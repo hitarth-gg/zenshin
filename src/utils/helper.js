@@ -1,4 +1,4 @@
-import { GET_ANIME_DETAILS_BY_ID, GET_ANIME_EPISODES_BY_ID, SEARCH_ANIME, SEARCH_TORRENT, TOP_AIRING_ANIME } from "./api";
+import { GET_ANIME_DETAILS_BY_ID, GET_ANIME_EPISODES_BY_ID, SEARCH_ANIME, SEARCH_TORRENT, TOP_AIRING_ANIME, TOP_ANIME } from "./api";
 
 export async function searchAnime(text, limit = 10) {
   try {
@@ -11,9 +11,19 @@ export async function searchAnime(text, limit = 10) {
   }
 }
 
-export async function getTopAnime() {
+export async function getTopAiringAnime() {
   try {
     const response = await fetch(TOP_AIRING_ANIME());
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function getTopAnime() {
+  try {
+    const response = await fetch(TOP_ANIME());
     const data = await response.json();
     return data;
   } catch (error) {

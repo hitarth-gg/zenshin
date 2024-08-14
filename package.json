@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.10",
     "@fontsource/inter": "^5.0.19",
     "@fontsource/space-mono": "^5.0.20",
     "@radix-ui/react-icons": "^1.3.0",
@@ -18,6 +19,8 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^5.51.1",
     "@tanstack/react-query-devtools": "^5.51.1",
+    "@videojs/http-streaming": "^3.13.2",
+    "@vidstack/react": "^1.12.9",
     "axios": "^1.7.4",
     "date-fns": "^3.6.0",
     "ldrs": "^1.0.2",
@@ -42,6 +45,7 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.5",
+    "video.js": "^8.17.3",
     "vite": "^5.3.4",
     "vite-plugin-eslint": "^1.8.1"
   }

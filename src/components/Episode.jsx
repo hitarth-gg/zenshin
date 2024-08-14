@@ -7,25 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Skeleton } from "@radix-ui/themes";
 
-const data = {
-  mal_id: 1,
-  url: "https://myanimelist.net/anime/53580/Tensei_shitara_Slime_Datta_Ken_3rd_Season/episode/1",
-  title: "Demons and Strategies",
-  title_japanese: "悪魔と策謀",
-  title_romanji: "Akuma to Sakubou ",
-  aired: "2024-04-05T00:00:00+00:00",
-  score: 4.3,
-  filler: false,
-  recap: false,
-  forum_url: "https://myanimelist.net/forum/?topicid=2154196",
-};
-
 export default function Episode({ data, anime }) {
   //   const [torrentData, setTorrentData] = useState();
   const navigate = useNavigate();
   const [active, setActive] = useState(false);
 
-  const searchQuery = `${anime} ${data.mal_id < 10 ? `0${data.mal_id}` : data.mal_id}`;
+  let searchQuery = `${anime}`;
+  if (data?.mal_id > 0)
+    searchQuery = `${anime} ${data.mal_id < 10 ? `0${data.mal_id}` : data.mal_id}`;
 
   const {
     isLoading,
@@ -45,9 +34,59 @@ export default function Episode({ data, anime }) {
   function onTorrentClick(torrent) {
     console.log(torrent);
     console.log(torrent.magnet);
-    
+
     navigate(`/player/${encodeURIComponent(torrent.magnet)}`);
   }
+
+  // if the data is undefined, then it is a filler episode or a recap episode ot a movie
+  if (data === undefined)
+    return (
+      <div
+        onClick={() => handleClick()}
+        className="m-1 cursor-default border border-gray-700 p-3 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20]"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex gap-x-1 font-space-mono font-medium opacity-90">
+            <div>
+              <p className="font-space-mono text-lg font-medium opacity-90">
+                {anime}
+              </p>
+            </div>
+          </div>
+        </div>
+        {active && (
+          <div className="mt-3 flex flex-col gap-y-2">
+            {isLoading && <Skeleton width={"50%"} />}
+            {error && (
+              <p className="font-space-mono text-red-500">
+                Error fetching torrents
+              </p>
+            )}
+            {torrentData?.data?.map((torrent) => (
+              <div className="flex items-center">
+                <div className="flex min-w-20 items-center gap-x-1 border border-gray-800 p-1">
+                  <p className="font-space-mono text-xs opacity-60">
+                    {torrent.seeders}
+                  </p>
+                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                  <p className="font-space-mono text-xs opacity-60">
+                    {torrent.leechers}
+                  </p>
+                  <div className="h-2 w-2 rounded-full bg-red-500"></div>
+                </div>
+                <p
+                  key={torrent.title}
+                  onClick={() => onTorrentClick(torrent)}
+                  className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 hover:text-purple-400 hover:opacity-85"
+                >
+                  {torrent.title}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
 
   return (
     <div
@@ -79,7 +118,7 @@ export default function Episode({ data, anime }) {
         </div>
       </div>
       {active && (
-        <div className="mt-3">
+        <div className="mt-3 flex flex-col gap-y-2">
           {isLoading && <Skeleton width={"50%"} />}
           {error && (
             <p className="font-space-mono text-red-500">
@@ -87,9 +126,25 @@ export default function Episode({ data, anime }) {
             </p>
           )}
           {torrentData?.data?.map((torrent) => (
-            <p key={torrent.title} onClick={() => onTorrentClick(torrent)} className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 hover:text-purple-400 hover:opacity-85">
-              {torrent.title}
-            </p>
+            <div className="flex items-center">
+              <div className="flex min-w-20 items-center gap-x-1 border border-gray-800 p-1">
+                <p className="font-space-mono text-xs opacity-60">
+                  {torrent.seeders}
+                </p>
+                <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                <p className="font-space-mono text-xs opacity-60">
+                  {torrent.leechers}
+                </p>
+                <div className="h-2 w-2 rounded-full bg-red-500"></div>
+              </div>
+              <p
+                key={torrent.title}
+                onClick={() => onTorrentClick(torrent)}
+                className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 hover:text-purple-400 hover:opacity-85"
+              >
+                {torrent.title}
+              </p>
+            </div>
           ))}
         </div>
       )}

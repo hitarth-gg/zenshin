@@ -18,6 +18,11 @@ export function TOP_AIRING_ANIME() {
   return `${BASE_URL_JIKAN}/top/anime?&filter=airing&limit=25&sfw=true&type=tv`
 }
 
+// https://api.jikan.moe/v4/top/anime
+export function TOP_ANIME() {
+  return `${BASE_URL_JIKAN}/top/anime`
+}
+
 // https://api.jikan.moe/v4/anime/{id}/full
 export function GET_ANIME_DETAILS_BY_ID(id) {
   return `${BASE_URL_JIKAN}/anime/${id}/full`

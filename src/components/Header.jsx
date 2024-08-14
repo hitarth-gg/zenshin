@@ -11,19 +11,19 @@ import { Button } from "@radix-ui/themes";
 
 export default function Header({ theme, toggleTheme }) {
   return (
-    <div className=" sticky top-0 z-10 bg-[#111113] bg-opacity-70 backdrop-blur-lg flex items-center justify-between border-[#5a5e6750] px-4 py-3">
+    <div className=" sticky top-0 z-10 h-12 bg-[#111113] bg-opacity-70 backdrop-blur-lg flex items-center justify-between border-[#5a5e6750] px-4 py-3">
       <div className="flex items-center justify-center gap-x-2">
         <Link
           className="hover: flex w-fit cursor-pointer select-none gap-x-2 rounded-sm p-1 font-spaceMono text-sm transition-all duration-200 hover:bg-[#70707030]"
           to={"/"}
         >
           {/* <span>zenshin | 全身</span> */}
-          <img src={zenshinLogo} alt="" className="w-20"/>
+          <img src={zenshinLogo} alt="" className="w-16"/>
         </Link>
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
         <Button color="gray" variant="ghost" size={"1"}>
           <a
-            href="https://github.com/hitarth-gg/codeforces-explorer"
+            href="https://github.com/hitarth-gg"
             target="_blank"
             rel="noreferrer"
           >
