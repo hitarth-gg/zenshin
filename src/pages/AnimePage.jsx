@@ -5,9 +5,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import CenteredLoader from "../ui/CenteredLoader";
 import useGetAnimeEpisodesById from "../hooks/useGetAnimeEpisodesById";
+import Episode from "../components/Episode";
+import { Skeleton } from "@radix-ui/themes";
 
 export default function AnimePage() {
-  const animeId = useParams().id;
+  const animeId = useParams().animeId;
   console.log(animeId);
 
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId);
@@ -57,6 +59,28 @@ export default function AnimePage() {
           </p>
         </div>
       </div>
+      {!error && isLoadingEpisodes ? (
+        <div>
+          <div className="m-1 flex cursor-pointer justify-between border border-gray-700 items-center p-3 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20]">
+            <div className="flex flex-col gap-y-4">
+              <Skeleton width={"10rem"} height={"1.3rem"} />
+              <Skeleton width={"10rem"} height={"1.1rem"}/>
+            </div>
+            <Skeleton width={"10rem"} />
+          </div>
+        </div>
+      ) : (
+        <div className="mt-5">
+          <p className="font-space-mono text-lg font-medium opacity-90">
+            Episodes
+          </p>
+          <div className="mt-3 grid grid-cols-1 gap-y-3">
+            {animeEpisodes?.data.map((episode) => (
+              <Episode key={episode.mal_id} anime={data.title} data={episode} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

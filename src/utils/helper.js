@@ -1,4 +1,4 @@
-import { GET_ANIME_DETAILS_BY_ID, GET_ANIME_EPISODES_BY_ID, SEARCH_ANIME, TOP_AIRING_ANIME } from "./api";
+import { GET_ANIME_DETAILS_BY_ID, GET_ANIME_EPISODES_BY_ID, SEARCH_ANIME, SEARCH_TORRENT, TOP_AIRING_ANIME } from "./api";
 
 export async function searchAnime(text, limit = 10) {
   try {
@@ -44,3 +44,18 @@ export async function getAnimeEpisodesById(id) {
     throw new Error(error);
   }
 }
+
+// const searchQuery = `${anime} Episode ${data.mal_id < 10 ? `0${data.mal_id}` : data.mal_id}`;
+//     const response = await fetch(SEARCH_TORRENT(searchQuery));
+//     const data2 = await response.json();
+export async function searchTorrent(query) {
+  try {
+    const response = await fetch(SEARCH_TORRENT(query));
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+}
+  

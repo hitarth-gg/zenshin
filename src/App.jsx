@@ -5,6 +5,7 @@ import ErrorPage from "./pages/ErrorPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import AnimePage from "./pages/AnimePage";
+import Player from "./pages/Player";
 
 const router = createBrowserRouter(
   [
@@ -18,10 +19,22 @@ const router = createBrowserRouter(
           errorElement: <ErrorPage />,
         },
         {
-          path: "/anime/:id",
+          path: "/anime/:animeId",
           element: <AnimePage />,
           errorElement: <ErrorPage />,
+          // children:[
+          //   {
+          //     path: "episode/:episodeId",
+          //     element: <Player />,
+          //     errorElement: <ErrorPage />,
+          //   }
+          // ]
         },
+        {
+          path: "/player/:magnetId",
+          element: <Player />,
+          errorElement: <ErrorPage />,
+        }
         
       ],
     },

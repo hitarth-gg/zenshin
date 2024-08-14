@@ -1,5 +1,6 @@
 import SearchBar from "./SearchBar";
 import { Link } from "react-router-dom";
+import zenshinLogo from "../assets/zenshinLogo.png";
 import {
   DividerVerticalIcon,
   GitHubLogoIcon,
@@ -16,7 +17,8 @@ export default function Header({ theme, toggleTheme }) {
           className="hover: flex w-fit cursor-pointer select-none gap-x-2 rounded-sm p-1 font-spaceMono text-sm transition-all duration-200 hover:bg-[#70707030]"
           to={"/"}
         >
-          <span>zenshin | 全身</span>
+          {/* <span>zenshin | 全身</span> */}
+          <img src={zenshinLogo} alt="" className="w-20"/>
         </Link>
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
         <Button color="gray" variant="ghost" size={"1"}>

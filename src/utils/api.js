@@ -10,7 +10,7 @@ export function SEARCH_ANIME(query, limit=10) {
 const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
 
 export function SEARCH_TORRENT(query) {
-  return `${BASE_URL_NYAA}/?q=${query}&sort=seeders&order=desc&page=1`
+  return `${BASE_URL_NYAA}/?q=${query}&sort=seeders&order=desc&page=1&category=anime`
 }
 
 // https://api.jikan.moe/v4/top/anime?&filter=airing&limit=25
