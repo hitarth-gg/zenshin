@@ -22,6 +22,7 @@ Built it as a mini project to familiarize myself with video streaming using Expr
 ![image](https://github.com/user-attachments/assets/e9c36b62-1c69-417d-9021-79f496e71bf6)
 ![image](https://github.com/user-attachments/assets/e9baf709-dc2a-4b90-95b2-ff4dcfdd986d)
 ![image](https://github.com/user-attachments/assets/1341c03b-0674-4d70-be95-e4d1bff3119e)
+![image](https://github.com/user-attachments/assets/ab95917b-11f5-4f02-a73f-43cfa2afc40f)
 
 
 ### VLC Media Player Support
