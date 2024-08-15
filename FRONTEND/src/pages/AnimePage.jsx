@@ -86,9 +86,9 @@ export default function AnimePage() {
         </div>
       )}
 
-      {animeEpisodes && animeEpisodes.data.length > 0 && (
+      {animeEpisodes && animeEpisodes?.data?.length > 0 && (
         <div className="mt-5">
-          <div className="flex items-center  gap-x-3">
+          <div className="flex items-center gap-x-3">
             <p className="font-space-mono text-lg font-medium opacity-90">
               Episodes
             </p>
@@ -113,9 +113,9 @@ export default function AnimePage() {
         </div>
       )}
 
-      {animeEpisodes && animeEpisodes.data.length === 0 && (
+      {animeEpisodes && animeEpisodes?.data?.length === 0 && (
         <div className="mt-5">
-          <div className="flex items-center  gap-x-3">
+          <div className="flex items-center gap-x-3">
             <p className="font-space-mono text-lg font-medium opacity-90">
               Episodes
             </p>
