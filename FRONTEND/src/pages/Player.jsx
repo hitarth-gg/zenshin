@@ -1,64 +1,10 @@
-// import axios from "axios";
-// import { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-
-// export default function Player(query) {
-//   const magnetURI = useParams().magnetId;
-//   const [videoSrc, setVideoSrc] = useState("");
-//   const [subtitleSrc, setSubtitleSrc] = useState("");
-//   console.log(magnetURI);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       // Step 1: Add the torrent
-//       await axios.get(
-//         `http://localhost:8000/add/${encodeURIComponent(magnetURI)}`,
-//       );
-//       // Step 2: Set the video source for streaming
-//       setVideoSrc(
-//         `http://localhost:8000/stream/${encodeURIComponent(magnetURI)}`,
-//       );
-//       // Step 3: Set the subtitle source
-//       setSubtitleSrc(
-//         `http://localhost:8000/subtitles/${encodeURIComponent(magnetURI)}`,
-//       );
-//     } catch (error) {
-//       console.error("Error adding the torrent or streaming video", error);
-//     }
-//   };
-
-//   console.log(videoSrc, subtitleSrc);
-
-//   return (
-//     <div>
-//       <div className="App">
-//         <form onSubmit={handleSubmit}>
-//           <button type="submit">Stream</button>
-//         </form>
-//         {videoSrc && (
-//           <video controls src={videoSrc} style={{ width: "70%" }}>
-//             {subtitleSrc && (
-//               <track
-//                 kind="subtitles"
-//                 src={subtitleSrc}
-//                 srcLang="en"
-//                 label="English"
-//                 default
-//               />
-//             )}
-//           </video>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import VideoJS from "./VideoJs";
 import videojs from "video.js";
 import StreamStats from "../components/StreamStats";
+import { Button } from "@radix-ui/themes";
 
 export default function Player(query) {
   const magnetURI = useParams().magnetId;
@@ -83,6 +29,23 @@ export default function Player(query) {
       );
     } catch (error) {
       console.error("Error adding the torrent or streaming video", error);
+    }
+  };
+
+  const handleVlcStream = async () => {
+    try {
+      await axios.get(
+        `http://localhost:8000/add/${encodeURIComponent(magnetURI)}`,
+      );
+
+      // Send a request to the server to open VLC with the video stream URL
+      await axios.get(
+        `http://localhost:8000/stream-to-vlc?url=${encodeURIComponent(
+          `http://localhost:8000/stream/${encodeURIComponent(magnetURI)}`,
+        )}`,
+      );
+    } catch (error) {
+      console.error("Error streaming to VLC", error);
     }
   };
 
@@ -126,16 +89,36 @@ export default function Player(query) {
   /* ------------------------------------------------------ */
 
   return (
-    <div className="font-space-mono flex justify-center items-center ">
-      <div className="App w-3/5 ">
-        <form onSubmit={handleSubmit}>
-          <button type="submit">Stream</button>
-        </form>
+    <div className="flex items-center justify-center font-space-mono">
+      <div className="App w-3/5">
+        
         {videoSrc && (
           <VideoJS options={videoPlayerOptions} onReady={handlePlayerReady} />
         )}
-      <StreamStats magnetURI={magnetURI} /> {/* We basiically do this to prevent video player re-render */}
+        <StreamStats magnetURI={magnetURI} />{" "}
+        {/* We basiically do this to prevent video player re-render */}
+        <div className="flex gap-x-3 mt-5">
+          <Button
+            size="1"
+            color="orange"
+            variant="soft"
+            onClick={handleVlcStream}
+            className="ml-4"
+          >
+            Open in VLC
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            size="1"
+            color="blue"
+            variant="soft"
+            type="submit"
+          >
+            Stream on Browser
+          </Button>
+        </div>
       </div>
+      
     </div>
   );
 }
