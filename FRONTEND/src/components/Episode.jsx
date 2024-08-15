@@ -7,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Skeleton } from "@radix-ui/themes";
 
-export default function Episode({ data, anime }) {
+export default function Episode({ data, anime, englishDub }) {
   //   const [torrentData, setTorrentData] = useState();
   const navigate = useNavigate();
   const [active, setActive] = useState(false);
 
-  let searchQuery = `${anime}`;
+  let searchQuery = `${anime} ${englishDub ? "Dual Audio" : ""}`;
   if (data?.mal_id > 0)
-    searchQuery = `${anime} ${data.mal_id < 10 ? `0${data.mal_id}` : data.mal_id}`;
+    searchQuery = `${anime} ${data.mal_id < 10 ? `0${data.mal_id}` : data.mal_id} ${englishDub ? "Dual Audio" : ""}`;
 
   const {
     isLoading,
@@ -22,6 +22,8 @@ export default function Episode({ data, anime }) {
     error,
     status,
   } = useNyaaTracker(active ? searchQuery : null);
+
+  console.log(searchQuery);
 
   function handleClick() {
     if (active) {

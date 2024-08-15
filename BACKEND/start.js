@@ -160,6 +160,26 @@ app.get('/stream-to-vlc', (req, res) => {
 });
 /* ------------------------------------------------------ */
 
+app.delete("/remove/:magnet", async (req, res) => {
+  let magnet = req.params.magnet;
+
+  // Find the torrent by magnet link
+  let tor = await client.get(magnet);
+  if (!tor) {
+    return res.status(404).send("Torrent not found");
+  }
+
+  // Destroy the torrent to stop downloading and remove it from the client
+  tor.destroy((err) => {
+    if (err) {
+      console.error("Error removing torrent:", err);
+      return res.status(500).send("Error removing torrent");
+    }
+
+    res.status(200).send("Torrent removed successfully");
+  });
+});
+
 
 // app.get("/subtitles/:magnet", (req, res) => {
 //   let magnet = req.params.magnet;

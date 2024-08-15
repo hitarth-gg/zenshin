@@ -12,7 +12,7 @@ export default function SearchResults({ data, setIsActive }) {
   return (
     <div
       onClick={() => handleClick()}
-      className="flex animate-fade cursor-pointer gap-x-5 rounded-md bg-[#111113] px-2 py-1 font-inter transition-all duration-200 ease-in-out hover:scale-105 hover:bg-[#232326]"
+      className="flex animate-fade cursor-pointer gap-x-5 rounded-md bg-[#111113] px-2 py-1 font-inter transition-all duration-200 ease-in-out hover:scale-105 hover:bg-[#232326] hover:z-10"
     >
       <img
         className="duration-400 h-12 w-12 animate-fade rounded-lg object-cover transition-all ease-in-out hover:scale-150"

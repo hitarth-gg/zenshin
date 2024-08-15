@@ -11,6 +11,7 @@ export async function searchAnime(text, limit = 10) {
   }
 }
 
+/* ------------------------------------------------------ */
 export async function getTopAiringAnime() {
   try {
     const response = await fetch(TOP_AIRING_ANIME());
@@ -20,6 +21,7 @@ export async function getTopAiringAnime() {
     throw new Error(error);
   }
 }
+/* ------------------------------------------------------ */
 
 export async function getTopAnime() {
   try {

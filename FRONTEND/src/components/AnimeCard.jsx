@@ -28,6 +28,7 @@ export default function AnimeCard({ data }) {
           <p className="">{format(new Date(data.aired.from), "MMMM yyyy")}</p>
           <p>{data.type}</p>
         </div>
+        <div></div>
       </div>
     </div>
   );

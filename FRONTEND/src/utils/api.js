@@ -1,14 +1,12 @@
 // jikan api
 const BASE_URL_JIKAN = 'https://api.jikan.moe/v4'
+const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
 
 export function SEARCH_ANIME(query, limit=10) {
   return `${BASE_URL_JIKAN}/anime?q=${query}&limit=${limit}`
 }
 
-
 // 'https://nyaaapi.onrender.com/nyaa?q=one%20piece&sort=seeders&order=desc&page=1'
-const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
-
 export function SEARCH_TORRENT(query) {
   return `${BASE_URL_NYAA}/?q=${query}&sort=seeders&order=desc&page=1&category=anime`
 }

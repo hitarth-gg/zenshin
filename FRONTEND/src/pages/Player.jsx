@@ -88,25 +88,36 @@ export default function Player(query) {
 
   /* ------------------------------------------------------ */
 
+  const handleRemoveTorrent = async () => {
+    try {
+      // Send a DELETE request to remove the torrent
+      await axios.delete(
+        `http://localhost:8000/remove/${encodeURIComponent(magnetURI)}`,
+      );
+
+      // Clear the video and subtitle sources
+      setVideoSrc("");
+      setSubtitleSrc("");
+
+      // Dispose of the player if it's active
+      if (playerRef.current) {
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+    } catch (error) {
+      console.error("Error removing the torrent", error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center font-space-mono">
       <div className="App w-3/5">
-        
         {videoSrc && (
           <VideoJS options={videoPlayerOptions} onReady={handlePlayerReady} />
         )}
         <StreamStats magnetURI={magnetURI} />{" "}
         {/* We basiically do this to prevent video player re-render */}
-        <div className="flex gap-x-3 mt-5">
-          <Button
-            size="1"
-            color="orange"
-            variant="soft"
-            onClick={handleVlcStream}
-            className="ml-4"
-          >
-            Open in VLC
-          </Button>
+        <div className="mt-5 flex gap-x-3">
           <Button
             onClick={handleSubmit}
             size="1"
@@ -116,9 +127,24 @@ export default function Player(query) {
           >
             Stream on Browser
           </Button>
+          <Button
+            size="1"
+            color="orange"
+            variant="soft"
+            onClick={handleVlcStream}
+          >
+            Open in VLC
+          </Button>
+          <Button
+            size="1"
+            color="red"
+            variant="soft"
+            onClick={handleRemoveTorrent}
+          >
+            Stop and Remove
+          </Button>
         </div>
       </div>
-      
     </div>
   );
 }

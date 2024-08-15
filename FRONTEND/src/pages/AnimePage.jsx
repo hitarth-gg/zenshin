@@ -1,12 +1,12 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useGetAnimeById from "../hooks/useGetAnimeById";
 import { format } from "date-fns";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CenteredLoader from "../ui/CenteredLoader";
 import useGetAnimeEpisodesById from "../hooks/useGetAnimeEpisodesById";
 import Episode from "../components/Episode";
-import { Skeleton } from "@radix-ui/themes";
+import { Button, Skeleton } from "@radix-ui/themes";
 
 export default function AnimePage() {
   const animeId = useParams().animeId;
@@ -18,6 +18,7 @@ export default function AnimePage() {
   if (error) {
     throw new Error(error);
   }
+  const [englishDub, setEnglishDub] = useState(false);
 
   if (isLoading) return <CenteredLoader />;
   if (status !== "success") return <CenteredLoader />;
@@ -57,6 +58,20 @@ export default function AnimePage() {
           <p className="font-space-mono text-sm tracking-wide opacity-55">
             {data.synopsis}
           </p>
+          <div className="mt-6 flex gap-x-5">
+            <Link target="_blank" to={data.url}>
+              <Button size={"1"} variant="">
+                MyAnimeList
+              </Button>
+            </Link>
+            {data.trailer.url && (
+              <Link target="_blank" to={data.trailer.url}>
+                <Button size={"1"} color="red" variant="">
+                  YouTube
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
       {!error && isLoadingEpisodes && (
@@ -73,12 +88,26 @@ export default function AnimePage() {
 
       {animeEpisodes && animeEpisodes.data.length > 0 && (
         <div className="mt-5">
-          <p className="font-space-mono text-lg font-medium opacity-90">
-            Episodes
-          </p>
+          <div className="flex items-center  gap-x-3">
+            <p className="font-space-mono text-lg font-medium opacity-90">
+              Episodes
+            </p>
+            <Button
+              size={"1"}
+              onClick={() => setEnglishDub(!englishDub)}
+              color={englishDub ? "blue" : "gray"}
+            >
+              English Dub
+            </Button>
+          </div>
           <div className="mt-3 grid grid-cols-1 gap-y-3">
             {animeEpisodes?.data.map((episode) => (
-              <Episode key={episode.mal_id} anime={data.title} data={episode} />
+              <Episode
+                key={episode.mal_id}
+                anime={data.title}
+                data={episode}
+                englishDub={englishDub}
+              />
             ))}
           </div>
         </div>
@@ -86,11 +115,20 @@ export default function AnimePage() {
 
       {animeEpisodes && animeEpisodes.data.length === 0 && (
         <div className="mt-5">
-          <p className="font-space-mono text-lg font-medium opacity-90">
-            Episodes
-          </p>
+          <div className="flex items-center  gap-x-3">
+            <p className="font-space-mono text-lg font-medium opacity-90">
+              Episodes
+            </p>
+            <Button
+              size={"1"}
+              onClick={() => setEnglishDub(!englishDub)}
+              color={englishDub ? "blue" : "gray"}
+            >
+              English Dub
+            </Button>
+          </div>
           <div className="mt-3 grid grid-cols-1 gap-y-3">
-              <Episode  anime={data.title} />
+            <Episode anime={data.title} englishDub={englishDub} />
           </div>
         </div>
       )}
