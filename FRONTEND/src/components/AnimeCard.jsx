@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 export default function AnimeCard({ data }) {
-  console.log(data);
+  // console.log(data);
   const navigate = useNavigate();
 
   function handleClick() {

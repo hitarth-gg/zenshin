@@ -180,7 +180,6 @@ app.delete("/remove/:magnet", async (req, res) => {
   });
 });
 
-
 // app.get("/subtitles/:magnet", (req, res) => {
 //   let magnet = req.params.magnet;
 

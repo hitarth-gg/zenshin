@@ -23,9 +23,19 @@ export async function getTopAiringAnime() {
 }
 /* ------------------------------------------------------ */
 
-export async function getTopAnime() {
+export async function getTopAnime(page = 1) {
+  // set time out to prevent too many requests
+  console.log("Fetching top anime with page:", page);
+  
+  await new Promise(resolve => setTimeout(resolve, 1000)); // 2000 milliseconds delay
   try {
-    const response = await fetch(TOP_ANIME());
+    const response = await fetch(TOP_ANIME(page), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }  
+  );
     const data = await response.json();
     return data;
   } catch (error) {

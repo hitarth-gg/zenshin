@@ -17,8 +17,13 @@ export function TOP_AIRING_ANIME() {
 }
 
 // https://api.jikan.moe/v4/top/anime
-export function TOP_ANIME() {
-  return `${BASE_URL_JIKAN}/top/anime`
+// export function TOP_ANIME() {
+//   return `${BASE_URL_JIKAN}/top/anime`
+// }
+
+// https://api.jikan.moe/v4/top/anime
+export function TOP_ANIME(page = 1) {
+  return `${BASE_URL_JIKAN}/top/anime?page=${page}&limit=25&sfw=true`
 }
 
 // https://api.jikan.moe/v4/anime/{id}/full
