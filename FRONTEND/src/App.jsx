@@ -22,13 +22,6 @@ const router = createBrowserRouter(
           path: "/anime/:animeId",
           element: <AnimePage />,
           errorElement: <ErrorPage />,
-          // children:[
-          //   {
-          //     path: "episode/:episodeId",
-          //     element: <Player />,
-          //     errorElement: <ErrorPage />,
-          //   }
-          // ]
         },
         {
           path: "/player/:magnetId",
