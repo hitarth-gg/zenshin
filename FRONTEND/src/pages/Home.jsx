@@ -73,12 +73,12 @@ export default function Home() {
             className="h-[6rem] object-scale-down"
           />
           <p className="font-space-mono">
-            Stream your favorite torrents instantly with our service, no waiting
+            Stream your favourite torrents instantly with our service, no waiting
             for downloads, reliable and seamless streaming directly to your
-            browser. Built with <span className="text-cyan-300">React</span>,{" "}
+            browser / VLC Media Player. <br/> Built with <span className="text-cyan-300">React</span>,{" "}
             <span className="text-orange-300">TanStack Query</span>, Radix UI,
             ExpressJS, Tailwind CSS,{" "}
-            <span className="text-red-500">WebTorrent</span>, Video.JS, and
+            <span className="text-red-500">WebTorrent</span>, Video.js, and
             more.
           </p>
         </div>

@@ -10,26 +10,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.12.10",
     "@fontsource/inter": "^5.0.19",
     "@fontsource/space-mono": "^5.0.20",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/themes": "^3.1.1",
-    "@reduxjs/toolkit": "^2.2.6",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-query": "^5.51.1",
     "@tanstack/react-query-devtools": "^5.51.1",
     "@videojs/http-streaming": "^3.13.2",
-    "@vidstack/react": "^1.12.9",
     "axios": "^1.7.4",
     "date-fns": "^3.6.0",
     "ldrs": "^1.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-infinite-scroll-component": "^6.1.0",
-    "react-redux": "^9.1.2",
     "react-router-dom": "^6.25.0",
-    "sonner": "^1.5.0",
     "tailwindcss-animated": "^1.1.2"
   },
   "devDependencies": {

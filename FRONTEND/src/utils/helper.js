@@ -1,4 +1,11 @@
-import { GET_ANIME_DETAILS_BY_ID, GET_ANIME_EPISODES_BY_ID, SEARCH_ANIME, SEARCH_TORRENT, TOP_AIRING_ANIME, TOP_ANIME } from "./api";
+import {
+  GET_ANIME_DETAILS_BY_ID,
+  GET_ANIME_EPISODES_BY_ID,
+  SEARCH_ANIME,
+  SEARCH_TORRENT,
+  TOP_AIRING_ANIME,
+  TOP_ANIME,
+} from "./api";
 
 export async function searchAnime(text, limit = 10) {
   try {
@@ -26,16 +33,15 @@ export async function getTopAiringAnime() {
 export async function getTopAnime(page = 1) {
   // set time out to prevent too many requests
   console.log("Fetching top anime with page:", page);
-  
-  await new Promise(resolve => setTimeout(resolve, 1000)); // 2000 milliseconds delay
+
+  await new Promise((resolve) => setTimeout(resolve, 500)); // 2000 milliseconds delay
   try {
     const response = await fetch(TOP_ANIME(page), {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-    }  
-  );
+    });
     const data = await response.json();
     return data;
   } catch (error) {
@@ -46,11 +52,11 @@ export async function getTopAnime(page = 1) {
 export async function getAnimeById(id) {
   try {
     console.log("Fetching anime with id:", id);
-    
+
     const response = await fetch(GET_ANIME_DETAILS_BY_ID(id));
     const data = await response.json();
     console.log(data);
-    
+
     return data;
   } catch (error) {
     throw new Error(error);
@@ -80,4 +86,3 @@ export async function searchTorrent(query) {
     throw new Error(error);
   }
 }
-  

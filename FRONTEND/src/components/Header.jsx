@@ -38,10 +38,10 @@ export default function Header({ theme, toggleTheme }) {
       <div className="flex items-center justify-center gap-x-8">
         <Link
           target="_blank"
-          to="https://github.com/hitarth-gg/codeforces-explorer-extension"
+          to="https://github.com/hitarth-gg/zenshin"
         >
           <Button color="gray" variant="ghost" size={"1"}>
-            <div className="p-1 text-[.8rem]">Extension</div>
+            <div className="p-1 text-[.8rem]">How to use</div>
           </Button>
         </Link>
         <Button color="gray" variant="ghost" size={"1"} onClick={toggleTheme}>
