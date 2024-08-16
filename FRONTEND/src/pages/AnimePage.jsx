@@ -35,37 +35,37 @@ export default function AnimePage() {
         />
         <div className="flex-1 justify-start gap-y-0">
           <p className="font-space-mono text-xl font-medium opacity-90">
-            {data.title}
+            {data?.title}
           </p>
           <p className="text font-space-mono font-medium opacity-60">
-            {data.title_english}
+            {data?.title_english}
           </p>
           <div className="my-3 h-[1px] w-full bg-[#333]"></div> {/* Divider */}
           <div className="flex w-fit gap-x-2 pr-4 text-xs opacity-60">
-            <p className="">{data.type}</p>
+            <p className="">{data?.type}</p>
             <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
-            <p>{`${data.episodes ? data.episodes : "?"} episodes`}</p>
+            <p>{`${data?.episodes ? data?.episodes : "?"} episodes`}</p>
             <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
-            <p>({data.status})</p>
+            <p>({data?.status})</p>
             <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
             <p className="text-xs opacity-60">
-              {format(new Date(data.aired.from), "MMMM yyyy")}
+              {format(new Date(data?.aired.from), "MMMM yyyy")}
             </p>
             <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
-            <p className="opacity-60">{data.season}</p>
+            <p className="opacity-60">{data?.season}</p>
           </div>
           <div className="my-3 h-[1px] w-1/2 bg-[#333]"></div> {/* Divider */}
           <p className="font-space-mono text-sm tracking-wide opacity-55">
-            {data.synopsis}
+            {data?.synopsis}
           </p>
           <div className="mt-6 flex gap-x-5">
-            <Link target="_blank" to={data.url}>
+            <Link target="_blank" to={data?.url}>
               <Button size={"1"} variant="">
                 MyAnimeList
               </Button>
             </Link>
-            {data.trailer.url && (
-              <Link target="_blank" to={data.trailer.url}>
+            {data?.trailer.url && (
+              <Link target="_blank" to={data?.trailer.url}>
                 <Button size={"1"} color="red" variant="">
                   YouTube
                 </Button>
