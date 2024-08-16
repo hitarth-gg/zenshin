@@ -13,14 +13,21 @@ export default function AnimePage() {
   console.log(animeId);
 
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId);
-  const { isLoadingEpisodes, animeEpisodes, errorEpisodes, statusEpisodes } =
-    useGetAnimeEpisodesById(animeId);
-  if (error) {
-    throw new Error(error);
-  }
+  const {
+    isLoading: isLoadingEpisodes,
+    animeEpisodes,
+    errorEpisodes,
+    statusEpisodes,
+  } = useGetAnimeEpisodesById(animeId);
+
   const [englishDub, setEnglishDub] = useState(false);
 
   if (isLoading) return <CenteredLoader />;
+
+  if (error) {
+    throw new Error(error);
+  }
+
   if (status !== "success") return <CenteredLoader />;
 
   const data = animeData?.data;
@@ -49,7 +56,7 @@ export default function AnimePage() {
             <p>({data?.status})</p>
             <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
             <p className="text-xs opacity-60">
-              {format(new Date(data?.aired.from), "MMMM yyyy")}
+              {data && format(new Date(data?.aired.from), "MMMM yyyy")}
             </p>
             <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
             <p className="opacity-60">{data?.season}</p>
