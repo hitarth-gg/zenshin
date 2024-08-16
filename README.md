@@ -13,6 +13,10 @@ If you are a content owner and believe that your rights are being violated, plea
 
 ---
 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/DiVczJ92sAU/0.jpg)](https://www.youtube.com/watch?v=DiVczJ92sAU)
+
+[YouTube: How to use / build](https://youtu.be/DiVczJ92sAU?si=NvqnDvXE_LW7EHW8)
+
 A web based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
 
 Built it as a mini project to familiarize myself with video streaming using ExpressJS and handling of streams and APIs in a ReactJS based frontend webapp.
