@@ -8,6 +8,9 @@ import { getTopAnime } from "../utils/helper";
 import { useEffect, useState } from "react";
 import { set } from "date-fns";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { Spinner } from "@radix-ui/themes";
+import { toast } from "sonner";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 export default function Home() {
   const { isLoading, topAiringAnime, error, status } = useTopAiringAnime();
   // const { isLoading2, topAnime, error2, status2 } = useGetTopAnime();
@@ -27,7 +30,15 @@ export default function Home() {
     },
   });
 
-  console.log(data);
+  if(infiniteQueryError){
+    toast.error("Error fetching Top Animes", {
+      icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
+      description: infiniteQueryError?.message,
+      classNames: {
+        title: "text-rose-500",
+      },
+    });
+  }
 
   // if (error) {
   //   throw new Error(error);
@@ -73,9 +84,10 @@ export default function Home() {
             className="h-[6rem] object-scale-down"
           />
           <p className="font-space-mono">
-            Stream your favourite torrents instantly with our service, no waiting
-            for downloads, reliable and seamless streaming directly to your
-            browser / VLC Media Player. <br/> Built with <span className="text-cyan-300">React</span>,{" "}
+            Stream your favourite torrents instantly with our service, no
+            waiting for downloads, reliable and seamless streaming directly to
+            your browser / VLC Media Player. <br /> Built with{" "}
+            <span className="text-cyan-300">React</span>,{" "}
             <span className="text-orange-300">TanStack Query</span>, Radix UI,
             ExpressJS, Tailwind CSS,{" "}
             <span className="text-red-500">WebTorrent</span>, Video.js, and
@@ -121,8 +133,13 @@ export default function Home() {
           <InfiniteScroll
             dataLength={topAnime.length}
             next={() => fetchNextPage()}
-            hasMore={topAnime?.length < 200}
-            loader={<h4>Loading...</h4>}
+            hasMore={topAnime?.length < 500}
+            loader={
+              <div className="flex gap-x-2 justify-center items-center">
+                <h4>Loading...</h4>
+                <Spinner />
+              </div>
+            }
           >
             <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
               {topAnime?.map((anime) => {

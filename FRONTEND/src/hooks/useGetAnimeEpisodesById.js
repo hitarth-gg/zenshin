@@ -13,6 +13,7 @@ export default function useGetAnimeEpisodesById(id) {
     queryKey: ["cur_anime_episodes", id],
     queryFn: () => getAnimeEpisodesById(id),
     staleTime: 0,
+    
   });
 
   return { isLoading, animeEpisodes, error, status };

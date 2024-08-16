@@ -7,16 +7,21 @@ import CenteredLoader from "../ui/CenteredLoader";
 import useGetAnimeEpisodesById from "../hooks/useGetAnimeEpisodesById";
 import Episode from "../components/Episode";
 import { Button, Skeleton } from "@radix-ui/themes";
+import { toast } from "sonner";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 export default function AnimePage() {
+
   const animeId = useParams().animeId;
   console.log(animeId);
+
+    
 
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId);
   const {
     isLoading: isLoadingEpisodes,
     animeEpisodes,
-    errorEpisodes,
+    error:errorEpisodes,
     statusEpisodes,
   } = useGetAnimeEpisodesById(animeId);
 
@@ -27,6 +32,15 @@ export default function AnimePage() {
   if (error) {
     throw new Error(error);
   }
+  
+  if(errorEpisodes){
+    toast.error("Error fetching Top Animes", {
+      icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
+      description: `Couldn't fetch episodes: ${errorEpisodes?.message}`,
+      classNames: {
+        title: "text-rose-500",
+      },
+    });}
 
   if (status !== "success") return <CenteredLoader />;
 

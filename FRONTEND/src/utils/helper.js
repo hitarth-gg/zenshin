@@ -22,6 +22,16 @@ export async function searchAnime(text, limit = 10) {
 export async function getTopAiringAnime() {
   try {
     const response = await fetch(TOP_AIRING_ANIME());
+
+    if (response.status === 429) {
+      throw new Error("Too many requests to the API. You are being rate-limited. Please wait a min and refresh the page.");
+    } else if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        `Error ${response.status}: ${response.statusText} - ${errorData.message}`,
+      );
+    }
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -34,7 +44,7 @@ export async function getTopAnime(page = 1) {
   // set time out to prevent too many requests
   console.log("Fetching top anime with page:", page);
 
-  await new Promise((resolve) => setTimeout(resolve, 500)); // 2000 milliseconds delay
+  await new Promise((resolve) => setTimeout(resolve, 0)); // 900 milliseconds delay
   try {
     const response = await fetch(TOP_ANIME(page), {
       method: "GET",
@@ -42,6 +52,17 @@ export async function getTopAnime(page = 1) {
         "Content-Type": "application/json",
       },
     });
+
+    if (response.status === 429) {
+      console.log("Too many requests to the API. You are being rate-limited. Please wait a min and refresh the page.");
+      throw new Error("Too many requests to the API. You are being rate-limited. Please wait a min and refresh the page.");
+    } else if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        `Error ${response.status}: ${response.statusText} - ${errorData.message}`,
+      );
+    }
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -54,6 +75,16 @@ export async function getAnimeById(id) {
     console.log("Fetching anime with id:", id);
 
     const response = await fetch(GET_ANIME_DETAILS_BY_ID(id));
+
+    if (response.status === 429) {
+      throw new Error("Too many requests to the API. You are being rate-limited. Please wait a min and refresh the page.");
+    } else if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        `Error ${response.status}: ${response.statusText} - ${errorData.message}`,
+      );
+    }
+
     const data = await response.json();
     console.log(data);
 
@@ -66,6 +97,16 @@ export async function getAnimeById(id) {
 export async function getAnimeEpisodesById(id) {
   try {
     const response = await fetch(GET_ANIME_EPISODES_BY_ID(id));
+
+    if (response.status === 429) {
+      throw new Error("Too many requests to the API. You are being rate-limited. Please wait a min and refresh the page.");
+    } else if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        `Error ${response.status}: ${response.statusText} - ${errorData.message}`,
+      );
+    }
+
     const data = await response.json();
     return data;
   } catch (error) {
