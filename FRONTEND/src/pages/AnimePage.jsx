@@ -97,7 +97,7 @@ export default function AnimePage() {
       </div>
       {!error && isLoadingEpisodes && (
         <div>
-          <div className="m-1 flex cursor-pointer items-center justify-between border border-gray-700 p-3 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20]">
+          <div className="m-1 mt-8 flex cursor-pointer items-center justify-between border border-gray-700 p-3 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20]">
             <div className="flex flex-col gap-y-4">
               <Skeleton width={"10rem"} height={"1.3rem"} />
               <Skeleton width={"10rem"} height={"1.1rem"} />

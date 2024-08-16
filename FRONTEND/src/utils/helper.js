@@ -44,7 +44,7 @@ export async function getTopAnime(page = 1) {
   // set time out to prevent too many requests
   console.log("Fetching top anime with page:", page);
 
-  await new Promise((resolve) => setTimeout(resolve, 0)); // 900 milliseconds delay
+  await new Promise((resolve) => setTimeout(resolve, 900)); // 900 milliseconds delay
   try {
     const response = await fetch(TOP_ANIME(page), {
       method: "GET",
