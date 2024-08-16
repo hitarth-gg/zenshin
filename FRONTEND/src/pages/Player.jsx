@@ -5,6 +5,8 @@ import VideoJS from "./VideoJs";
 import videojs from "video.js";
 import StreamStats from "../components/StreamStats";
 import { Button } from "@radix-ui/themes";
+import { toast } from "sonner";
+import { ExclamationTriangleIcon, TrashIcon } from "@radix-ui/react-icons";
 
 export default function Player(query) {
   const magnetURI = useParams().magnetId;
@@ -29,6 +31,17 @@ export default function Player(query) {
       );
     } catch (error) {
       console.error("Error adding the torrent or streaming video", error);
+
+      toast.error("Error streaming video", {
+        duration: 5000,
+        icon: (
+          <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />
+        ),
+        description: "Couldn't stream the video, make sure the torrent is valid and the Backend Server is running.",
+        classNames: {
+          title: "text-rose-500",
+        },
+      });
     }
   };
 
@@ -46,6 +59,16 @@ export default function Player(query) {
       );
     } catch (error) {
       console.error("Error streaming to VLC", error);
+      toast.error("Error streaming to VLC", {
+        icon: (
+          <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />
+        ),
+        description:
+          "Make sure VLC is installed on your system and correct path is set in the server and the Backend Server is running.",
+        classNames: {
+          title: "text-rose-500",
+        },
+      });
     }
   };
 
@@ -104,8 +127,27 @@ export default function Player(query) {
         playerRef.current.dispose();
         playerRef.current = null;
       }
+
+      toast.success("Torrent removed successfully", {
+        icon: <TrashIcon height="16" width="16" color="#ffffff" />,
+        description: "The torrent has been removed successfully",
+        classNames: {
+          title: "text-green-500",
+        },
+      });
     } catch (error) {
       console.error("Error removing the torrent", error);
+
+      toast.error("Error removing the torrent", {
+        icon: (
+          <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />
+        ),
+        description:
+          "Couldn't remove the torrent, you can manually remove it by restarting the server.",
+        classNames: {
+          title: "text-rose-500",
+        },
+      });
     }
   };
 

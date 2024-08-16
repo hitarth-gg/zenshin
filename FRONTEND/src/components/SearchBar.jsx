@@ -50,6 +50,9 @@ export default function SearchBar() {
       toast.error("Invalid search query", {
         icon: <MagnifyingGlassIcon height="16" width="16" color="#ffffff" />,
         description: "Please enter a valid search query",
+        classNames: {
+          title: "text-rose-500",
+        },
       });
       return;
     }

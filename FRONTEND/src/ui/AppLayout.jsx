@@ -18,7 +18,7 @@ export default function AppLayout({ props }) {
   return (
     <Theme appearance={theme}>
       {/* <div className="pointer-events-none h-0 w-0 opacity-0"></div> */}
-      <Toaster
+      {/* <Toaster
         theme={theme}
         toastOptions={{
           classNames: {
@@ -32,6 +32,19 @@ export default function AppLayout({ props }) {
             cancelButton: "bg-orange-400",
             closeButton: "bg-lime-400",
             icon: "text-rose-100",
+          },
+        }}
+      /> */}
+      <Toaster
+        theme={theme}
+        // richColors
+        unstyled={false}
+        toastOptions={{
+          classNames: {
+            error: "bg-[#1c1317] border border-rose-500",
+            success: "bg-[#131c16] border border-green-500",
+            icon: "opacity-80",
+            description: "font-space-mono text-white opacity-90",
           },
         }}
       />
