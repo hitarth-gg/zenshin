@@ -49,3 +49,4 @@ Define the path to vlc.exe in BACKEND/server.js :
 - react-infinite-scroll-component
 - TailwindCSS w/ tailwindcss-animated and line-clamp
 - ExpressJS
+- Nyaa-API : https://github.com/Vivek-Kolhe/Nyaa-API
