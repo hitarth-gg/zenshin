@@ -141,13 +141,13 @@ import { exec } from 'child_process';
 // Full path to VLC executable, change it as needed
 const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"'; // Adjust this path as needed
 
-app.get('/stream-to-vlc', (req, res) => {
-  const { url } = req.query;
+app.get('/stream-to-vlc', async (req, res) => {
+  const { url, magnet } = req.query;
+  
+
   if (!url) {
     return res.status(400).send('URL is required');
   }
-
-  // Use the full path to VLC
   const vlcCommand = `${vlcPath} "${url}"`;
 
   exec(vlcCommand, (error) => {

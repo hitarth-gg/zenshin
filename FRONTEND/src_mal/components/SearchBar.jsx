@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Code, Skeleton, Spinner, TextField } from "@radix-ui/themes";
+import { Code, TextField } from "@radix-ui/themes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
@@ -40,14 +40,11 @@ export default function SearchBar() {
     // console.log(event.target.value);
   };
 
-  const [searching, setSearching] = useState(false);
   const handleSearchText = useCallback(async function handleSearchText(
     searchText,
   ) {
     if (searchText) {
-      setSearching(true);
       const data = await searchAnime(searchText);
-      setSearching(false);
       setSearchData(data);
     } else {
       toast.error("Invalid search query", {
@@ -61,7 +58,7 @@ export default function SearchBar() {
     }
   }, []);
 
-  console.log(searchData);
+  // console.log(searchData);
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -114,14 +111,8 @@ export default function SearchBar() {
 
       {isActive && (
         <div className="absolute mt-2 flex w-full animate-fade-down flex-col justify-center animate-duration-[400ms]">
-          {searching && (
-            <div className="flex flex-col items-center justify-center gap-y-5">
-              <Spinner />
-            </div>
-          )}
-
-          {searchData?.map((x) => (
-            <SearchResults key={x.id} data={x} setIsActive={setIsActive} />
+          {searchData?.data?.map((x) => (
+            <SearchResults key={x.mal_id} data={x} setIsActive={setIsActive} />
           ))}
         </div>
       )}

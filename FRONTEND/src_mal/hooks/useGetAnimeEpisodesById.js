@@ -12,7 +12,7 @@ export default function useGetAnimeEpisodesById(id) {
   } = useQuery({
     queryKey: ["cur_anime_episodes", id],
     queryFn: () => getAnimeEpisodesById(id),
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
     
   });
 

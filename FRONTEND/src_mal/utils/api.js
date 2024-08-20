@@ -1,8 +1,6 @@
 // jikan api
 const BASE_URL_JIKAN = 'https://api.jikan.moe/v4'
 const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
-export const BASE_URL_ANILIST = 'https://graphql.anilist.co'
-const BASE_URL_ANIZIP = "https://api.ani.zip"
 
 export function SEARCH_ANIME(query, limit=10) {
   return `${BASE_URL_JIKAN}/anime?q=${query}&limit=${limit}`
@@ -33,17 +31,7 @@ export function GET_ANIME_DETAILS_BY_ID(id) {
   return `${BASE_URL_JIKAN}/anime/${id}/full`
 }
 
-// https://api.ani.zip/mappings?anilist_id=153406
-export function GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id) {
-  console.log(`${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`);
-  
-  return `${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`
-}
-
 // https://api.jikan.moe/v4/anime/{id}/episodes
 export function GET_ANIME_EPISODES_BY_ID(id) {
   return `${BASE_URL_JIKAN}/anime/${id}/episodes`
 }
-
-/* ----------------------- ANILIST ---------------------- */
-

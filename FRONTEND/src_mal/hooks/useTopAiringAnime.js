@@ -10,7 +10,7 @@ export default function useTopAiringAnime() {
   } = useQuery({
     queryKey: ["top_airing_anime"],
     queryFn: getTopAiringAnime,
-    staleTime: 1000 * 60 * 10, // 10 mins
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   return { isLoading, topAiringAnime, error, status };

@@ -2,24 +2,16 @@ import AnimeCard from "../components/AnimeCard";
 import useTopAiringAnime from "../hooks/useTopAiringAnime";
 import zenshin1 from "../assets/zenshin2.png";
 import zenshinLogo from "../assets/zenshinLogo.png";
+import useGetTopAnime from "../hooks/useGetTopAnime";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getTopAnime } from "../utils/helper";
 import { useEffect, useState } from "react";
+import { set } from "date-fns";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Spinner } from "@radix-ui/themes";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import useGetRecentGlobalActivity from "../hooks/useGetRecentGlobalActivity";
 export default function Home() {
-
-  // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
-  // const {
-  //   isLoading: isLoadingRecentActivity,
-  //   data: recentActivity,
-  //   error: errorRecentActivity,
-  //   status: statusRecentActivity,
-  // } = useGetRecentGlobalActivity();
-
   const { isLoading, topAiringAnime, error, status } = useTopAiringAnime();
   // const { isLoading2, topAnime, error2, status2 } = useGetTopAnime();
   // const { isLoading2, topAnime:topAnimeTS, error2, status2 } = useGetTopAnime();
@@ -36,7 +28,6 @@ export default function Home() {
     getNextPageParam: (lastPage, allPages) => {
       return allPages.length + 1;
     },
-    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   if(infiniteQueryError){
@@ -48,7 +39,6 @@ export default function Home() {
       },
     });
   }
-
 
   // if (error) {
   //   throw new Error(error);
@@ -73,19 +63,17 @@ export default function Home() {
   // console.log(topAnime);
 
   const [topAnime, setTopAnime] = useState([]);
-  console.log(data);
-  
+
   useEffect(() => {
     if (data) {
       const newTopAnime = data.pages
-        .map((page) => page)
+        .map((page) => page.data)
         .flat()
         .filter(Boolean);
       setTopAnime(newTopAnime);
     }
   }, [data]);
 
-  // TOO LAZY TOO MAKE THIS RESPONSIVE
   return (
     <div className="font-space-mono tracking-tight">
       <div className="flex min-h-[94svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row">
@@ -125,8 +113,8 @@ export default function Home() {
             Top Airing Anime
           </div>
           <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
-            {!isLoading && !error &&
-              topAiringAnime?.map((anime) => <AnimeCard key={anime.id + "topAiringAnime"} data={anime} />)}
+            {status === "success" &&
+              topAiringAnime?.data?.map((anime) => <AnimeCard data={anime} />)}
           </div>
         </div>
       )}
@@ -147,7 +135,7 @@ export default function Home() {
             next={() => fetchNextPage()}
             hasMore={topAnime?.length < 500}
             loader={
-              <div className="flex gap-x-2 overflow-hidden justify-center items-center">
+              <div className="flex gap-x-2 justify-center items-center">
                 <h4>Loading...</h4>
                 <Spinner />
               </div>
@@ -155,7 +143,7 @@ export default function Home() {
           >
             <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
               {topAnime?.map((anime) => {
-                return <AnimeCard key={anime.id + "topAnime"} data={anime} />;
+                return <AnimeCard key={anime.mal_id} data={anime} />;
               })}
             </div>
           </InfiniteScroll>

@@ -12,7 +12,7 @@ export default function useGetAnimeById(id) {
   } = useQuery({
     queryKey: ["cur_anime", id],
     queryFn: () => getAnimeById(id),
-    staleTime: 1000 * 60 * 20, // 20 mins
+    staleTime: 0,
   });
 
   return { isLoading, animeData, error, status };
