@@ -33,7 +33,7 @@ app.use(cors());
 /* ------------- CHECK LATEST GITHUB RELEASE ------------ */
 const owner = 'hitarth-gg'; // Replace with the repository owner
 const repo = 'codeforces-explorer-extension';   // Replace with the repository name
-const cuurentVersion = 'v1.0.0'; // Replace with the current version
+const currentVersion = 'v1.0.0'; // Replace with the current version
 
 const getLatestRelease = async () => {
   try {
@@ -45,7 +45,7 @@ const getLatestRelease = async () => {
     
     const data = await response.json();
 
-    if (data.tag_name !== cuurentVersion) {
+    if (data.tag_name !== currentVersion) {
       console.log(chalk.blue('New version available:', data.tag_name));
       console.log('Release notes:', data.body);
       console.log(chalk.yellow('Download URL: https://github.com/hitarth-gg/zenshin/releases'));
