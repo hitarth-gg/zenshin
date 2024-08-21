@@ -19,6 +19,7 @@ export default function StreamStatsEpisode({
   stopEpisodeDownload,
   setCurrentEpisode,
   currentEpisode,
+  handleStreamVlc,
 }) {
   const [details, setDetails] = useState(null);
 
@@ -45,20 +46,19 @@ export default function StreamStatsEpisode({
   }, [episode, magnetURI]);
 
   return (
-    <div className="mb-10 mt-2 flex flex-col gap-y-1 border-b border-gray-700 pb-3 font-space-mono">
+    <div className="mb-10 mt-3 items-center flex flex-col gap-y-1 border-b border-gray-700 pb-3 font-space-mono">
       <div className="text-blue-400">{details?.name}</div>
-      <div className="opacity-45">
-        <div className="flex justify-between">
-          <p>
+      <div className="">
+        <div className="flex justify-center gap-x-20 mt-3">
+          <p className="opacity-45">
             <strong>Size:</strong> {formatBytes(details?.length)}
           </p>
-          <p>
+          <p className="opacity-45">
             <strong>Downloaded:</strong> {formatBytes(details?.downloaded)}
           </p>
-          <p>
+          <p className="opacity-45">
             <strong>Progress:</strong> {(details?.progress * 100)?.toFixed(2)}%
           </p>
-          <p className="">
             <Button
               size="1"
               color="red"
@@ -71,8 +71,17 @@ export default function StreamStatsEpisode({
             >
               Stop downloading the episode
             </Button>
-          </p>
-          <div className="flex gap-x-16 text-sm"></div>
+            <Button
+              size="1"
+              color="orange"
+              variant="soft"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleStreamVlc(episode);
+              }}
+            >
+              Open VLC
+            </Button>
         </div>
       </div>
     </div>

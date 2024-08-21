@@ -6,7 +6,11 @@ import videojs from "video.js";
 import StreamStats from "../components/StreamStats";
 import { Button } from "@radix-ui/themes";
 import { toast } from "sonner";
-import { ExclamationTriangleIcon, LightningBoltIcon, TrashIcon } from "@radix-ui/react-icons";
+import {
+  ExclamationTriangleIcon,
+  LightningBoltIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import EpisodesPlayer from "../components/EpisodesPlayer";
 import StreamStatsEpisode from "../components/StreamStatsEpisode";
 
@@ -58,8 +62,6 @@ export default function Player(query) {
       );
       console.log("magnetURI: " + magnetURI);
 
-        
-
       console.log(response);
       const data = await response.data;
       setFiles(data);
@@ -69,7 +71,8 @@ export default function Player(query) {
         icon: (
           <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />
         ),
-        description: "Backend is not running on your local machine or NO files were found in the torrent",
+        description:
+          "Backend is not running on your local machine or NO files were found in the torrent",
         classNames: {
           title: "text-rose-500",
         },
@@ -134,7 +137,6 @@ export default function Player(query) {
       console.error("Error checking if the backend is running", error);
     }
   };
-
 
   /* ------------------------------------------------------ */
 
@@ -291,15 +293,24 @@ export default function Player(query) {
     <div className="flex items-center justify-center font-space-mono">
       <div className="">
         {videoSrc && (
-          <VideoJS options={videoPlayerOptions} onReady={handlePlayerReady} />
+          <div className="flex justify-center">
+            <VideoJS options={videoPlayerOptions} onReady={handlePlayerReady} />
+          </div>
         )}
 
         {/* We basiically do this to prevent video player re-render */}
         {currentEpisode && (
-          <StreamStatsEpisode magnetURI={magnetURI} episode={currentEpisode} stopEpisodeDownload={stopEpisodeDownload} setCurrentEpisode={setCurrentEpisode} currentEpisode={currentEpisode} />
+          <StreamStatsEpisode
+            magnetURI={magnetURI}
+            episode={currentEpisode}
+            stopEpisodeDownload={stopEpisodeDownload}
+            setCurrentEpisode={setCurrentEpisode}
+            currentEpisode={currentEpisode}
+            handleStreamVlc={handleStreamVlc}
+          />
         )}
 
-        <div className="border p-4 fixed-width bg-[#1d1d20] border-gray-700">
+        <div className="fixed-width border border-gray-700 bg-[#1d1d20] p-4">
           <StreamStats magnetURI={magnetURI} />
 
           <div className="mt-5 flex gap-x-3">
