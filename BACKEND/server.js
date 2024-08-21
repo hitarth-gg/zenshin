@@ -1,13 +1,23 @@
 import express from "express";
 import WebTorrent from "webtorrent";
 import cors from "cors";
-import { SubtitleParser } from "matroska-subtitles"; // Import SubtitleParser from matroska-subtitles
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from 'url';
+
+
+// Get the current directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // const tempDir = path.join(process.env.TEMP || "/tmp", "myapp_subtitles");
 // const webtDir = path.join(process.env.TEMP || "/tmp", "webtorrent");
 // console.log(tempDir);
+const currentDir = path.join(__dirname, "downloads");
+console.log(currentDir);
+if (!fs.existsSync(currentDir)) {
+  fs.mkdirSync(currentDir, { recursive: true });
+}
 
 const app = express();
 const client = new WebTorrent();
@@ -71,7 +81,7 @@ app.get("/metadata/:magnet", async (req, res) => {
   }
   /* ------------------------------------------------------ */
 
-  const torrent = client.add(magnet, { deselect:true });
+  const torrent = client.add(magnet, { deselect:true, path: currentDir});
 
   torrent.on("metadata", () => {
     const files = torrent.files.map((file) => ({

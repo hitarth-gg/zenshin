@@ -65,7 +65,7 @@ export default function StreamStatsEpisode({
               variant="soft"
               onClick={(e) => {
                 e.stopPropagation();
-                stopEpisodeDownload(currentEpisode);
+                stopEpisodeDownload(episode);
                 setCurrentEpisode("");
               }}
             >

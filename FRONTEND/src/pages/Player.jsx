@@ -208,6 +208,8 @@ export default function Player(query) {
   const stopEpisodeDownload = async (episode) => {
     try {
       // Send a DELETE request to remove the torrent
+      console.log(`http://localhost:8000/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`);
+      
       await axios.get(
         `http://localhost:8000/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
       );
@@ -255,6 +257,7 @@ export default function Player(query) {
 
       // Clear the video and subtitle sources
       setVideoSrc("");
+      setCurrentEpisode("");
       setSubtitleSrc("");
       setFiles([]);
 
