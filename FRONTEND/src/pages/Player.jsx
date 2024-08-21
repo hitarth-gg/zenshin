@@ -1,12 +1,12 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import VideoJS from "./VideoJs";
 import videojs from "video.js";
 import StreamStats from "../components/StreamStats";
 import { Button } from "@radix-ui/themes";
 import { toast } from "sonner";
-import { ExclamationTriangleIcon, TrashIcon } from "@radix-ui/react-icons";
+import { ExclamationTriangleIcon, LightningBoltIcon, TrashIcon } from "@radix-ui/react-icons";
 import EpisodesPlayer from "../components/EpisodesPlayer";
 import StreamStatsEpisode from "../components/StreamStatsEpisode";
 
@@ -58,25 +58,23 @@ export default function Player(query) {
       );
       console.log("magnetURI: " + magnetURI);
 
-      if (!response.data) {
-        toast.error("No files found in the torrent", {
-          icon: (
-            <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />
-          ),
-          description: "No files found in the torrent",
-          classNames: {
-            title: "text-rose-500",
-          },
-        });
-
-        return;
-      }
+        
 
       console.log(response);
       const data = await response.data;
       setFiles(data);
       console.log("files: " + data);
     } catch (error) {
+      toast.error("Backend is not running on your local machine", {
+        icon: (
+          <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />
+        ),
+        description: "Backend is not running on your local machine or NO files were found in the torrent",
+        classNames: {
+          title: "text-rose-500",
+        },
+      });
+
       console.error("Error getting torrent details", error);
     }
   };
@@ -107,6 +105,36 @@ export default function Player(query) {
       });
     }
   };
+
+  const checkBackendRunning = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/ping");
+      console.log(response);
+
+      if (response.status === 200) {
+        toast.success("Backend is running", {
+          icon: <LightningBoltIcon height="16" width="16" color="#ffffff" />,
+          description: "Backend is running on your local machine",
+          classNames: {
+            title: "text-green-500",
+          },
+        });
+      }
+    } catch (error) {
+      toast.error("Backend is not running", {
+        icon: (
+          <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />
+        ),
+        description: "Backend is not running on your local machine",
+        classNames: {
+          title: "text-rose-500",
+        },
+      });
+
+      console.error("Error checking if the backend is running", error);
+    }
+  };
+
 
   /* ------------------------------------------------------ */
 
@@ -291,6 +319,14 @@ export default function Player(query) {
               onClick={handleRemoveTorrent}
             >
               Stop and Remove Anime
+            </Button>
+            <Button
+              size="1"
+              color="green"
+              variant="soft"
+              onClick={checkBackendRunning}
+            >
+              Ping Backend
             </Button>
           </div>
         </div>

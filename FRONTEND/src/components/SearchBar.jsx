@@ -1,8 +1,7 @@
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Code, Skeleton, Spinner, TextField } from "@radix-ui/themes";
+import { Code, Spinner, TextField } from "@radix-ui/themes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { useNavigate, useParams } from "react-router-dom";
 import SearchResults from "./SearchResults";
 import { searchAnime } from "../utils/helper";
 
@@ -13,8 +12,6 @@ export default function SearchBar() {
 
   const inputRef = useRef(null);
   const searchBarRef = useRef(null);
-
-  const navigate = useNavigate();
 
   console.log(searchText);
 

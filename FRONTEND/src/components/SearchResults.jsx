@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { SEARCH_TORRENT } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 
 export default function SearchResults({ data, setIsActive }) {

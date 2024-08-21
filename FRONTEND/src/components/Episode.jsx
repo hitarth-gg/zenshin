@@ -1,12 +1,9 @@
 import { format } from "date-fns";
-import { SEARCH_TORRENT } from "../utils/api";
 import useNyaaTracker from "../hooks/useNyaaTracker";
-import { getAniZipMappings, searchTorrent } from "../utils/helper";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@radix-ui/themes";
-import { GlobeIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 export default function Episode({
   data,

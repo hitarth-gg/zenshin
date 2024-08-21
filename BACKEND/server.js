@@ -328,6 +328,11 @@ app.delete("/remove/:magnet", async (req, res) => {
   });
 });
 
+// ping backend
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
+
 // app.get("/subtitles/:magnet", (req, res) => {
 //   let magnet = req.params.magnet;
 

@@ -1,15 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 import useGetAnimeById from "../hooks/useGetAnimeById";
 import { format } from "date-fns";
-import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import CenteredLoader from "../ui/CenteredLoader";
-import useGetAnimeEpisodesById from "../hooks/useGetAnimeEpisodesById";
 import Episode from "../components/Episode";
-import { Button, Skeleton } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { getAniZipMappings } from "../utils/helper";
 import useGetAniZipMappings from "../hooks/useGetAniZipMappings";
 import useGetAnimeByMalId from "../hooks/useGetAnimeByMalId";
 

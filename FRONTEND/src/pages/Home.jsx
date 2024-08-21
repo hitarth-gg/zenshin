@@ -9,7 +9,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Spinner } from "@radix-ui/themes";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import useGetRecentGlobalActivity from "../hooks/useGetRecentGlobalActivity";
 export default function Home() {
 
   // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
