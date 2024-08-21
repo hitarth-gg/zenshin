@@ -102,7 +102,7 @@ export default function Home() {
             <span className="text-cyan-300">React</span>,{" "}
             <span className="text-orange-300">TanStack Query</span>, Radix UI,
             ExpressJS, Tailwind CSS,{" "}
-            <span className="text-red-500">WebTorrent</span>, Video.js, and
+            <span className="text-red-500">WebTorrent</span>, Video.js and
             more.
           </p>
         </div>
