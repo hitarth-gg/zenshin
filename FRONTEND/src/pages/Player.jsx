@@ -215,6 +215,7 @@ export default function Player(query) {
       );
 
       // Clear the video and subtitle sources
+      setCurrentEpisode("");
       setVideoSrc("");
       setSubtitleSrc("");
 
