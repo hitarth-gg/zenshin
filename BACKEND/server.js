@@ -32,7 +32,7 @@ app.use(cors());
 
 /* ------------- CHECK LATEST GITHUB RELEASE ------------ */
 const owner = 'hitarth-gg'; // Replace with the repository owner
-const repo = 'codeforces-explorer-extension';   // Replace with the repository name
+const repo = 'zenshin';   // Replace with the repository name
 const currentVersion = 'v1.0.0'; // Replace with the current version
 
 const getLatestRelease = async () => {
