@@ -4,6 +4,7 @@ import cors from "cors";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from 'url';
+import chalk from 'chalk';
 
 
 // Get the current directory
@@ -28,6 +29,35 @@ app.use(cors());
 // if (!fs.existsSync(tempDir)) {
 //   fs.mkdirSync(tempDir, { recursive: true });
 // }
+
+/* ------------- CHECK LATEST GITHUB RELEASE ------------ */
+const owner = 'hitarth-gg'; // Replace with the repository owner
+const repo = 'codeforces-explorer-extension';   // Replace with the repository name
+const cuurentVersion = 'v1.0.0'; // Replace with the current version
+
+const getLatestRelease = async () => {
+  try {
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+
+    if (data.tag_name !== cuurentVersion) {
+      console.log(chalk.blue('New version available:', data.tag_name));
+      console.log('Release notes:', data.body);
+      console.log(chalk.yellow('Download URL: https://github.com/hitarth-gg/zenshin/releases'));
+    }
+  } catch (error) {
+    console.error('Error fetching latest release:', error);
+  }
+};
+getLatestRelease();
+/* ------------------------------------------------------ */
+
+
 
 app.get("/add/:magnet", async (req, res) => {
   let magnet = req.params.magnet;
@@ -297,6 +327,7 @@ app.get("/details/:magnet", async (req, res) => {
 
 /* --------------- Handling VLC streaming --------------- */
 import { exec } from "child_process";
+import { get } from "http";
 // Full path to VLC executable, change it as needed
 const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"'; // Adjust this path as needed
 
