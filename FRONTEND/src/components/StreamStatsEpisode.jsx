@@ -20,6 +20,7 @@ export default function StreamStatsEpisode({
   setCurrentEpisode,
   currentEpisode,
   handleStreamVlc,
+  setVideoSrc,
 }) {
   const [details, setDetails] = useState(null);
 
@@ -65,8 +66,8 @@ export default function StreamStatsEpisode({
               variant="soft"
               onClick={(e) => {
                 e.stopPropagation();
-                stopEpisodeDownload(episode);
                 setCurrentEpisode("");
+                stopEpisodeDownload(episode);
               }}
             >
               Stop downloading the episode

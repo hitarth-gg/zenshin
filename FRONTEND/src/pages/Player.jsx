@@ -160,6 +160,7 @@ export default function Player(query) {
   };
   const playerRef = useRef(null);
   const [isActive, setIsActive] = useState(false);
+  const [currentEpisode, setCurrentEpisode] = useState("");
 
   const handlePlayerReady = (player) => {
     playerRef.current = player;
@@ -186,6 +187,11 @@ export default function Player(query) {
   const handleStreamVlc = async (episode) => {
     try {
       // Send a request to the server to open VLC with the video stream URL
+      await axios.get(
+        `http://localhost:8000/stream-to-vlc?url=${encodeURIComponent(
+          `http://localhost:8000/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
+        )}`,
+      );
       await axios.get(
         `http://localhost:8000/stream-to-vlc?url=${encodeURIComponent(
           `http://localhost:8000/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
@@ -292,7 +298,6 @@ export default function Player(query) {
     }
   };
 
-  const [currentEpisode, setCurrentEpisode] = useState("");
 
   return (
     <div className="flex items-center justify-center font-space-mono">
@@ -312,6 +317,7 @@ export default function Player(query) {
             setCurrentEpisode={setCurrentEpisode}
             currentEpisode={currentEpisode}
             handleStreamVlc={handleStreamVlc}
+            setVideoSrc={setVideoSrc}
           />
         )}
 
