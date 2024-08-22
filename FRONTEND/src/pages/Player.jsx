@@ -192,11 +192,6 @@ export default function Player(query) {
           `http://localhost:8000/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
         )}`,
       );
-      await axios.get(
-        `http://localhost:8000/stream-to-vlc?url=${encodeURIComponent(
-          `http://localhost:8000/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
-        )}`,
-      );
     } catch (error) {
       console.error("Error streaming to VLC", error);
       toast.error("Error streaming to VLC", {
