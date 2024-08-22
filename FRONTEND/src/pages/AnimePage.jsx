@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import useGetAniZipMappings from "../hooks/useGetAniZipMappings";
 import useGetAnimeByMalId from "../hooks/useGetAnimeByMalId";
+import { autop } from "@wordpress/autop";
+import ReactHtmlParser from "react-html-parser";
 
 export default function AnimePage() {
   const animeId = useParams().animeId;
@@ -74,7 +76,7 @@ export default function AnimePage() {
 
   if (isLoading) return <CenteredLoader />;
 
-  if(errorMappings || errorMalId) {
+  if (errorMappings || errorMalId) {
     toast.error("Error fetching Anime", {
       icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
       description: `Couldn't fetch anime: ${errorMappings?.message || errorMalId?.message}`,
@@ -172,12 +174,16 @@ export default function AnimePage() {
               <p className="opacity-60">{data?.season}</p>
             </div>
             <div className="my-3 h-[1px] w-1/2 bg-[#333]"></div> {/* Divider */}
-            <div className="animate-fade">
-              <p className="font-space-mono text-sm tracking-wide opacity-55">
-                {malIdData?.data?.synopsis ||
-                  data?.description ||
-                  "No description"}
-              </p>
+            <div className="animate-fade animate-duration-1000">
+              <div className="flex flex-col gap-y-2 font-space-mono text-sm opacity-55">
+                {ReactHtmlParser(
+                  autop(
+                    malIdData?.data?.synopsis ||
+                      data?.description ||
+                      "No description",
+                  ),
+                )}
+              </div>
             </div>
             <div className="mt-6 flex gap-x-5">
               <Link target="_blank" to={data?.siteUrl}>
