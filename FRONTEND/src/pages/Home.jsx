@@ -129,7 +129,7 @@ export default function Home() {
 
       {status === "success" && !error && (
         <div className="mx-5 mt-8">
-          <div className="mb-2 ml-8 border-b border-gray-700 pb-1 font-space-mono font-bold">
+          <div className="mb-2 ml-8 tracking-wider text-lg border-b border-gray-700 pb-1 font-space-mono font-bold">
             Top Airing Anime
           </div>
           <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
@@ -149,8 +149,8 @@ export default function Home() {
       )}
 
       {!infiniteQueryError && topAnime.length > 0 && (
-        <div className="mx-5">
-          <div className="ml-8 mb-2 border-b border-gray-700 pb-1 font-space-mono font-bold">
+        <div className="mx-5 mt-12">
+          <div className="ml-8 tracking-wider mb-2 text-lg border-b border-gray-700 pb-1 font-space-mono font-bold">
             Top Anime
           </div>
           <InfiniteScroll

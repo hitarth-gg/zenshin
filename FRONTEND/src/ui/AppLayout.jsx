@@ -48,11 +48,11 @@ export default function AppLayout({ props }) {
           },
         }}
       />
-      <div className="layout flex flex-col font-inter">
-        {isLoading && <Loader />}
-        <Header />
-        <main className="">{props || <Outlet />}</main>
-      </div>
+        <div className="layout flex flex-col font-inter">
+          {isLoading && <Loader />}
+          <Header />
+          <main className="">{props || <Outlet />}</main>
+        </div>
     </Theme>
   );
 }

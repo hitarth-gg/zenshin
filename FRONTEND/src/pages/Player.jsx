@@ -179,6 +179,7 @@ export default function Player(query) {
   const handleStreamBrowser = (eipsode) => {
     setVideoSrc(
       `http://localhost:8000/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(eipsode)}`,
+
     );
   };
 

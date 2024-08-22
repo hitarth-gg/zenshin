@@ -88,7 +88,7 @@ export async function searchAnime(text, limit = 10) {
 export async function getTopAiringAnime() {
   const query = `
     query {
-      Page(perPage: 30, page: 1) {
+      Page(perPage: 35, page: 1) {
         media(type: ANIME, sort: TRENDING_DESC, status: RELEASING, isAdult: false) {
           id
           idMal
