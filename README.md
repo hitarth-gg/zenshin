@@ -17,6 +17,8 @@ Built it as a mini project to familiarize myself with video streaming using Expr
 
 ---
 
+Note: The video player in the browser currently does not support subtitle rendering as extracting embedded subtitles from an mkv file is quite tricky and is way out of my league. To play the video with subtitles open it in VLC by clicking on the `Open VLC` button when playing an episode.
+
 ### VLC Media Player Support
 Define the path to vlc.exe in BACKEND/server.js : 
 
