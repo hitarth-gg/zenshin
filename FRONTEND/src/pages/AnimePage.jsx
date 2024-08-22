@@ -10,7 +10,7 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import useGetAniZipMappings from "../hooks/useGetAniZipMappings";
 import useGetAnimeByMalId from "../hooks/useGetAnimeByMalId";
 import { autop } from "@wordpress/autop";
-import ReactHtmlParser from "react-html-parser";
+import parse from "html-react-parser";
 
 export default function AnimePage() {
   const animeId = useParams().animeId;
@@ -176,7 +176,7 @@ export default function AnimePage() {
             <div className="my-3 h-[1px] w-1/2 bg-[#333]"></div> {/* Divider */}
             <div className="animate-fade animate-duration-1000">
               <div className="flex flex-col gap-y-2 font-space-mono text-sm opacity-55">
-                {ReactHtmlParser(
+                {parse(
                   autop(
                     malIdData?.data?.synopsis ||
                       data?.description ||
