@@ -1,4 +1,3 @@
-// jikan api
 const BASE_URL_JIKAN = 'https://api.jikan.moe/v4'
 const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
 export const BASE_URL_ANILIST = 'https://graphql.anilist.co'

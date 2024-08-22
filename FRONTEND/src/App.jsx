@@ -7,6 +7,11 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import AnimePage from "./pages/AnimePage";
 import Player from "./pages/Player";
 
+// import { lazy } from "react";
+
+// const AnimePage = lazy(() => import("./pages/AnimePage"));
+// const Player = lazy(() => import("./pages/Player"));
+
 const router = createBrowserRouter(
   [
     {

@@ -9,8 +9,9 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Spinner } from "@radix-ui/themes";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-export default function Home() {
+import loundraw from "../assets/loundraw.jpg";
 
+export default function Home() {
   // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
   // const {
   //   isLoading: isLoadingRecentActivity,
@@ -38,7 +39,7 @@ export default function Home() {
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
-  if(infiniteQueryError){
+  if (infiniteQueryError) {
     toast.error("Error fetching Top Animes", {
       icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
       description: infiniteQueryError?.message,
@@ -47,7 +48,6 @@ export default function Home() {
       },
     });
   }
-
 
   // if (error) {
   //   throw new Error(error);
@@ -73,7 +73,7 @@ export default function Home() {
 
   const [topAnime, setTopAnime] = useState([]);
   console.log(data);
-  
+
   useEffect(() => {
     if (data) {
       const newTopAnime = data.pages
@@ -87,28 +87,37 @@ export default function Home() {
   // TOO LAZY TOO MAKE THIS RESPONSIVE
   return (
     <div className="font-space-mono tracking-tight">
-      <div className="flex min-h-[94svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row">
-        <div className="flex h-full w-2/5 flex-col items-center justify-start gap-y-10 p-3">
+      {/* <div className="to-purple-800-500 absolute left-40 top-[10rem] h-96 w-96 rounded-full bg-gradient-to-r from-blue-400 via-purple-500 opacity-20 blur-[100px]"></div> */}
+
+      <div
+        className="flex min-h-[94svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
+        style={{
+          backgroundImage: `url(${loundraw})`,
+          backgroundSize: "cover",
+        }}
+      >
+        <div className="flex h-full w-8/12 flex-col items-center justify-start gap-y-10 p-3 lg:w-2/5">
           <img
             src={zenshinLogo}
             alt=""
-            className="h-[6rem] object-scale-down"
+            className="h-[6rem] object-scale-down drop-shadow-xl"
           />
           <p className="font-space-mono">
             Stream your favourite torrents instantly with our service, no
             waiting for downloads, reliable and seamless streaming directly to
-            your browser / VLC Media Player. <br /> Built with{" "}
+            your browser / VLC Media Player. 
+            {/* <br /> Built with{" "}
             <span className="text-cyan-300">React</span>,{" "}
             <span className="text-orange-300">TanStack Query</span>, Radix UI,
             ExpressJS, Tailwind CSS,{" "}
-            <span className="text-red-500">WebTorrent</span>, Video.js and
-            more.
+            <span className="text-red-500">WebTorrent</span>, Video.js and more. */}
           </p>
         </div>
+
         <img
           src={zenshin1}
           alt="zenshin"
-          className="h-48 object-scale-down sm:h-64 md:h-80 lg:h-96"
+          className="h-48 object-scale-down drop-shadow-lg sm:h-64 md:h-80 lg:h-96"
         />
       </div>
 
@@ -119,13 +128,16 @@ export default function Home() {
       )}
 
       {status === "success" && !error && (
-        <div className="mx-5">
-          <div className="ml-8 border-b border-gray-700 pb-1 font-space-mono font-bold">
+        <div className="mx-5 mt-8">
+          <div className="mb-2 ml-8 border-b border-gray-700 pb-1 font-space-mono font-bold">
             Top Airing Anime
           </div>
           <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
-            {!isLoading && !error &&
-              topAiringAnime?.map((anime) => <AnimeCard key={anime.id + "topAiringAnime"} data={anime} />)}
+            {!isLoading &&
+              !error &&
+              topAiringAnime?.map((anime) => (
+                <AnimeCard key={anime.id + "topAiringAnime"} data={anime} />
+              ))}
           </div>
         </div>
       )}
@@ -138,7 +150,7 @@ export default function Home() {
 
       {!infiniteQueryError && topAnime.length > 0 && (
         <div className="mx-5">
-          <div className="ml-8 border-b border-gray-700 pb-1 font-space-mono font-bold">
+          <div className="ml-8 mb-2 border-b border-gray-700 pb-1 font-space-mono font-bold">
             Top Anime
           </div>
           <InfiniteScroll
@@ -146,7 +158,7 @@ export default function Home() {
             next={() => fetchNextPage()}
             hasMore={topAnime?.length < 500}
             loader={
-              <div className="flex gap-x-2 overflow-hidden justify-center items-center">
+              <div className="flex items-center justify-center gap-x-2 overflow-hidden">
                 <h4>Loading...</h4>
                 <Spinner />
               </div>
