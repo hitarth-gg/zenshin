@@ -3,9 +3,8 @@ import WebTorrent from "webtorrent";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from 'url';
-import chalk from 'chalk';
-
+import { fileURLToPath } from "url";
+import chalk from "chalk";
 
 // Get the current directory
 const __filename = fileURLToPath(import.meta.url);
@@ -30,34 +29,38 @@ app.use(cors());
 //   fs.mkdirSync(tempDir, { recursive: true });
 // }
 
-
 /* ------------- CHECK LATEST GITHUB RELEASE ------------ */
-const owner = 'hitarth-gg'; // Replace with the repository owner
-const repo = 'zenshin';   // Replace with the repository name
-const currentVersion = 'v1.0.0'; // Replace with the current version
+const owner = "hitarth-gg"; // Replace with the repository owner
+const repo = "zenshin"; // Replace with the repository name
+const currentVersion = "v1.0.0"; // Replace with the current version
 
 const getLatestRelease = async () => {
   try {
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`);
-    
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/releases/latest`
+    );
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
 
     if (data.tag_name !== currentVersion) {
-      console.log(chalk.blue('New version available:', data.tag_name));
-      console.log('Release notes:', data.body);
-      console.log(chalk.yellow('Download URL: https://github.com/hitarth-gg/zenshin/releases'));
+      console.log(chalk.blue("New version available:", data.tag_name));
+      console.log("Release notes:", data.body);
+      console.log(
+        chalk.yellow(
+          "Download URL: https://github.com/hitarth-gg/zenshin/releases"
+        )
+      );
     }
   } catch (error) {
-    console.error('Error fetching latest release:', error);
+    console.error("Error fetching latest release:", error);
   }
 };
 getLatestRelease();
 /* ------------------------------------------------------ */
-
 
 /* ----------------- SEED EXISTING FILES ---------------- */
 // Seed all existing files on server startup
@@ -70,13 +73,18 @@ const seedExistingFiles = () => {
 
     files.forEach((file) => {
       const filePath = path.join(downloadsDir, file);
-      
+
       if (fs.lstatSync(filePath).isFile()) {
         client.seed(filePath, { path: downloadsDir }, (torrent) => {
           // console.log(`Seeding file: ${filePath}`);
           // console.log(`Magnet URI: ${torrent.magnetURI}`);
-            console.log(chalk.bgBlue("Seeding started: "), chalk.cyan(torrent.name));
-
+          console.log(
+            chalk.bgBlue("Seeding started: "),
+            chalk.cyan(torrent.name)
+          );
+          torrent.on("error", (err) => {
+            console.error(chalk.bgRed("Error seeding file:"), err);
+          });
         });
       }
     });
@@ -86,7 +94,6 @@ const seedExistingFiles = () => {
 // Call the function to start seeding existing files
 seedExistingFiles();
 /* ------------------------------------------------------ */
-
 
 app.get("/add/:magnet", async (req, res) => {
   let magnet = req.params.magnet;
@@ -140,7 +147,7 @@ app.get("/metadata/:magnet", async (req, res) => {
   }
   /* ------------------------------------------------------ */
 
-  const torrent = client.add(magnet, { deselect:true, path: downloadsDir});
+  const torrent = client.add(magnet, { deselect: true, path: downloadsDir });
 
   torrent.on("metadata", () => {
     const files = torrent.files.map((file) => ({
@@ -148,7 +155,7 @@ app.get("/metadata/:magnet", async (req, res) => {
       length: file.length,
     }));
     console.log(files);
-    
+
     res.status(200).json(files);
   });
 });
@@ -156,7 +163,7 @@ app.get("/metadata/:magnet", async (req, res) => {
 app.get("/streamfile/:magnet/:filename", async function (req, res, next) {
   let magnet = req.params.magnet;
   let filename = req.params.filename;
-  
+
   console.log(magnet);
 
   let tor = await client.get(magnet);
@@ -172,12 +179,11 @@ app.get("/streamfile/:magnet/:filename", async function (req, res, next) {
     return res.status(404).send("No file found in the torrent");
   }
   console.log(file);
-  
 
   file.select();
 
   let range = req.headers.range;
-  
+
   console.log("Range : " + range);
 
   if (!range) {
@@ -218,7 +224,6 @@ app.get("/streamfile/:magnet/:filename", async function (req, res, next) {
   stream.on("close", () => {
     console.log("Stream closed prematurely");
   });
-  
 });
 
 // Deselect an episode with the given filename
@@ -233,9 +238,12 @@ app.get("/deselect/:magnet/:filename", async (req, res) => {
   }
 
   let file = tor.files.find((f) => f.name === filename);
+
   if (!file) {
     return res.status(404).send("No file found in the torrent");
   }
+
+  console.log(chalk.bgRed(file.toString()));
 
   file.deselect();
 
