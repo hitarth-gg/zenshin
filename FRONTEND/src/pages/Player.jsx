@@ -207,7 +207,7 @@ export default function Player(query) {
     }
   };
 
-  const stopEpisodeDownload = async (episode) => {
+  const stopEpisodeDownload2 = async (episode) => {
     try {
       // Send a DELETE request to remove the torrent
       console.log(`http://localhost:8000/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`);
@@ -249,6 +249,12 @@ export default function Player(query) {
       });
     }
   };
+
+  // for some reason, calling this function twice works, WebTorrent's file.deselect() is known to be buggy
+  const stopEpisodeDownload = async (episode) => {
+    await stopEpisodeDownload2(episode);
+    await stopEpisodeDownload2(episode);
+  }
 
   /* ------------------------------------------------------ */
   const handleRemoveTorrent = async () => {
