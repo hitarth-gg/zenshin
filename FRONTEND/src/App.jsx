@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import AnimePage from "./pages/AnimePage";
 import Player from "./pages/Player";
+import NewReleases from "./pages/NewReleases";
 
 // import { lazy } from "react";
 
@@ -32,6 +33,11 @@ const router = createBrowserRouter(
           path: "/player/:magnetId",
           element: <Player />,
           errorElement: <ErrorPage />,
+        },
+        {
+          path: "/newreleases",
+          element: <NewReleases />,
+          errorElement: <ErrorPage />,
         }
         
       ],
@@ -57,7 +63,7 @@ const queryClient = new QueryClient({
 
   return (
     <QueryClientProvider client={queryClient}>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
         <RouterProvider router={router} />
       </QueryClientProvider>
   );

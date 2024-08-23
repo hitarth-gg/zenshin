@@ -10,7 +10,10 @@ export default function useGetAniZipMappings(id) {
     status,
   } = useQuery({
     queryKey: ["cur_anime_anizip", id],
-    queryFn: () => getAniZipMappings(id),
+    queryFn: () => {
+      if (id) return getAniZipMappings(id);
+      return null;
+    },
     staleTime: 1000 * 60 * 20, // 20 mins
   });
 

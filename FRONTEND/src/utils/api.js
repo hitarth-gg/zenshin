@@ -2,6 +2,8 @@ const BASE_URL_JIKAN = 'https://api.jikan.moe/v4'
 const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
 export const BASE_URL_ANILIST = 'https://graphql.anilist.co'
 const BASE_URL_ANIZIP = "https://api.ani.zip"
+const TOSHO = "https://feed.animetosho.org"
+
 
 export function SEARCH_ANIME(query, limit=10) {
   return `${BASE_URL_JIKAN}/anime?q=${query}&limit=${limit}`
@@ -44,5 +46,8 @@ export function GET_ANIME_EPISODES_BY_ID(id) {
   return `${BASE_URL_JIKAN}/anime/${id}/episodes`
 }
 
-/* ----------------------- ANILIST ---------------------- */
 
+// https://feed.animetosho.org/rss2?qx=1&q="[SubsPlease]"
+export function GET_TOSHO_RSS(packer = "[SubsPlease]") {
+  return `${TOSHO}/rss2?qx=1&q=${packer}`
+}

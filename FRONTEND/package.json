@@ -24,6 +24,7 @@
     "@wordpress/autop": "^4.6.0",
     "axios": "^1.7.4",
     "date-fns": "^3.6.0",
+    "events": "^3.3.0",
     "html-react-parser": "^5.1.12",
     "ldrs": "^1.0.2",
     "react": "^18.3.1",
@@ -32,7 +33,8 @@
     "react-router-dom": "^6.25.0",
     "react-spinners": "^0.14.1",
     "sonner": "^1.5.0",
-    "tailwindcss-animated": "^1.1.2"
+    "tailwindcss-animated": "^1.1.2",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

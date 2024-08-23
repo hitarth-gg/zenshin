@@ -3,11 +3,13 @@ import {
   GET_ANIME_DETAILS_BY_ID,
   GET_ANIME_EPISODES_BY_ID,
   GET_ANIME_MAPPING_BY_ANILIST_ID,
+  GET_TOSHO_RSS,
   SEARCH_ANIME,
   SEARCH_TORRENT,
   TOP_AIRING_ANIME,
   TOP_ANIME,
 } from "./api";
+import { parseStringPromise } from 'xml2js';
 
 // export async function searchAnime(text, limit = 10) {
 //   try {
@@ -83,6 +85,76 @@ export async function searchAnime(text, limit = 10) {
     throw new Error(error.message || error);
   }
 }
+
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export async function searchAiringAnime(text, limit = 2) {
+  console.log("Searching for airing anime with text:", text);
+  await delay(1300);  // Adjust the delay as needed
+
+  try {
+    const query = `
+      query ($search: String, $limit: Int) {
+        Page(perPage: $limit) {
+          media(search: $search, type: ANIME, status: RELEASING) {
+            id
+            format
+            status
+            episodes
+            startDate {
+              year
+              month
+              day
+            }
+            title {
+              romaji
+              english
+              native
+            }
+            description
+            coverImage {
+              extraLarge
+              large
+              medium
+            }
+            genres
+          }
+        }
+      }
+    `;
+
+    const variables = {
+      search: text,
+      limit: limit,
+    };
+
+    const response = await fetch(BASE_URL_ANILIST, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: variables,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.errors?.[0]?.message || "Failed to fetch anime data",
+      );
+    }
+
+    return data.data.Page.media;
+  } catch (error) {
+    throw new Error(error.message || error);
+  }
+}
+
 
 /* ------------------------------------------------------ */
 export async function getTopAiringAnime() {
@@ -496,3 +568,20 @@ export async function getRecentActivity() {
   }
 }
 
+// getNewReleases(default"[SubsPlease]")
+export async function getNewReleases() {
+  try {
+    const response = await fetch(GET_TOSHO_RSS());
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const xml = await response.text();
+    const data = await parseStringPromise(xml, { mergeAttrs: true });
+    return data.rss.channel[0].item;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+}
