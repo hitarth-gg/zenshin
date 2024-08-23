@@ -14,10 +14,10 @@ const __dirname = path.dirname(__filename);
 // const tempDir = path.join(process.env.TEMP || "/tmp", "myapp_subtitles");
 // const webtDir = path.join(process.env.TEMP || "/tmp", "webtorrent");
 // console.log(tempDir);
-const currentDir = path.join(__dirname, "downloads");
-console.log(currentDir);
-if (!fs.existsSync(currentDir)) {
-  fs.mkdirSync(currentDir, { recursive: true });
+const downloadsDir = path.join(__dirname, "downloads");
+console.log(downloadsDir);
+if (!fs.existsSync(downloadsDir)) {
+  fs.mkdirSync(downloadsDir, { recursive: true });
 }
 
 const app = express();
@@ -29,6 +29,7 @@ app.use(cors());
 // if (!fs.existsSync(tempDir)) {
 //   fs.mkdirSync(tempDir, { recursive: true });
 // }
+
 
 /* ------------- CHECK LATEST GITHUB RELEASE ------------ */
 const owner = 'hitarth-gg'; // Replace with the repository owner
@@ -57,6 +58,34 @@ const getLatestRelease = async () => {
 getLatestRelease();
 /* ------------------------------------------------------ */
 
+
+/* ----------------- SEED EXISTING FILES ---------------- */
+// Seed all existing files on server startup
+const seedExistingFiles = () => {
+  fs.readdir(downloadsDir, (err, files) => {
+    if (err) {
+      console.error("Error reading downloads directory:", err);
+      return;
+    }
+
+    files.forEach((file) => {
+      const filePath = path.join(downloadsDir, file);
+      
+      if (fs.lstatSync(filePath).isFile()) {
+        client.seed(filePath, { path: downloadsDir }, (torrent) => {
+          // console.log(`Seeding file: ${filePath}`);
+          // console.log(`Magnet URI: ${torrent.magnetURI}`);
+            console.log(chalk.bgBlue("Seeding started: "), chalk.cyan(torrent.name));
+
+        });
+      }
+    });
+  });
+};
+
+// Call the function to start seeding existing files
+seedExistingFiles();
+/* ------------------------------------------------------ */
 
 
 app.get("/add/:magnet", async (req, res) => {
@@ -111,7 +140,7 @@ app.get("/metadata/:magnet", async (req, res) => {
   }
   /* ------------------------------------------------------ */
 
-  const torrent = client.add(magnet, { deselect:true, path: currentDir});
+  const torrent = client.add(magnet, { deselect:true, path: downloadsDir});
 
   torrent.on("metadata", () => {
     const files = torrent.files.map((file) => ({
