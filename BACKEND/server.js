@@ -243,7 +243,7 @@ app.get("/deselect/:magnet/:filename", async (req, res) => {
     return res.status(404).send("No file found in the torrent");
   }
 
-  console.log(chalk.bgRed(file.toString()));
+  console.log(chalk.bgRed("Download Stopped:") + " " + chalk.cyan(file.name));
 
   file.deselect();
 
