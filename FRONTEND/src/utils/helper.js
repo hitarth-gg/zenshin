@@ -128,6 +128,7 @@ export async function searchAiringAnime(text, limit = 2) {
       search: text,
       limit: limit,
     };
+    // throw new Error("Too many requests to the API. You are being rate-limited. Please come back after a minute.");
 
     const response = await fetch(BASE_URL_ANILIST, {
       method: "POST",
@@ -151,6 +152,8 @@ export async function searchAiringAnime(text, limit = 2) {
 
     return data.data.Page.media;
   } catch (error) {
+    if(error.message.includes("Failed to fetch"))
+      throw new Error("Too many requests to the API. You are being rate-limited. Please come back after a minute.");
     throw new Error(error.message || error);
   }
 }
@@ -200,7 +203,7 @@ export async function getTopAiringAnime() {
 
     if (response.status === 429) {
       throw new Error(
-        "Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.",
+        "Too many requests to the API. You are being rate-limited. Please come back after a minute.",
       );
     } else if (!response.ok) {
       const errorData = await response.json();

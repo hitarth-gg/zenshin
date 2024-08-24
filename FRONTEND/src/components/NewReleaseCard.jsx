@@ -43,7 +43,7 @@ function timeAgo(dateString) {
   return result;
 }
 
-export default function NewReleaseCard({ data }) {
+export default function NewReleaseCard({ data, cardErrorShown, setCardErrorShown }) {
   const navigate = useNavigate();
   const magnet = magnetRegex(data?.description[0]) || "";
 
@@ -64,7 +64,6 @@ export default function NewReleaseCard({ data }) {
   );
 
   const [anilistId, setAnilistId] = useState(null);
-
   useEffect(() => {
     async function fetchAnilistId() {
       try {
@@ -73,17 +72,20 @@ export default function NewReleaseCard({ data }) {
         setAnilistData(data[0]);
         setAnilistId(data[0]?.id);
       } catch (error) {
-        toast.error("Error fetching Anilist ID", {
-          description: error?.message,
-          classNames: {
-            title: "text-rose-500",
-          },
-        });
+        setCardErrorShown(true); // Set the flag to true to prevent duplicate toasts
+        if (cardErrorShown === false) {
+          toast.error("Error fetching Anilist ID", {
+            description: error?.message,
+            classNames: {
+              title: "text-rose-500",
+            },
+          });
+        }
         return;
       }
     }
     fetchAnilistId();
-  }, [title]);
+  }, [cardErrorShown, setCardErrorShown, title]);
 
   const {
     isLoading: isLoadingMappings,

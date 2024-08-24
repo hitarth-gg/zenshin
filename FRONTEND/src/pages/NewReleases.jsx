@@ -8,6 +8,7 @@ export default function NewReleases() {
   const { isLoading, data, error, status } = useGetNewReleases(packer);
   const [newReleases, setNewReleases] = useState([]);
   const [displayedReleases, setDisplayedReleases] = useState([]);
+  const [cardErrorShown, setCardErrorShown] = useState(false); // Track whether error toast was shown
 
   useEffect(() => {
     if (data) {
@@ -64,7 +65,7 @@ export default function NewReleases() {
       </div>
       <div className="grid animate-fade grid-cols-4">
         {displayedReleases.map((release) => (
-          <NewReleaseCard key={release.title} data={release} />
+          <NewReleaseCard key={release.title} data={release} cardErrorShown={cardErrorShown} setCardErrorShown={setCardErrorShown}/>
         ))}
       </div>
     </div>
