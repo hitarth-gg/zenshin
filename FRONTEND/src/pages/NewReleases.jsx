@@ -3,36 +3,33 @@ import useGetNewReleases from "../hooks/useGetNewReleases";
 import CenteredLoader from "../ui/CenteredLoader";
 import NewReleaseCard from "../components/NewReleaseCard";
 
-
-
 export default function NewReleases() {
-  const packer = "[Erai-Raws]";
+  const packer = "[SubsPlease]";
   const { isLoading, data, error, status } = useGetNewReleases(packer);
   const [newReleases, setNewReleases] = useState([]);
   const [displayedReleases, setDisplayedReleases] = useState([]);
 
-  
   useEffect(() => {
     if (data) {
       const HQ_Releases = data.filter((release) =>
         release.title[0].includes("1080p"),
       );
       setNewReleases(HQ_Releases.slice(0, 12));
-    //   setNewReleases(HQ_Releases);
+      //   setNewReleases(HQ_Releases);
     }
   }, [data]);
 
-//   useEffect(() => {
-//     if (newReleases.length > 0) {
-//       newReleases.forEach((release, index) => {
-//         setTimeout(() => {
-//           setDisplayedReleases((prev) => [...prev, release]);
-//         }, index * 200); // .2 seconds delay for each release
-//       });
-//     }
-//   }, [newReleases]);
+  //   useEffect(() => {
+  //     if (newReleases.length > 0) {
+  //       newReleases.forEach((release, index) => {
+  //         setTimeout(() => {
+  //           setDisplayedReleases((prev) => [...prev, release]);
+  //         }, index * 200); // .2 seconds delay for each release
+  //       });
+  //     }
+  //   }, [newReleases]);
 
-useEffect(() => {
+  useEffect(() => {
     async function insertReleases() {
       const chunkSize = 5;
       for (let i = 0; i < newReleases.length; i += chunkSize) {
@@ -51,7 +48,6 @@ useEffect(() => {
       insertReleases();
     }
   }, [newReleases]);
-
 
   if (isLoading) {
     return <CenteredLoader />;

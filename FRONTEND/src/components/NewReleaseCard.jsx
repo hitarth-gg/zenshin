@@ -11,6 +11,15 @@ import useGetAniZipMappings from "../hooks/useGetAniZipMappings";
 import { Skeleton } from "@radix-ui/themes";
 import { toast } from "sonner";
 
+function magnetRegex(magnet) {
+  const magnetRegex = /<a href="([^"]*)">Magnet<\/a>/i;
+  let magnetRegex2 = /<a href="(magnet:[^"]*)">Magnet<\/a>/i;
+  const match1 = magnet?.match(magnetRegex);
+  const match2 = match1[0]?.match(magnetRegex2);
+  const match3 = match2[0]?.split('"')[1];
+  return match3 || "";
+}
+
 const tempImg =
   "https://artworks.thetvdb.com/banners/v4/episode/10166490/screencap/6685897a8dc6c.jpg";
 
@@ -18,7 +27,6 @@ function timeAgo(dateString) {
   // Parse the date string
   const pastDate = new Date(dateString);
   const now = new Date();
-
   // Calculate differences
   const minutesAgo = differenceInMinutes(now, pastDate);
   const secondsAgo = differenceInSeconds(now, pastDate);
@@ -32,15 +40,17 @@ function timeAgo(dateString) {
   if (hoursAgo >= 1) {
     result = `${hoursAgo} hours ago`;
   }
-
   return result;
 }
 
 export default function NewReleaseCard({ data }) {
   const navigate = useNavigate();
+  const magnet = magnetRegex(data?.description[0]) || "";
+
+  console.log(data);
 
   function handleClick() {
-    // navigate(`/anime/${data.id}`, { state: { data } });
+    navigate(`/player/${encodeURIComponent(magnet)}`);
   }
   const filename = data?.title[0];
   const [anilistData, setAnilistData] = useState(null);

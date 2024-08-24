@@ -569,9 +569,9 @@ export async function getRecentActivity() {
 }
 
 // getNewReleases(default"[SubsPlease]")
-export async function getNewReleases() {
+export async function getNewReleases(packer = "[SubsPlease]") {
   try {
-    const response = await fetch(GET_TOSHO_RSS());
+    const response = await fetch(GET_TOSHO_RSS(packer));
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
