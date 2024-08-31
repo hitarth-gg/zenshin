@@ -2,7 +2,7 @@
 
 <img src="https://github.com/user-attachments/assets/af797fd4-e7ca-428f-82fc-c50d13b9407c" width="120">
 
-Note: Work will be continued on this project from Sep 2024.
+Note: Work will be continued on this project from Oct 2024.
 
 A web based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
 
