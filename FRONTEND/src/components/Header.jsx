@@ -13,19 +13,21 @@ import { Button } from "@radix-ui/themes";
 import { useZenshinContext } from "../utils/ContextProvider";
 
 export default function Header({ theme }) {
+
   const zenshinContext = useZenshinContext();
   function toggleGlow() {
     zenshinContext.setGlow(!zenshinContext.glow);
   }
 
+  
+
   return (
     <div className="sticky top-0 z-20 flex h-12 items-center justify-between border-[#5a5e6750] bg-[#111113] bg-opacity-60 px-4 py-3 backdrop-blur-md">
-      <div className="flex  items-center justify-center gap-x-2">
+      <div className="flex items-center justify-center gap-x-2">
         <Link
           className="hover: font-spaceMono flex w-fit cursor-pointer select-none gap-x-2 rounded-sm p-1 text-sm transition-all duration-200 hover:bg-[#70707030]"
           to={"/"}
         >
-          {/* <span>zenshin | 全身</span> */}
           <img src={zenshinLogo} alt="" className="w-16" />
         </Link>
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
@@ -55,7 +57,12 @@ export default function Header({ theme }) {
             <div className="p-1 text-[.8rem]">How to use</div>
           </Button>
         </Link>
-        <Button color="gray" variant="ghost" size={"1"} onClick={() => toggleGlow()}>
+        <Button
+          color="gray"
+          variant="ghost"
+          size={"1"}
+          onClick={() => toggleGlow()}
+        >
           {zenshinContext.glow ? (
             <ShadowIcon className="my-1" width={16} height={16} />
           ) : (
