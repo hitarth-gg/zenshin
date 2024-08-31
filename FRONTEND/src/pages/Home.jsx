@@ -9,7 +9,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Spinner } from "@radix-ui/themes";
 import { toast } from "sonner";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import loundraw from "../assets/loundraw.jpg";
+// import loundraw from "../assets/loundraw.jpg";
+import gradient1 from "../assets/gradient1.jpg";
 
 export default function Home() {
   // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
@@ -88,11 +89,11 @@ export default function Home() {
   return (
     <div className="font-space-mono tracking-tight">
       {/* <div className="to-purple-800-500 absolute left-40 top-[10rem] h-96 w-96 rounded-full bg-gradient-to-r from-blue-400 via-purple-500 opacity-20 blur-[100px]"></div> */}
-
       <div
-        className="flex min-h-[94svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
+        // className="flex min-h-[94svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
+        className="flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
         style={{
-          backgroundImage: `url(${loundraw})`,
+          backgroundImage: `url(${gradient1})`,
           backgroundSize: "cover",
         }}
       >
@@ -105,7 +106,7 @@ export default function Home() {
           <p className="font-space-mono">
             Stream your favourite torrents instantly with our service, no
             waiting for downloads, reliable and seamless streaming directly to
-            your browser / VLC Media Player. 
+            your browser / VLC Media Player.
             {/* <br /> Built with{" "}
             <span className="text-cyan-300">React</span>,{" "}
             <span className="text-orange-300">TanStack Query</span>, Radix UI,
@@ -129,7 +130,7 @@ export default function Home() {
 
       {status === "success" && !error && (
         <div className="mx-5 mt-8">
-          <div className="mb-2 ml-8 tracking-wider text-lg border-b border-gray-700 pb-1 font-space-mono font-bold">
+          <div className="mb-2 ml-8 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Airing Anime
           </div>
           <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
@@ -150,7 +151,7 @@ export default function Home() {
 
       {!infiniteQueryError && topAnime.length > 0 && (
         <div className="mx-5 mt-12">
-          <div className="ml-8 tracking-wider mb-2 text-lg border-b border-gray-700 pb-1 font-space-mono font-bold">
+          <div className="mb-2 ml-8 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Anime
           </div>
           <InfiniteScroll

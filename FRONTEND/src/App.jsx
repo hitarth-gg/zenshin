@@ -38,8 +38,7 @@ const router = createBrowserRouter(
           path: "/newreleases",
           element: <NewReleases />,
           errorElement: <ErrorPage />,
-        }
-        
+        },
       ],
     },
   ],
@@ -49,21 +48,19 @@ const router = createBrowserRouter(
 );
 
 function App() {
-
   // the idea of integrating react-query is similar to that of context api
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // staleTime: 60 * 1000, // staleTime is the time in milliseconds after which the data is considered stale
-      staleTime: 0,
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // staleTime: 60 * 1000, // staleTime is the time in milliseconds after which the data is considered stale
+        staleTime: 0,
+      },
     },
-  },
-});
-
+  });
 
   return (
-    <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
+      <QueryClientProvider client={queryClient}>
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         <RouterProvider router={router} />
       </QueryClientProvider>
   );

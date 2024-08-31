@@ -11,8 +11,14 @@ import useGetAniZipMappings from "../hooks/useGetAniZipMappings";
 import useGetAnimeByMalId from "../hooks/useGetAnimeByMalId";
 import { autop } from "@wordpress/autop";
 import parse from "html-react-parser";
+import { useZenshinContext } from "../utils/ContextProvider";
 
 export default function AnimePage() {
+
+  const zenshinContext = useZenshinContext();
+  const { glow } = zenshinContext;
+
+
   const animeId = useParams().animeId;
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId);
   const malId = animeData?.idMal;
@@ -22,6 +28,7 @@ export default function AnimePage() {
   //   error: errorEpisodes,
   //   statusEpisodes,
   // } = useGetAnimeEpisodesById(animeId);
+
 
   const {
     isLoading: isLoadingMappings,
@@ -135,10 +142,17 @@ export default function AnimePage() {
       {/* {false && ( */}
       {data?.bannerImage && (
         // <div className="p-4 px-8">
-        <div className="">
+        <div className="relative">
+          {glow && <div className="animate-fade-down">
+            <img
+              src={data?.bannerImage}
+              className="absolute top-0 saturate-150 z-0 h-72 w-full object-cover opacity-70 blur-3xl brightness-75"
+              alt=""
+            />
+          </div>}
           <img
             src={data?.bannerImage}
-            className="h-72 w-full animate-fade-down object-cover brightness-75"
+            className="z-10 h-72 w-full animate-fade-down object-cover brightness-75"
             alt=""
           />
         </div>
