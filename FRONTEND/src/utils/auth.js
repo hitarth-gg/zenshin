@@ -1,10 +1,14 @@
 // export const ANILIST_CLIENT_ID = () => {
 //   const url = window.location.href;
-//   if (url.includes("localhost")) return "20876";
-//   else return "20866";
+//   if (url.includes("localhost")) {
+//     console.log("Localhost detected");
+//     return 20876;
+//   } else return 20866;
 // };
 
-export const ANILIST_CLIENT_ID = 20876;
+// export const ANILIST_CLIENT_ID = 20876;
+// export const ANILIST_CLIENT_ID = 20866;
+export const ANILIST_CLIENT_ID = window.location.href.includes("localhost") ? 20876 : 20866;
 export const anilistAuthUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${ANILIST_CLIENT_ID}&response_type=token`;
 
 export async function getAnilistProfile(anilistToken) {

@@ -24,7 +24,7 @@ export default function AnilistAuthCallback() {
           console.log(`Token Type: ${tokenType}`);
           console.log(`Expires In: ${expiresIn}`);
 
-          window.location.replace("/");
+          window.location.replace("/zenshin");
 
           toast.success("Successfully logged in to AniList", {
             icon: (
