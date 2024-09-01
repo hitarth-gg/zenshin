@@ -2,6 +2,9 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
 import { useZenshinContext } from "../utils/ContextProvider";
+import { Badge, Tooltip } from "@radix-ui/themes";
+import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
+import { Pause } from "@phosphor-icons/react";
 
 export default function AnimeCard({ data }) {
   // console.log(data);
@@ -22,6 +25,8 @@ export default function AnimeCard({ data }) {
       )
     : null;
 
+  const status = data?.mediaListEntry?.status;
+
   return (
     <div
       onClick={() => handleClick()}
@@ -38,9 +43,39 @@ export default function AnimeCard({ data }) {
           {data?.title?.romaji}
         </div>
 
-        <div className="flex justify-between text-xs opacity-60">
-          <p className="">{date && format(new Date(date), "MMMM yyyy")}</p>
-          <p>{data.format}</p>
+        <div className="flex justify-between text-xs">
+          <div className="flex items-center gap-x-2">
+            <p className="text-nowrap opacity-60">
+              {date && format(new Date(date), "MMMM yyyy")}
+            </p>
+
+            {status === "CURRENT" && (
+              <Tooltip content="Watching">
+                <p className="h-2 w-2 rounded-full bg-blue-500"></p>
+              </Tooltip>
+            )}
+            {status === "PLANNING" && (
+              <Tooltip content="Planning to watch">
+                <p className="h-2 w-2 rounded-full bg-orange-500"></p>
+              </Tooltip>
+            )}
+            {status === "COMPLETED" && (
+              <Tooltip content="Completed">
+                <p className="h-2 w-2 rounded-full bg-green-500"></p>
+              </Tooltip>
+            )}
+            {status === "DROPPED" && (
+              <Tooltip content="Dropped">
+                <p className="h-2 w-2 rounded-full bg-red-700"></p>
+              </Tooltip>
+            )}
+            {status === "PAUSED" && (
+              <Tooltip content="Paused">
+                <p className="h-2 w-2 rounded-full bg-gray-500"></p>
+              </Tooltip>
+            )}
+          </div>
+          <p className="opacity-60">{data.format.slice(0, 3)}</p>
         </div>
         <div></div>
       </div>

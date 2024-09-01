@@ -9,7 +9,7 @@ import {
   TOP_AIRING_ANIME,
   TOP_ANIME,
 } from "./api";
-import { parseStringPromise } from 'xml2js';
+import { parseStringPromise } from "xml2js";
 
 // export async function searchAnime(text, limit = 10) {
 //   try {
@@ -21,6 +21,8 @@ import { parseStringPromise } from 'xml2js';
 //     throw new Error(error);
 //   }
 // }
+
+const token = localStorage.getItem("anilist_token");
 
 export async function searchAnime(text, limit = 10) {
   try {
@@ -86,12 +88,11 @@ export async function searchAnime(text, limit = 10) {
   }
 }
 
-
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function searchAiringAnime(text, limit = 2) {
   console.log("Searching for airing anime with text:", text);
-  await delay(1300);  // Adjust the delay as needed
+  await delay(1300); // Adjust the delay as needed
 
   try {
     const query = `
@@ -152,12 +153,13 @@ export async function searchAiringAnime(text, limit = 2) {
 
     return data.data.Page.media;
   } catch (error) {
-    if(error.message.includes("Failed to fetch"))
-      throw new Error("Too many requests to the API. You are being rate-limited. Please come back after a minute.");
+    if (error.message.includes("Failed to fetch"))
+      throw new Error(
+        "Too many requests to the API. You are being rate-limited. Please come back after a minute.",
+      );
     throw new Error(error.message || error);
   }
 }
-
 
 /* ------------------------------------------------------ */
 export async function getTopAiringAnime() {
@@ -186,18 +188,35 @@ export async function getTopAiringAnime() {
             day
           }
           format
+          ${
+            token
+              ? `mediaListEntry { 
+            id
+            status
+            score
+            progress
+          }`
+              : ""
+          }
         }
       }
     }
   `;
 
   try {
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+
+    // If token is present, add Authorization header
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     const response = await fetch(BASE_URL_ANILIST, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      headers,
       body: JSON.stringify({ query }),
     });
 
@@ -252,18 +271,36 @@ export async function getTopAnime(page = 1) {
             day
           }
           format
+          ${
+            token
+              ? `mediaListEntry { 
+            id
+            status
+            score
+            progress
+          }`
+              : ""
+          }
         }
       }
     }
   `;
 
   try {
+
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+
+    // If token is present, add Authorization header
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     const response = await fetch(BASE_URL_ANILIST, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      headers,
       body: JSON.stringify({
         query,
         variables: { page },
@@ -507,7 +544,6 @@ export async function searchTorrent(query) {
     throw new Error(error);
   }
 }
-
 
 export async function getRecentActivity() {
   const query = `

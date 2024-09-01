@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import AnimePage from "./pages/AnimePage";
 import Player from "./pages/Player";
 import NewReleases from "./pages/NewReleases";
+import AnilistAuthCallback from "./components/AnilistAuthCallback";
 
 // import { lazy } from "react";
 
@@ -39,6 +40,11 @@ const router = createBrowserRouter(
           element: <NewReleases />,
           errorElement: <ErrorPage />,
         },
+        {
+          path: "/anilistauthcallback",
+          element: <AnilistAuthCallback />,
+          errorElement: <ErrorPage />,
+        },
       ],
     },
   ],
@@ -60,7 +66,7 @@ function App() {
 
   return (
       <QueryClientProvider client={queryClient}>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
         <RouterProvider router={router} />
       </QueryClientProvider>
   );

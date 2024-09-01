@@ -9,7 +9,8 @@ export default {
       inter: ["Inter", "ui-sans-serif", "system-ui"],
       "space-mono": ["Space Mono", "ui-sans-serif", "system-ui"],
     },
-    extend: {},
+    extend: {
+    },
   },
   plugins: [require("tailwindcss-animated", "@tailwindcss/line-clamp")],
 };

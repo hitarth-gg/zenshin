@@ -73,7 +73,7 @@ export default function Home() {
   // console.log(topAnime);
 
   const [topAnime, setTopAnime] = useState([]);
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     if (data) {
@@ -133,7 +133,7 @@ export default function Home() {
           <div className="mb-2 ml-8 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Airing Anime
           </div>
-          <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
             {!isLoading &&
               !error &&
               topAiringAnime?.map((anime) => (
@@ -165,7 +165,7 @@ export default function Home() {
               </div>
             }
           >
-            <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
               {topAnime?.map((anime) => {
                 return <AnimeCard key={anime.id + "topAnime"} data={anime} />;
               })}
