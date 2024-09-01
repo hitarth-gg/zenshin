@@ -287,7 +287,6 @@ export async function getTopAnime(page = 1) {
   `;
 
   try {
-
     const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -385,17 +384,34 @@ export async function getAnimeById(id) {
             }
           }
         }
+        ${
+          token
+            ? `mediaListEntry { 
+          id
+          status
+          score
+          progress
+        }`
+            : ""
+        }
       }
     }
   `;
 
   try {
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+
+    // If token is present, add Authorization header
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     const response = await fetch(BASE_URL_ANILIST, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      headers,
       body: JSON.stringify({
         query,
         variables: { id },

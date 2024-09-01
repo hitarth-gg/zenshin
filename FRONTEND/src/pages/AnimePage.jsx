@@ -22,13 +22,7 @@ export default function AnimePage() {
   const animeId = useParams().animeId;
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId);
   const malId = animeData?.idMal;
-  // const {
-  //   isLoading: isLoadingEpisodes,
-  //   animeEpisodes,
-  //   error: errorEpisodes,
-  //   statusEpisodes,
-  // } = useGetAnimeEpisodesById(animeId);
-
+  const episodesWatched = animeData?.mediaListEntry?.progress || 0;
 
   const {
     isLoading: isLoadingMappings,
@@ -80,6 +74,7 @@ export default function AnimePage() {
   }
 
   const [englishDub, setEnglishDub] = useState(false);
+  const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false);
 
   if (isLoading) return <CenteredLoader />;
 
@@ -239,6 +234,13 @@ export default function AnimePage() {
               >
                 English Dub
               </Button>
+              <Button
+                size={"1"}
+                onClick={() => setHideWatchedEpisodes(!hideWatchedEpisodes)}
+                color={hideWatchedEpisodes ? "blue" : "gray"}
+              >
+                Hide Watched Episodes
+              </Button>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-y-3">
               <Episode
@@ -251,7 +253,7 @@ export default function AnimePage() {
                   key={"ep -" + ix}
                   anime={data.title}
                   animeId={data.id}
-                  data={episode}
+                  data={{...episode, progress:episodesWatched, hideWatchedEpisodes}}
                   englishDub={englishDub}
                   episodeNumber={ix + 1}
                   aniZip_titles={aniZip_titles}

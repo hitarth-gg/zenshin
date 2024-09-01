@@ -2,9 +2,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
 import { useZenshinContext } from "../utils/ContextProvider";
-import { Badge, Tooltip } from "@radix-ui/themes";
-import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { Pause } from "@phosphor-icons/react";
+import { Tooltip } from "@radix-ui/themes";
 
 export default function AnimeCard({ data }) {
   // console.log(data);
@@ -56,7 +54,7 @@ export default function AnimeCard({ data }) {
             )}
             {status === "PLANNING" && (
               <Tooltip content="Planning to watch">
-                <p className="h-2 w-2 rounded-full bg-orange-500"></p>
+                <p className="h-2 w-2 rounded-full bg-gray-400"></p>
               </Tooltip>
             )}
             {status === "COMPLETED" && (
@@ -71,7 +69,7 @@ export default function AnimeCard({ data }) {
             )}
             {status === "PAUSED" && (
               <Tooltip content="Paused">
-                <p className="h-2 w-2 rounded-full bg-gray-500"></p>
+                <p className="h-2 w-2 rounded-full bg-orange-500"></p>
               </Tooltip>
             )}
           </div>

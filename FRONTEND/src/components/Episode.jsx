@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import useNyaaTracker from "../hooks/useNyaaTracker";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@radix-ui/themes";
+import { Skeleton, Tooltip } from "@radix-ui/themes";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 export default function Episode({
@@ -17,6 +17,7 @@ export default function Episode({
   //   const [torrentData, setTorrentData] = useState();
   const navigate = useNavigate();
   const [active, setActive] = useState(false);
+  const progress = data?.progress || 0;
 
   let searchQueryRomaji = `${anime.romaji} ${englishDub ? "Dual Audio" : ""}`;
   if (data)
@@ -192,10 +193,11 @@ export default function Episode({
     );
 
   // if the data is defined, then it is a normal episode
+  if (episodeNumber <= progress && data?.hideWatchedEpisodes) return null;
   return (
     <div
       onClick={() => handleClick()}
-      className="m-1 cursor-default border border-gray-700 p-2 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20]"
+      className={`m-1 w-full cursor-default border border-gray-700 p-2 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-x-1 font-space-mono font-medium opacity-90">
@@ -203,18 +205,27 @@ export default function Episode({
             <img
               src={data.thumbnail}
               alt="episode_img"
-              className="duration-400 hover:z-20 mr-3 h-24 animate-fade object-cover transition-all ease-in-out hover:scale-150 hover:rounded-md"
+              className="duration-400 mr-3 h-24 animate-fade object-cover transition-all ease-in-out hover:z-20 hover:scale-150 hover:rounded-md"
             />
           )}
           {/* <p className="text-lg">{episodeNumber}. </p> */}
           <div>
-            <p className="font-space-mono text-lg font-medium opacity-90">
-              {episodeNumber}. {data.title}
+            <p className="flex items-center gap-2 font-space-mono text-lg font-medium opacity-100">
+              {episodeNumber <= progress && (
+                <Tooltip content="Watched">
+                  <p className="h-2 min-h-2 w-2 min-w-2 rounded-full bg-green-500"></p>
+                </Tooltip>
+              )}
+              <p className="line-clamp-1">
+                {episodeNumber}. {data.title}
+              </p>
             </p>
             {data.overview && (
-              <p className="font-space-mono text-sm font-medium opacity-60">
-                {data.overview}
-              </p>
+              // <Tooltip content={data.overview}>
+                <p className="line-clamp-3 font-space-mono text-sm font-medium opacity-60">
+                  {data.overview}
+                </p>
+              // </Tooltip>
             )}
           </div>
         </div>
