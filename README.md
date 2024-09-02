@@ -8,10 +8,10 @@ A web based anime torrent streamer which can stream torrents in the browser and 
 
 Built it as a mini project to familiarize myself with video streaming using ExpressJS and handling of streams and APIs in a ReactJS based frontend webapp.
 
-![image](https://github.com/user-attachments/assets/32525d74-0507-4e76-a2b6-209673209c7b)
-![image](https://github.com/user-attachments/assets/9abe8f0f-3eef-405c-b595-924cd2276b6b)
-![image](https://github.com/user-attachments/assets/5b2f79f7-85a4-4532-b5af-e1f3e5eeeb71)
-![image](https://github.com/user-attachments/assets/4e3ec7cf-2fec-4c1c-8a1d-d07dfbda2f53)
+![image](https://github.com/user-attachments/assets/5d93d3a7-533c-4615-a25d-34e7af901108)
+![image](https://github.com/user-attachments/assets/8ccb3ec0-c162-4017-95e4-b90d33000eb7)
+![image](https://github.com/user-attachments/assets/0936fbc4-fe18-42ca-a000-a3de70741bd3)
+![image](https://github.com/user-attachments/assets/d2b00ee5-4242-4c9b-9492-64829ed655fe)
 ![image](https://github.com/user-attachments/assets/bec74950-27c7-4b1a-ac7c-974e6d699739)
 ![image](https://github.com/user-attachments/assets/e9baf709-dc2a-4b90-95b2-ff4dcfdd986d)
 ![image](https://github.com/user-attachments/assets/1341c03b-0674-4d70-be95-e4d1bff3119e)
