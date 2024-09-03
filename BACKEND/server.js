@@ -210,6 +210,10 @@ app.get("/streamfile/:magnet/:filename", async function (req, res, next) {
     end: end,
   };
 
+  detailsOfEpisode.percentageWatched = (start / end) * 100;
+  console.log(detailsOfEpisode);
+  
+
   let stream = file.createReadStream(stream_position);
   stream.pipe(res);
 
@@ -251,6 +255,15 @@ app.get("/deselect/:magnet/:filename", async (req, res) => {
 });
 
 // get download details of a file
+
+let detailsOfEpisode = {
+  name: "",
+  length: 0,
+  downloaded: 0,
+  progress: 0,
+  percentageWatched: 0,
+}
+
 app.get("/detailsepisode/:magnet/:filename", async (req, res) => {
   let magnet = req.params.magnet;
   let filename = req.params.filename;
@@ -265,14 +278,16 @@ app.get("/detailsepisode/:magnet/:filename", async (req, res) => {
     return res.status(404).send("No file found in the torrent");
   }
 
-  let details = {
+  // let details = {
+  detailsOfEpisode = {
     name: file.name,
     length: file.length,
     downloaded: file.downloaded,
     progress: file.progress,
+    percentageWatched: detailsOfEpisode.percentageWatched,
   };
 
-  res.status(200).json(details);
+  res.status(200).json(detailsOfEpisode);
 });
 
 /* ------------------------------------------------------ */

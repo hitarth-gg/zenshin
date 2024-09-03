@@ -1,5 +1,8 @@
 import { Button } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { setWatchedEpisodes } from "../utils/helper";
 
 const formatBytes = (bytes, decimals = 2) => {
   if (bytes === 0) return "0 Bytes";
@@ -23,6 +26,12 @@ export default function StreamStatsEpisode({
   setVideoSrc,
 }) {
   const [details, setDetails] = useState(null);
+  const animeId = useParams().animeId;
+  const priorProgress = useParams().priorProgress;
+  const currentEpisodeNum = useParams().currentEpisodeNum;
+  const [mountTime, setMountTime] = useState(Date.now());
+
+  const [episodeUpdated, setEpisodeUpdated] = useState(false);
 
   useEffect(() => {
     const fetchDetails = () => {
@@ -46,11 +55,36 @@ export default function StreamStatsEpisode({
     return () => clearInterval(intervalId);
   }, [episode, magnetURI]);
 
+  console.log("details", details?.percentageWatched);
+
+  useEffect(() => {
+    const elapsedTime = Date.now() - mountTime;
+
+    if (
+      elapsedTime > 5000 && // Check if more than 5 seconds have passed
+      !episodeUpdated &&
+      details?.percentageWatched > 80 &&
+      details?.percentageWatched < 98 &&
+      currentEpisodeNum > priorProgress
+      && animeId && currentEpisodeNum && priorProgress
+    ) {
+      setEpisodeUpdated(true);
+      if (!localStorage.getItem("anilist_token")) return;
+      try {
+        setWatchedEpisodes(animeId, currentEpisodeNum, priorProgress); // Update watched episodes on AniList, see helper.js
+        toast("Episode updated on AniList!", { type: "success" });
+      } catch (error) {
+        console.error("Error updating episode on AniList:", error);
+        toast("Error updating episode on AniList!", { type: "error" });
+      }
+    }
+  }, [details, episodeUpdated, currentEpisodeNum, priorProgress, animeId, mountTime])
+
   return (
-    <div className="mb-10 mt-3 items-center flex flex-col gap-y-1 border-b border-gray-700 pb-3 font-space-mono">
+    <div className="mb-10 mt-3 flex flex-col items-center gap-y-1 border-b border-gray-700 pb-3 font-space-mono">
       <div className="text-blue-400">{details?.name}</div>
       <div className="">
-        <div className="flex justify-center gap-x-20 mt-3">
+        <div className="mt-3 flex justify-center gap-x-20">
           <p className="opacity-45">
             <strong>Size:</strong> {formatBytes(details?.length)}
           </p>
@@ -60,29 +94,29 @@ export default function StreamStatsEpisode({
           <p className="opacity-45">
             <strong>Progress:</strong> {(details?.progress * 100)?.toFixed(2)}%
           </p>
-            <Button
-              size="1"
-              color="red"
-              variant="soft"
-              onClick={(e) => {
-                e.stopPropagation();
-                setCurrentEpisode("");
-                stopEpisodeDownload(episode);
-              }}
-            >
-              Stop downloading the episode
-            </Button>
-            <Button
-              size="1"
-              color="orange"
-              variant="soft"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleStreamVlc(episode);
-              }}
-            >
-              Open VLC
-            </Button>
+          <Button
+            size="1"
+            color="red"
+            variant="soft"
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentEpisode("");
+              stopEpisodeDownload(episode);
+            }}
+          >
+            Stop downloading the episode
+          </Button>
+          <Button
+            size="1"
+            color="orange"
+            variant="soft"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleStreamVlc(episode);
+            }}
+          >
+            Open VLC
+          </Button>
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@ const router = createBrowserRouter(
           errorElement: <ErrorPage />,
         },
         {
-          path: "/player/:magnetId",
+          path: "/player/:magnetId/:animeId/:priorProgress/:currentEpisodeNum",
           element: <Player />,
           errorElement: <ErrorPage />,
         },

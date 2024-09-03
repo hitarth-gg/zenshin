@@ -131,7 +131,9 @@ export default function Episode({
   }
 
   function onTorrentClick(torrent) {
-    navigate(`/player/${encodeURIComponent(torrent.magnet)}`);
+    navigate(
+      `/player/${encodeURIComponent(torrent.magnet)}/${animeId}/${progress}/${episodeNumber}`,
+    );
   }
 
   // if the data is undefined, then it is a filler episode or a recap episode ot a movie
@@ -222,9 +224,9 @@ export default function Episode({
             </p>
             {data.overview && (
               // <Tooltip content={data.overview}>
-                <p className="line-clamp-3 font-space-mono text-sm font-medium opacity-60">
-                  {data.overview}
-                </p>
+              <p className="line-clamp-3 font-space-mono text-sm font-medium opacity-60">
+                {data.overview}
+              </p>
               // </Tooltip>
             )}
           </div>

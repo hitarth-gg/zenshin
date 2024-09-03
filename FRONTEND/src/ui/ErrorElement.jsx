@@ -27,7 +27,7 @@ export default function ErrorElement({ title="Something Went wrong !", text, typ
         <div className={`font-medium ${style.inner}`}>
           {title}
         </div>
-        <p className="text-sm">
+        <p className="text-sm max-w-screen-md">
           {text || error?.data || error?.message || "Unknown Error"}
         </p>
       </div>

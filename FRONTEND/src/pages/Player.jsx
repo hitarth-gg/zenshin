@@ -16,6 +16,7 @@ import StreamStatsEpisode from "../components/StreamStatsEpisode";
 
 export default function Player(query) {
   const magnetURI = useParams().magnetId;
+
   const [videoSrc, setVideoSrc] = useState("");
   const [subtitleSrc, setSubtitleSrc] = useState("");
   const [files, setFiles] = useState([]);
@@ -180,7 +181,6 @@ export default function Player(query) {
   const handleStreamBrowser = (eipsode) => {
     setVideoSrc(
       `http://localhost:8000/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(eipsode)}`,
-
     );
   };
 
@@ -210,8 +210,10 @@ export default function Player(query) {
   const stopEpisodeDownload2 = async (episode) => {
     try {
       // Send a DELETE request to remove the torrent
-      console.log(`http://localhost:8000/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`);
-      
+      console.log(
+        `http://localhost:8000/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
+      );
+
       await axios.get(
         `http://localhost:8000/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
       );
@@ -254,7 +256,7 @@ export default function Player(query) {
   const stopEpisodeDownload = async (episode) => {
     await stopEpisodeDownload2(episode);
     await stopEpisodeDownload2(episode);
-  }
+  };
 
   /* ------------------------------------------------------ */
   const handleRemoveTorrent = async () => {
@@ -298,7 +300,6 @@ export default function Player(query) {
       });
     }
   };
-
 
   return (
     <div className="flex items-center justify-center font-space-mono">

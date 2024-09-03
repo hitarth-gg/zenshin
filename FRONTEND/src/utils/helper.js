@@ -640,3 +640,57 @@ export async function getNewReleases(packer = "[SubsPlease]") {
     throw new Error(error);
   }
 }
+
+/* ------------------------------------------------------ */
+
+export async function setWatchedEpisodes(animeId, episodesWatched) {
+  if (!token) {
+    throw new Error("User is not authenticated. Please log in to update episode data on AniList.");
+  }
+
+  const mutation = `
+    mutation ($id: Int, $progress: Int) {
+      SaveMediaListEntry(
+        mediaId: $id
+        progress: $progress
+      ) {
+        id
+        progress
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch(BASE_URL_ANILIST, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: {
+          id: animeId,
+          progress: episodesWatched,
+        },
+      }),
+    });
+
+    if (response.status === 429) {
+      throw new Error(
+        "Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page."
+      );
+    } else if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        `Error ${response.status}: ${response.statusText} - ${errorData.message}`
+      );
+    }
+
+    const data = await response.json();
+    return data.data.SaveMediaListEntry;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
