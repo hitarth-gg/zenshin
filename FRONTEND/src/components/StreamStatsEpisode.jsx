@@ -26,9 +26,9 @@ export default function StreamStatsEpisode({
   setVideoSrc,
 }) {
   const [details, setDetails] = useState(null);
-  const animeId = useParams().animeId;
-  const priorProgress = useParams().priorProgress;
-  const currentEpisodeNum = useParams().currentEpisodeNum;
+  const animeId = useParams().animeId || null;
+  const priorProgress = useParams().priorProgress || null;
+  const currentEpisodeNum = useParams().currentEpisodeNum || null;
   const [mountTime, setMountTime] = useState(Date.now());
 
   const [episodeUpdated, setEpisodeUpdated] = useState(false);
