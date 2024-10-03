@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------ CUSTOM SCROLL BAR ----------------- */
+/* Apply custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background: #666; /* Thumb color */
+  border-radius: 0px; /* Thumb border-radius */
+}
+
+/* Scrollbar thumb states */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Hover thumb color */
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #444; /* Active thumb color */
+}
+/* ------------------------------------------------------ */
+
+.draggable {
+  -webkit-app-region: drag;
+}
+.nodrag {
+  -webkit-app-region: no-drag;
+}
