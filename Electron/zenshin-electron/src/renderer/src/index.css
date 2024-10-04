@@ -7,7 +7,6 @@
 ::-webkit-scrollbar {
   width: 7px; /* Scrollbar width */
   height: 7px; /* Scrollbar height */
-
 }
 
 /* Scrollbar track */
@@ -36,4 +35,20 @@
 }
 .nodrag {
   -webkit-app-region: no-drag;
+}
+
+/* For blur mask of banner image */
+.mask {
+  -webkit-mask: -webkit-gradient(
+    linear,
+    left top, /* Start point of the gradient */
+    right top, /* End point of the gradient */
+    from(rgba(0, 0, 0, 1)), /* Fully opaque at the left */
+    to(rgba(0, 0, 0, 0)) /* Fully transparent at the right */
+  );
+  mask: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, 0) 60%
+  );
 }
