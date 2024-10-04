@@ -5,7 +5,8 @@
 /* ------------------ CUSTOM SCROLL BAR ----------------- */
 /* Apply custom scrollbar styles */
 ::-webkit-scrollbar {
-  width: 8px; /* Scrollbar width */
+  width: 7px; /* Scrollbar width */
+  height: 7px; /* Scrollbar height */
 }
 
 /* Scrollbar track */
@@ -15,7 +16,7 @@
 
 /* Scrollbar thumb */
 ::-webkit-scrollbar-thumb {
-  background: #666; /* Thumb color */
+  background: #4a4a4a; /* Thumb color */
   border-radius: 0px; /* Thumb border-radius */
 }
 
@@ -28,3 +29,26 @@
   background: #444; /* Active thumb color */
 }
 /* ------------------------------------------------------ */
+
+.draggable {
+  -webkit-app-region: drag;
+}
+.nodrag {
+  -webkit-app-region: no-drag;
+}
+
+/* For blur mask of banner image */
+.mask {
+  -webkit-mask: -webkit-gradient(
+    linear,
+    left top, /* Start point of the gradient */
+    right top, /* End point of the gradient */
+    from(rgba(0, 0, 0, 1)), /* Fully opaque at the left */
+    to(rgba(0, 0, 0, 0)) /* Fully transparent at the right */
+  );
+  mask: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, 0) 60%
+  );
+}

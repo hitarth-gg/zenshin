@@ -175,6 +175,9 @@ export async function getTopAiringAnime() {
             english
             native
           }
+          seasonYear
+          season
+          bannerImage
           coverImage {
             extraLarge
           }
@@ -645,7 +648,9 @@ export async function getNewReleases(packer = "[SubsPlease]") {
 
 export async function setWatchedEpisodes(animeId, episodesWatched) {
   if (!token) {
-    throw new Error("User is not authenticated. Please log in to update episode data on AniList.");
+    throw new Error(
+      "User is not authenticated. Please log in to update episode data on AniList.",
+    );
   }
 
   const mutation = `
@@ -679,12 +684,12 @@ export async function setWatchedEpisodes(animeId, episodesWatched) {
 
     if (response.status === 429) {
       throw new Error(
-        "Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page."
+        "Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.",
       );
     } else if (!response.ok) {
       const errorData = await response.json();
       throw new Error(
-        `Error ${response.status}: ${response.statusText} - ${errorData.message}`
+        `Error ${response.status}: ${response.statusText} - ${errorData.message}`,
       );
     }
 

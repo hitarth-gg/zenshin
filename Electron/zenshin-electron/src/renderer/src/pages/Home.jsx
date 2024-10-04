@@ -123,7 +123,7 @@ export default function Home() {
 
       {topAiringAnime?.length > 0 && (
         <div
-          className={`w-full animate-fade-up`}
+          className={`w-full animate-fade`}
           style={{
             opacity: 1 - bgOpacity
           }}
@@ -147,12 +147,13 @@ export default function Home() {
               )
               .map((anime) => (
                 // gradient from left to right black to transparent
-                <div key={anime.id + 'bannerAnime'} className="relative h-72">
+                <div
+                  key={anime.id + 'bannerAnime'}
+                  className="relative h-72 cursor-pointer"
+                  onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
+                >
                   <div className="mask absolute h-full w-8/12 bg-gradient-to-r from-[#141414] backdrop-blur-md"></div>
-                  <div
-                    className="absolute ml-5 flex h-full cursor-pointer flex-col items-start justify-center gap-y-2 px-2"
-                    onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
-                  >
+                  <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2">
                     <div className="line-clamp-1 max-w-xl bg-gradient-to-r from-[#14141480] py-1 text-start text-2xl font-semibold tracking-wider text-white drop-shadow-3xl">
                       {anime.title.romaji}
                     </div>
@@ -160,9 +161,12 @@ export default function Home() {
                       {anime.title.english}
                     </div>
 
-                    <div className="line-clamp-[9] w-80 text-left text-xs tracking-wide">
-                      {HTMLReactParser(anime.description)}
-                    </div>
+                    {anime.description && (
+                      <div className="line-clamp-[9] w-80 text-left text-xs tracking-wide">
+                        {HTMLReactParser(anime.description)}
+                      </div>
+                    )}
+
                     <div className="flex gap-x-8 border border-[#ffffff70] bg-[#00000050] px-1 py-1 text-xs backdrop-blur-[2px]">
                       <div>{anime.episodes || 0} episodes</div>
                       {anime.averageScore && (
