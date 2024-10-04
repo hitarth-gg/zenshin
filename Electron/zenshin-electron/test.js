@@ -1,574 +1,168 @@
-import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
-import path, { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
-import { fork } from 'child_process'
-import { Deeplink } from 'electron-deeplink'
-// import isDev from 'electron-is-dev'
+import AnimeCard from '../components/AnimeCard'
+import useTopAiringAnime from '../hooks/useTopAiringAnime'
+import zenshin1 from '../assets/zenshin2.png'
+import zenshinLogo from '../assets/zenshinLogo.png'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { getTopAnime } from '../utils/helper'
+import { useEffect, useState } from 'react'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { Spinner } from '@radix-ui/themes'
+import { toast } from 'sonner'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+// import loundraw from "../assets/loundraw.jpg";
+import gradient1 from '../assets/gradient1.jpg'
 
-let mainWindow // Define mainWindow here
+export default function Home() {
+  // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
+  // const {
+  //   isLoading: isLoadingRecentActivity,
+  //   data: recentActivity,
+  //   error: errorRecentActivity,
+  //   status: statusRecentActivity,
+  // } = useGetRecentGlobalActivity();
 
-function createWindow() {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 1300,
-    height: 800,
-    minWidth: 900,
-    minHeight: 670,
-    backgroundColor: '#1c1c1c',
-    show: false,
-    // frame: false,
-    // frame: process.platform === 'darwin', // Only keep the native frame on Mac
-    titleBarStyle: 'hidden',
-    titleBarOverlay: {
-      color: '#17191c00',
-      symbolColor: '#eee',
-      height: 45
+  const { isLoading, topAiringAnime, error, status } = useTopAiringAnime()
+  // const { isLoading2, topAnime, error2, status2 } = useGetTopAnime();
+  // const { isLoading2, topAnime:topAnimeTS, error2, status2 } = useGetTopAnime();
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    error: infiniteQueryError
+  } = useInfiniteQuery({
+    queryKey: ['top_animes'],
+    queryFn: ({ pageParam = 1 }) => getTopAnime(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      return allPages.length + 1
     },
-    autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
-      nodeIntegration: false,
-      contextIsolation: true,
-      enableRemoteModule: false,
-      devTools: true
-    }
+    staleTime: 1000 * 60 * 60 // 1 hour
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-  })
-
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' }
-  })
-
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-  }
-
-  // Handle IPC events
-  ipcMain.on('minimize-window', () => mainWindow.minimize())
-  ipcMain.on('maximize-window', () => {
-    if (mainWindow.isMaximized()) {
-      mainWindow.unmaximize()
-    } else {
-      mainWindow.maximize()
-    }
-  })
-  ipcMain.on('close-window', () => mainWindow.close())
-
-  ipcMain.on('oauth-login', (event, authUrl) => {
-    shell.openExternal(authUrl) // Open the OAuth URL in the default browser
-  })
-}
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
-
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
-  })
-
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
-  createWindow()
-
-  if (process.argv.length >= 2) {
-    app.setAsDefaultProtocolClient('zenshin2', process.execPath, [path.resolve(process.argv[1])])
-  } else {
-    app.setAsDefaultProtocolClient('zenshin2')
-  }
-
-  app2.listen(8000, () => {
-    console.log('Server running at http://localhost:8000')
-  })
-
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-const protocol = 'zenshin'
-const isDev = true
-const deeplink = new Deeplink({ app, mainWindow, protocol, isDev })
-
-deeplink.on('received', (link) => {
-  console.log('Received deeplink:', link)
-  if (mainWindow && mainWindow.webContents) {
-    mainWindow.webContents.send('deeplink-received', link)
-  }
-})
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
-
-import express from 'express'
-import WebTorrent from 'webtorrent'
-import cors from 'cors'
-import fs from 'fs'
-// import path from 'path'
-// import { fileURLToPath } from 'url'
-let chalk
-import('chalk').then((module) => {
-  chalk = module.default
-  console.log(chalk.green('Chalk is loaded!'))
-})
-
-
-
-// Get the current directory
-// const __filename = fileURLToPath(import.meta.url)
-// const __dirname = path.dirname(__filename)
-
-// const downloadsDir = path.join(__dirname, 'downloads')
-// const downloadsDir = path.join(app.getPath('downloads'), 'Zenshin')
-
-// const appPath = app.getAppPath()
-// console.log('App is running from:', appPath)
-// const downloadsDir = path.join(appPath, 'ZenshinDownloads')
-
-let downloadsDir = path.join(app.getPath('downloads'), 'ZenshinDownloads')
-
-const app2 = express()
-const client = new WebTorrent()
-
-app2.use(cors())
-
-function mkdirp(dir) {
-  if (fs.existsSync(dir)) {
-    return true
-  }
-  const dirname = path.dirname(dir)
-  mkdirp(dirname)
-  fs.mkdirSync(dir)
-}
-
-mkdirp(downloadsDir)
-
-/* ------------------------------------------------------ */
-/* ------------------------------------------------------ */
-/* ------------------------------------------------------ */
-/* ------------------------------------------------------ */
-/* ------------------------------------------------------ */
-/* ------------------------------------------------------ */
-
-const owner = 'hitarth-gg' // Replace with the repository owner
-const repo = 'zenshin' // Replace with the repository name
-const currentVersion = 'v1.0.0' // Replace with the current version
-
-// const getLatestRelease = async () => {
-//   try {
-//     const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`)
-
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`)
-//     }
-
-//     const data = await response.json()
-
-//     if (data.tag_name !== currentVersion) {
-//       console.log(chalk.blue('New version available:', data.tag_name))
-//       console.log('Release notes:', data.body)
-//       console.log(chalk.yellow('Download URL: https://github.com/hitarth-gg/zenshin/releases'))
-//     }
-//   } catch (error) {
-//     console.error('Error fetching latest release:', error)
-//   }
-// }
-// getLatestRelease()
-/* ------------------------------------------------------ */
-
-/* ----------------- SEED EXISTING FILES ---------------- */
-// Seed all existing files on server startup
-const seedExistingFiles = () => {
-  fs.readdir(downloadsDir, (err, files) => {
-    if (err) {
-      console.error('Error reading downloads directory:', err)
-      return
-    }
-
-    files.forEach((file) => {
-      const filePath = path.join(downloadsDir, file)
-
-      if (fs.lstatSync(filePath).isFile()) {
-        client.seed(filePath, { path: downloadsDir }, (torrent) => {
-          // console.log(`Seeding file: ${filePath}`);
-          // console.log(`Magnet URI: ${torrent.magnetURI}`);
-          console.log(chalk.bgBlue('Seeding started: '), chalk.cyan(torrent.name))
-          torrent.on('error', (err) => {
-            console.error(chalk.bgRed('Error seeding file:'), err)
-          })
-        })
+  if (infiniteQueryError) {
+    toast.error('Error fetching Top Animes', {
+      icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
+      description: infiniteQueryError?.message,
+      classNames: {
+        title: 'text-rose-500'
       }
     })
-  })
+  }
+
+  // if (error) {
+  //   throw new Error(error);
+  // }
+  // const [page, setPage] = useState(1);
+
+  // const [prevTopAnime, setPrevTopAnime] = useState([]);
+  // const[topAnime, setTopAnime] = useState([]);
+
+  // async function fetchMoreData() {
+  // // const { isLoading2, topAnime:topAnimeTS, error2, status2 } = useGetTopAnime();
+  // // const data = await getTopAnime(page);
+  //   console.log(data); // Add this line to inspect the structure
+  //   setPage(page + 1);
+  //   setPrevTopAnime([...prevTopAnime, ...data.data]);
+  //   setTopAnime([...topAnime, ...data.data]);
+  // }
+
+  // console.log(topAnime);
+
+  // const topAnime = data?.pages?.flatMap((page) => page.data) || [];
+  // console.log(topAnime);
+
+  const [topAnime, setTopAnime] = useState([])
+  // console.log(data);
+
+  useEffect(() => {
+    if (data) {
+      const newTopAnime = data.pages
+        .map((page) => page)
+        .flat()
+        .filter(Boolean)
+      setTopAnime(newTopAnime)
+    }
+  }, [data])
+
+  // TOO LAZY TOO MAKE THIS RESPONSIVE
+  return (
+    <div className="font-space-mono tracking-tight select-none">
+      <div
+        className="flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
+        style={{
+          backgroundImage: `url(${gradient1})`,
+          backgroundSize: 'cover'
+        }}
+      >
+        <div className="flex h-full w-8/12 flex-col items-center justify-start gap-y-10 p-3 lg:w-2/5">
+          <img src={zenshinLogo} alt="" className="h-[6rem] object-scale-down drop-shadow-xl" />
+          <p className="font-space-mono">
+            Stream your favourite torrents instantly with our service, no waiting for downloads,
+            reliable and seamless streaming directly to your browser / VLC Media Player.
+            {/* <br /> Built with{" "}
+            <span className="text-cyan-300">React</span>,{" "}
+            <span className="text-orange-300">TanStack Query</span>, Radix UI,
+            ExpressJS, Tailwind CSS,{" "}
+            <span className="text-red-500">WebTorrent</span>, Video.js and more. */}
+          </p>
+        </div>
+
+        <img
+          src={zenshin1}
+          alt="zenshin"
+          className="h-48 object-scale-down drop-shadow-lg sm:h-64 md:h-80 lg:h-96"
+        />
+      </div>
+
+      {error && (
+        <div className="text-red-500">Failed to fetch Top Airing Anime : {error.message}</div>
+      )}
+
+      {status === 'success' && !error && (
+        <div className="mx-5 mt-8">
+          <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+            Top Airing Anime
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg2:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-9">
+            {!isLoading &&
+              !error &&
+              topAiringAnime?.map((anime) => (
+                <AnimeCard key={anime.id + 'topAiringAnime'} data={anime} />
+              ))}
+          </div>
+        </div>
+      )}
+
+      {infiniteQueryError && (
+        <div className="text-red-500">Failed to fetch Top Anime : {infiniteQueryError.message}</div>
+      )}
+
+      {!infiniteQueryError && topAnime.length > 0 && (
+        <div className="mx-5 mt-12">
+          <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+            Top Anime
+          </div>
+          <InfiniteScroll
+            style={{ all: 'unset' }}
+            dataLength={topAnime.length}
+            next={() => fetchNextPage()}
+            hasMore={topAnime?.length < 500}
+            loader={
+              <div className="flex items-center justify-center gap-x-2 overflow-hidden">
+                <h4>Loading...</h4>
+                <Spinner />
+              </div>
+            }
+          >
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg2:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-9">
+              {topAnime?.map((anime) => {
+                return <AnimeCard key={anime.id + 'topAnime'} data={anime} />
+              })}
+            </div>
+          </InfiniteScroll>
+        </div>
+      )}
+    </div>
+  )
 }
-
-// Call the function to start seeding existing files
-seedExistingFiles()
-/* ------------------------------------------------------ */
-
-app2.get('/add/:magnet', async (req, res) => {
-  let magnet = req.params.magnet
-
-  /* ------------------------------------------------------ */
-  // Check if the torrent is already added
-  let existingTorrent = await client.get(magnet)
-  console.log('Existing torrent:', existingTorrent)
-
-  if (existingTorrent) {
-    // If torrent is already added, return its file information
-    let files = existingTorrent.files.map((file) => ({
-      name: file.name,
-      length: file.length
-    }))
-    // console.log("Existing torrent files:", files);
-
-    return res.status(200).json(files)
-  }
-  /* ------------------------------------------------------ */
-
-  client.add(magnet, function (torrent) {
-    let files = torrent.files.map((file) => ({
-      name: file.name,
-      length: file.length
-    }))
-    // console.log(files);
-
-    res.status(200).json(files)
-  })
-})
-
-/* -------------------- GET METADATA -------------------- */
-app2.get('/metadata/:magnet', async (req, res) => {
-  let magnet = req.params.magnet
-
-  /* ------------------------------------------------------ */
-  // Check if the torrent is already added
-  let existingTorrent = await client.get(magnet)
-  console.log('Existing torrent:', existingTorrent)
-
-  if (existingTorrent) {
-    // If torrent is already added, return its file information
-    let files = existingTorrent.files.map((file) => ({
-      name: file.name,
-      length: file.length
-    }))
-    // console.log("Existing torrent files:", files);
-
-    return res.status(200).json(files)
-  }
-  /* ------------------------------------------------------ */
-
-  const torrent = client.add(magnet, { deselect: true, path: downloadsDir })
-
-  torrent.on('metadata', () => {
-    const files = torrent.files.map((file) => ({
-      name: file.name,
-      length: file.length
-    }))
-    console.log(files)
-
-    res.status(200).json(files)
-  })
-})
-
-app2.get('/streamfile/:magnet/:filename', async function (req, res, next) {
-  let magnet = req.params.magnet
-  let filename = req.params.filename
-
-  console.log(magnet)
-
-  let tor = await client.get(magnet)
-
-  if (!tor) {
-    return res.status(404).send('Torrent not found')
-  }
-
-  let file = tor.files.find((f) => f.name === filename)
-  console.log('file :' + file.toString())
-
-  if (!file) {
-    return res.status(404).send('No file found in the torrent')
-  }
-  console.log(file)
-
-  file.select()
-
-  let range = req.headers.range
-
-  console.log('Range : ' + range)
-
-  if (!range) {
-    return res.status(416).send('Range is required')
-  }
-
-  let positions = range.replace(/bytes=/, '').split('-')
-  let start = parseInt(positions[0], 10)
-  let file_size = file.length
-  let end = positions[1] ? parseInt(positions[1], 10) : file_size - 1
-  let chunksize = end - start + 1
-
-  let head = {
-    'Content-Range': `bytes ${start}-${end}/${file_size}`,
-    'Accept-Ranges': 'bytes',
-    'Content-Length': chunksize,
-    'Content-Type': 'video/x-matroska'
-  }
-
-  res.writeHead(206, head)
-
-  let stream_position = {
-    start: start,
-    end: end
-  }
-
-  detailsOfEpisode.percentageWatched = (start / end) * 100
-  console.log(detailsOfEpisode)
-
-  let stream = file.createReadStream(stream_position)
-  stream.pipe(res)
-
-  stream.on('error', function (err) {
-    console.error('Stream error:', err)
-    // Only send a response if headers haven't been sent yet
-    if (!res.headersSent) {
-      return res.status(500).send('Error streaming the video')
-    }
-  })
-
-  stream.on('close', () => {
-    console.log('Stream closed prematurely')
-  })
-})
-
-// Deselect an episode with the given filename
-app2.get('/deselect/:magnet/:filename', async (req, res) => {
-  let magnet = req.params.magnet
-  let filename = req.params.filename
-
-  let tor = await client.get(magnet)
-
-  if (!tor) {
-    return res.status(404).send('Torrent not found')
-  }
-
-  let file = tor.files.find((f) => f.name === filename)
-
-  if (!file) {
-    return res.status(404).send('No file found in the torrent')
-  }
-
-  console.log(chalk.bgRed('Download Stopped:') + ' ' + chalk.cyan(file.name))
-
-  file.deselect()
-
-  res.status(200).send('File deselected successfully')
-})
-
-// get download details of a file
-
-let detailsOfEpisode = {
-  name: '',
-  length: 0,
-  downloaded: 0,
-  progress: 0,
-  percentageWatched: 0
-}
-
-app2.get('/detailsepisode/:magnet/:filename', async (req, res) => {
-  let magnet = req.params.magnet
-  let filename = req.params.filename
-
-  let tor = await client.get(magnet)
-  if (!tor) {
-    return res.status(404).send('Torrent not found')
-  }
-
-  let file = tor.files.find((f) => f.name === filename)
-  if (!file) {
-    return res.status(404).send('No file found in the torrent')
-  }
-
-  // let details = {
-  detailsOfEpisode = {
-    name: file.name,
-    length: file.length,
-    downloaded: file.downloaded,
-    progress: file.progress,
-    percentageWatched: detailsOfEpisode.percentageWatched
-  }
-
-  res.status(200).json(detailsOfEpisode)
-})
-
-/* ------------------------------------------------------ */
-
-app2.get('/stream/:magnet', async function (req, res, next) {
-  let magnet = req.params.magnet
-  console.log(magnet)
-
-  let tor = await client.get(magnet)
-
-  if (!tor) {
-    return res.status(404).send('Torrent not found')
-  }
-
-  let file = tor.files.find((f) => f.name.endsWith('.mkv'))
-  console.log('file :' + file.toString())
-
-  if (!file) {
-    return res.status(404).send('No MP4 file found in the torrent')
-  }
-
-  let range = req.headers.range
-  console.log('Range : ' + range)
-
-  if (!range) {
-    return res.status(416).send('Range is required')
-  }
-
-  let positions = range.replace(/bytes=/, '').split('-')
-  let start = parseInt(positions[0], 10)
-  let file_size = file.length
-  let end = positions[1] ? parseInt(positions[1], 10) : file_size - 1
-  let chunksize = end - start + 1
-
-  let head = {
-    'Content-Range': `bytes ${start}-${end}/${file_size}`,
-    'Accept-Ranges': 'bytes',
-    'Content-Length': chunksize,
-    'Content-Type': 'video/x-matroska'
-  }
-
-  res.writeHead(206, head)
-
-  let stream_position = {
-    start: start,
-    end: end
-  }
-
-  let stream = file.createReadStream(stream_position)
-  stream.pipe(res)
-
-  stream.on('error', function (err) {
-    console.error('Stream error:', err)
-    // Only send a response if headers haven't been sent yet
-    if (!res.headersSent) {
-      return res.status(500).send('Error streaming the video')
-    }
-  })
-
-  stream.on('close', () => {
-    console.log('Stream closed prematurely')
-  })
-})
-
-app2.get('/details/:magnet', async (req, res) => {
-  let magnet = req.params.magnet
-
-  // Find the torrent by magnet link
-  let tor = await client.get(magnet)
-  if (!tor) {
-    return res.status(404).send('Torrent not found')
-  }
-
-  // Prepare torrent details
-  let details = {
-    name: tor.name,
-    length: tor.length,
-    downloaded: tor.downloaded,
-    uploaded: tor.uploaded,
-    downloadSpeed: tor.downloadSpeed,
-    uploadSpeed: tor.uploadSpeed,
-    progress: tor.progress,
-    ratio: tor.ratio,
-    numPeers: tor.numPeers
-  }
-
-  res.status(200).json(details)
-})
-
-/* --------------- Handling VLC streaming --------------- */
-import { exec } from 'child_process'
-import { get } from 'http'
-import { fileURLToPath } from 'url'
-// Full path to VLC executable, change it as needed
-const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"' // Adjust this path as needed
-
-app2.get('/stream-to-vlc', async (req, res) => {
-  const { url, magnet } = req.query
-
-  if (!url) {
-    return res.status(400).send('URL is required')
-  }
-  const vlcCommand = `${vlcPath} "${url}"`
-
-  exec(vlcCommand, (error) => {
-    if (error) {
-      console.error(`Error launching VLC: ${error.message}`)
-      return res.status(500).send('Error launching VLC')
-    }
-    res.send('VLC launched successfully')
-  })
-})
-/* ------------------------------------------------------ */
-
-app2.delete('/remove/:magnet', async (req, res) => {
-  let magnet = req.params.magnet
-
-  // Find the torrent by magnet link
-  let tor = await client.get(magnet)
-  if (!tor) {
-    return res.status(404).send('Torrent not found')
-  }
-
-  // Destroy the torrent to stop downloading and remove it from the client
-  tor.destroy((err) => {
-    if (err) {
-      console.error('Error removing torrent:', err)
-      return res.status(500).send('Error removing torrent')
-    }
-
-    res.status(200).send('Torrent removed successfully')
-  })
-})
-
-// ping backend
-app2.get('/ping', (req, res) => {
-  res.status(200).send('pong')
-})
-
-// do not start the server again if it is already running
-
-// app2.listen(8000, () => {
-//   console.log('Server running at http://localhost:8000')
-// })

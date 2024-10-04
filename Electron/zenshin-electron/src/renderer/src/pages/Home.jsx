@@ -6,11 +6,15 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { getTopAnime } from '../utils/helper'
 import { useEffect, useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { Spinner } from '@radix-ui/themes'
+import { Skeleton, Spinner } from '@radix-ui/themes'
 import { toast } from 'sonner'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 // import loundraw from "../assets/loundraw.jpg";
 import gradient1 from '../assets/gradient1.jpg'
+import SkeletonAnimeCard from '../skeletons/SkeletonAnimeCard'
+import { getCurrentSeason } from '../utils/currentSeason'
+import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 
 export default function Home() {
   // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
@@ -21,9 +25,34 @@ export default function Home() {
   //   status: statusRecentActivity,
   // } = useGetRecentGlobalActivity();
 
+  // State to store background opacity
+  const [bgOpacity, setBgOpacity] = useState(1)
+
+  // Update opacity on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      // Adjust the value as per your requirement, this reduces opacity with scroll
+      const newOpacity = Math.max(0, 1 - scrollY / 500) // Minimum opacity is 0.3
+      setBgOpacity(newOpacity)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   const { isLoading, topAiringAnime, error, status } = useTopAiringAnime()
-  // const { isLoading2, topAnime, error2, status2 } = useGetTopAnime();
-  // const { isLoading2, topAnime:topAnimeTS, error2, status2 } = useGetTopAnime();
+
+  // get current year and season
+  const currentYear = new Date().getFullYear()
+  // season: WINTER, SPRING, SUMMER, FALL
+  const currentSeason = getCurrentSeason()
+
+  const scrollPosition = window.scrollY
+
   const {
     data,
     fetchNextPage,
@@ -37,7 +66,8 @@ export default function Home() {
     getNextPageParam: (lastPage, allPages) => {
       return allPages.length + 1
     },
-    staleTime: 1000 * 60 * 60 // 1 hour
+    staleTime: 1000 * 60 * 60, // 1 hour
+    gcTime: 1000 * 60 * 60 // 1 hour
   })
 
   if (infiniteQueryError) {
@@ -50,30 +80,7 @@ export default function Home() {
     })
   }
 
-  // if (error) {
-  //   throw new Error(error);
-  // }
-  // const [page, setPage] = useState(1);
-
-  // const [prevTopAnime, setPrevTopAnime] = useState([]);
-  // const[topAnime, setTopAnime] = useState([]);
-
-  // async function fetchMoreData() {
-  // // const { isLoading2, topAnime:topAnimeTS, error2, status2 } = useGetTopAnime();
-  // // const data = await getTopAnime(page);
-  //   console.log(data); // Add this line to inspect the structure
-  //   setPage(page + 1);
-  //   setPrevTopAnime([...prevTopAnime, ...data.data]);
-  //   setTopAnime([...topAnime, ...data.data]);
-  // }
-
-  // console.log(topAnime);
-
-  // const topAnime = data?.pages?.flatMap((page) => page.data) || [];
-  // console.log(topAnime);
-
   const [topAnime, setTopAnime] = useState([])
-  // console.log(data);
 
   useEffect(() => {
     if (data) {
@@ -85,14 +92,14 @@ export default function Home() {
     }
   }, [data])
 
-  // TOO LAZY TOO MAKE THIS RESPONSIVE
   return (
     <div className="font-space-mono tracking-tight select-none">
       <div
         className="flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
         style={{
-          backgroundImage: `url(${gradient1})`,
-          backgroundSize: 'cover'
+          // backgroundImage: `url(${gradient1})`,
+          // backgroundSize: 'cover',
+          background: `linear-gradient(rgba(17,17,19,${1 - bgOpacity}), rgba(17,17,19,${1 - bgOpacity})), url(${gradient1})`
         }}
       >
         <div className="flex h-full w-8/12 flex-col items-center justify-start gap-y-10 p-3 lg:w-2/5">
@@ -100,11 +107,6 @@ export default function Home() {
           <p className="font-space-mono">
             Stream your favourite torrents instantly with our service, no waiting for downloads,
             reliable and seamless streaming directly to your browser / VLC Media Player.
-            {/* <br /> Built with{" "}
-            <span className="text-cyan-300">React</span>,{" "}
-            <span className="text-orange-300">TanStack Query</span>, Radix UI,
-            ExpressJS, Tailwind CSS,{" "}
-            <span className="text-red-500">WebTorrent</span>, Video.js and more. */}
           </p>
         </div>
 
@@ -115,11 +117,49 @@ export default function Home() {
         />
       </div>
 
+      {topAiringAnime?.length > 0 && (
+        <div
+          className={`w-full`}
+          style={{
+            opacity: 1 - bgOpacity
+          }}
+        >
+          <Carousel
+            axis="horizontal"
+            showArrows={true}
+            showThumbs={false}
+            // autoPlay
+            interval={4000} // 3 seconds interval for autoplay
+          >
+            {topAiringAnime
+              ?.filter(
+                (anime) =>
+                  anime.seasonYear === currentYear &&
+                  anime.season.toLowerCase() === currentSeason.toLowerCase() &&
+                  anime.bannerImage !== null
+              )
+              .map((anime) => (
+                // gradient from left to right black to transparent
+                <div key={anime.id + 'bannerAnime'} className="relative h-72">
+                  <div className="absolute w-9/12 h-full bg-gradient-to-r from-[#141414]"></div>
+                  <div className="absolute  h-full flex flex-col justify-center items-center">
+                    <div className="font-semibold tracking-wider text-xl shadow-3xl">
+                      {anime.title.romaji}
+                    </div>
+                  </div>
+                  <img src={anime.bannerImage} alt="" className="h-72 w-full object-cover " />
+                </div>
+              ))}
+          </Carousel>
+        </div>
+      )}
+
       {error && (
         <div className="text-red-500">Failed to fetch Top Airing Anime : {error.message}</div>
       )}
 
-      {status === 'success' && !error && (
+      {/* {status === 'success' && !error && ( */}
+      {!error && (
         <div className="mx-5 mt-8">
           <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Airing Anime
@@ -130,6 +170,17 @@ export default function Home() {
               topAiringAnime?.map((anime) => (
                 <AnimeCard key={anime.id + 'topAiringAnime'} data={anime} />
               ))}
+            {isLoading && (
+              <>
+                <SkeletonAnimeCard />
+                <SkeletonAnimeCard />
+                <SkeletonAnimeCard />
+                <SkeletonAnimeCard />
+                <SkeletonAnimeCard />
+                <SkeletonAnimeCard />
+                <SkeletonAnimeCard />
+              </>
+            )}
           </div>
         </div>
       )}
@@ -159,6 +210,17 @@ export default function Home() {
               {topAnime?.map((anime) => {
                 return <AnimeCard key={anime.id + 'topAnime'} data={anime} />
               })}
+              {isFetching && (
+                <>
+                  <SkeletonAnimeCard />
+                  <SkeletonAnimeCard />
+                  <SkeletonAnimeCard />
+                  <SkeletonAnimeCard />
+                  <SkeletonAnimeCard />
+                  <SkeletonAnimeCard />
+                  <SkeletonAnimeCard />
+                </>
+              )}
             </div>
           </InfiniteScroll>
         </div>

@@ -25,6 +25,9 @@ module.exports = {
       '2xl': '1836px'
       // => @media (min-width: 1536px) { ... }
     },
+    boxShadow: {
+      '3xl': '90 35px 60px -15px rgba(0, 0, 0, 0.8)'
+    },
     extend: {}
   },
   plugins: [require('tailwindcss-animated', '@tailwindcss/line-clamp')]
