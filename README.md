@@ -2,10 +2,14 @@
 
 <img src="https://github.com/user-attachments/assets/af797fd4-e7ca-428f-82fc-c50d13b9407c" width="120">
 
-Note: Work will be continued on this project from Oct 2024.
+
 
 A web based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
 
+## Electron Port (Beta) :
+![image](https://github.com/user-attachments/assets/ed4e9255-69d7-4652-a488-7d5a3cfbb759)
+
+## Summary
 Built it as a mini project to familiarize myself with video streaming using ExpressJS and handling of streams and APIs in a ReactJS based frontend webapp.
 
 ![image](https://github.com/user-attachments/assets/5d93d3a7-533c-4615-a25d-34e7af901108)
