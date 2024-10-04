@@ -1,5 +1,5 @@
-appId: com.zenshin.app
-productName: zenshin
+appId: com.electron.app
+productName: electron-app
 directories:
   buildResources: build
 files:
@@ -11,7 +11,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: Zenshin
+  executableName: electron-app
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

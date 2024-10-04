@@ -1,23 +1,28 @@
-import AnimeCard from '../components/AnimeCard'
-import useTopAiringAnime from '../hooks/useTopAiringAnime'
-import zenshin1 from '../assets/zenshin2.png'
-import zenshinLogo from '../assets/zenshinLogo.png'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { getTopAnime } from '../utils/helper'
-import { useEffect, useState } from 'react'
-import { useInfiniteQuery } from '@tanstack/react-query'
-import { Skeleton, Spinner } from '@radix-ui/themes'
-import { toast } from 'sonner'
-import { ExclamationTriangleIcon, PersonIcon, StarIcon, VideoIcon } from '@radix-ui/react-icons'
+import AnimeCard from "../components/AnimeCard";
+import useTopAiringAnime from "../hooks/useTopAiringAnime";
+import zenshin1 from "../assets/zenshin2.png";
+import zenshinLogo from "../assets/zenshinLogo.png";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { getTopAnime } from "../utils/helper";
+import { useEffect, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { Skeleton, Spinner } from "@radix-ui/themes";
+import { toast } from "sonner";
+import {
+  ExclamationTriangleIcon,
+  PersonIcon,
+  StarIcon,
+  VideoIcon,
+} from "@radix-ui/react-icons";
 // import loundraw from "../assets/loundraw.jpg";
-import gradient1 from '../assets/gradient1.jpg'
-import SkeletonAnimeCard from '../skeletons/SkeletonAnimeCard'
-import { getCurrentSeason } from '../utils/currentSeason'
-import { Carousel } from 'react-responsive-carousel'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { autop } from '@wordpress/autop'
-import HTMLReactParser from 'html-react-parser/lib/index'
-import { useNavigate } from 'react-router-dom'
+import gradient1 from "../assets/gradient1.jpg";
+import SkeletonAnimeCard from "../skeletons/SkeletonAnimeCard";
+import { getCurrentSeason } from "../utils/currentSeason";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { autop } from "@wordpress/autop";
+import HTMLReactParser from "html-react-parser/lib/index";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
@@ -29,72 +34,72 @@ export default function Home() {
   // } = useGetRecentGlobalActivity();
 
   // State to store background opacity
-  const [bgOpacity, setBgOpacity] = useState(1)
+  const [bgOpacity, setBgOpacity] = useState(1);
 
   // Update opacity on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY
+      const scrollY = window.scrollY;
       // Adjust the value as per your requirement, this reduces opacity with scroll
-      const newOpacity = Math.max(0, 1 - scrollY / 500) // Minimum opacity is 0.3
-      setBgOpacity(newOpacity)
-    }
+      const newOpacity = Math.max(0, 1 - scrollY / 500); // Minimum opacity is 0.3
+      setBgOpacity(newOpacity);
+    };
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
-  const { isLoading, topAiringAnime, error, status } = useTopAiringAnime()
+  const { isLoading, topAiringAnime, error, status } = useTopAiringAnime();
 
   // get current year and season
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
   // season: WINTER, SPRING, SUMMER, FALL
-  const currentSeason = getCurrentSeason()
+  const currentSeason = getCurrentSeason();
 
-  const scrollPosition = window.scrollY
+  const scrollPosition = window.scrollY;
 
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetching,
-    error: infiniteQueryError
+    error: infiniteQueryError,
   } = useInfiniteQuery({
-    queryKey: ['top_animes'],
+    queryKey: ["top_animes"],
     queryFn: ({ pageParam = 1 }) => getTopAnime(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      return allPages.length + 1
+      return allPages.length + 1;
     },
     staleTime: 1000 * 60 * 60, // 1 hour
-    gcTime: 1000 * 60 * 60 // 1 hour
-  })
+    gcTime: 1000 * 60 * 60, // 1 hour
+  });
 
   if (infiniteQueryError) {
-    toast.error('Error fetching Top Animes', {
+    toast.error("Error fetching Top Animes", {
       icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
       description: infiniteQueryError?.message,
       classNames: {
-        title: 'text-rose-500'
-      }
-    })
+        title: "text-rose-500",
+      },
+    });
   }
 
-  const [topAnime, setTopAnime] = useState([])
-  const navigate = useNavigate()
+  const [topAnime, setTopAnime] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data) {
       const newTopAnime = data.pages
         .map((page) => page)
         .flat()
-        .filter(Boolean)
-      setTopAnime(newTopAnime)
+        .filter(Boolean);
+      setTopAnime(newTopAnime);
     }
-  }, [data])
+  }, [data]);
 
   return (
     <div className="select-none font-space-mono tracking-tight">
@@ -103,14 +108,19 @@ export default function Home() {
         style={{
           // backgroundImage: `url(${gradient1})`,
           // backgroundSize: 'cover',
-          background: `linear-gradient(rgba(17,17,19,${1 - bgOpacity}), rgba(17,17,19,${1 - bgOpacity})), url(${gradient1})`
+          background: `linear-gradient(rgba(17,17,19,${1 - bgOpacity}), rgba(17,17,19,${1 - bgOpacity})), url(${gradient1})`,
         }}
       >
         <div className="flex h-full w-8/12 flex-col items-center justify-start gap-y-10 p-3 lg:w-2/5">
-          <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[6rem] object-scale-down" />
+          <img
+            src={zenshinLogo}
+            alt=""
+            className="drop-shadow-xl h-[6rem] object-scale-down"
+          />
           <p className="font-space-mono">
-            Stream your favourite torrents instantly with our service, no waiting for downloads,
-            reliable and seamless streaming directly to your browser / VLC Media Player.
+            Stream your favourite torrents instantly with our service, no
+            waiting for downloads, reliable and seamless streaming directly to
+            your browser / VLC Media Player.
           </p>
         </div>
 
@@ -125,7 +135,7 @@ export default function Home() {
         <div
           className={`w-full animate-fade`}
           style={{
-            opacity: 1 - bgOpacity
+            opacity: 1 - bgOpacity,
           }}
         >
           <Carousel
@@ -143,14 +153,16 @@ export default function Home() {
                 (anime) =>
                   anime.seasonYear === currentYear &&
                   anime.season.toLowerCase() === currentSeason.toLowerCase() &&
-                  anime.bannerImage !== null
+                  anime.bannerImage !== null,
               )
               .map((anime) => (
                 // gradient from left to right black to transparent
                 <div
-                  key={anime.id + 'bannerAnime'}
+                  key={anime.id + "bannerAnime"}
                   className="relative h-72 cursor-pointer"
-                  onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
+                  onClick={() =>
+                    navigate(`/anime/${anime.id}`, { state: { data: anime } })
+                  }
                 >
                   <div className="mask absolute h-full w-8/12 bg-gradient-to-r from-[#141414] backdrop-blur-md"></div>
                   <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2">
@@ -184,7 +196,11 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  <img src={anime.bannerImage} alt="" className="h-72 w-full object-cover" />
+                  <img
+                    src={anime.bannerImage}
+                    alt=""
+                    className="h-72 w-full object-cover"
+                  />
                 </div>
               ))}
           </Carousel>
@@ -192,7 +208,9 @@ export default function Home() {
       )}
 
       {error && (
-        <div className="text-red-500">Failed to fetch Top Airing Anime : {error.message}</div>
+        <div className="text-red-500">
+          Failed to fetch Top Airing Anime : {error.message}
+        </div>
       )}
 
       {/* {status === 'success' && !error && ( */}
@@ -205,7 +223,7 @@ export default function Home() {
             {!isLoading &&
               !error &&
               topAiringAnime?.map((anime) => (
-                <AnimeCard key={anime.id + 'topAiringAnime'} data={anime} />
+                <AnimeCard key={anime.id + "topAiringAnime"} data={anime} />
               ))}
             {isLoading && (
               <>
@@ -223,7 +241,9 @@ export default function Home() {
       )}
 
       {infiniteQueryError && (
-        <div className="text-red-500">Failed to fetch Top Anime : {infiniteQueryError.message}</div>
+        <div className="text-red-500">
+          Failed to fetch Top Anime : {infiniteQueryError.message}
+        </div>
       )}
 
       {!infiniteQueryError && topAnime.length > 0 && (
@@ -232,7 +252,7 @@ export default function Home() {
             Top Anime
           </div>
           <InfiniteScroll
-            style={{ all: 'unset' }}
+            style={{ all: "unset" }}
             dataLength={topAnime.length}
             next={() => fetchNextPage()}
             hasMore={topAnime?.length < 500}
@@ -245,7 +265,7 @@ export default function Home() {
           >
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg2:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-9">
               {topAnime?.map((anime) => {
-                return <AnimeCard key={anime.id + 'topAnime'} data={anime} />
+                return <AnimeCard key={anime.id + "topAnime"} data={anime} />;
               })}
               {isFetching && (
                 <>
@@ -263,5 +283,5 @@ export default function Home() {
         </div>
       )}
     </div>
-  )
+  );
 }

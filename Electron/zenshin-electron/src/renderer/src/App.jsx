@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, createHashRouter, RouterProvider } from 'react-router-dom'
 import AppLayout from './ui/AppLayout'
 import Home from './pages/Home'
 import ErrorPage from './pages/ErrorPage'
@@ -14,44 +14,39 @@ import AnilistAuthCallback from './components/AnilistAuthCallback'
 // const AnimePage = lazy(() => import("./pages/AnimePage"));
 // const Player = lazy(() => import("./pages/Player"));
 
-const router = createBrowserRouter(
-  [
-    {
-      element: <AppLayout />,
-      errorElement: <AppLayout props={<ErrorPage />} />,
-      children: [
-        {
-          path: '/',
-          element: <Home />,
-          errorElement: <ErrorPage />
-        },
-        {
-          path: '/anime/:animeId',
-          element: <AnimePage />,
-          errorElement: <ErrorPage />
-        },
-        {
-          path: '/player/:magnetId/:animeId?/:priorProgress?/:currentEpisodeNum?',
-          element: <Player />,
-          errorElement: <ErrorPage />
-        },
-        {
-          path: '/newreleases',
-          element: <NewReleases />,
-          errorElement: <ErrorPage />
-        },
-        {
-          path: '/anilistauthcallback',
-          element: <AnilistAuthCallback />,
-          errorElement: <ErrorPage />
-        }
-      ]
-    }
-  ],
+const router = createHashRouter([
   {
-    basename: '/'
+    element: <AppLayout />,
+    errorElement: <AppLayout props={<ErrorPage />} />,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/anime/:animeId',
+        element: <AnimePage />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/player/:magnetId/:animeId?/:priorProgress?/:currentEpisodeNum?',
+        element: <Player />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/newreleases',
+        element: <NewReleases />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/anilistauthcallback',
+        element: <AnilistAuthCallback />,
+        errorElement: <ErrorPage />
+      }
+    ]
   }
-)
+])
 
 function App() {
   // the idea of integrating react-query is similar to that of context api
@@ -66,7 +61,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <RouterProvider router={router} />
     </QueryClientProvider>
   )

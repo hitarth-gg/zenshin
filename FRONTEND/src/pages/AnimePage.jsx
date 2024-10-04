@@ -253,23 +253,3 @@ export default function AnimePage() {
     </>
   )
 }
-
-// {animeEpisodes.length === 0 && (
-//   <div className="mt-5">
-//     <div className="flex items-center gap-x-3">
-//       <p className="font-space-mono text-lg font-medium opacity-90">
-//         Episodes
-//       </p>
-//       <Button
-//         size={"1"}
-//         onClick={() => setEnglishDub(!englishDub)}
-//         color={englishDub ? "blue" : "gray"}
-//       >
-//         English Dub
-//       </Button>
-//     </div>
-//     <div className="mt-3 grid grid-cols-1 gap-y-3">
-//       <Episode anime={data.title} englishDub={englishDub} />
-//     </div>
-//   </div>
-// )}
