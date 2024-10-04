@@ -6,7 +6,7 @@ import CenteredLoader from '../ui/CenteredLoader'
 import Episode from '../components/Episode'
 import { Button } from '@radix-ui/themes'
 import { toast } from 'sonner'
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { ExclamationTriangleIcon, PersonIcon, StarIcon } from '@radix-ui/react-icons'
 import useGetAniZipMappings from '../hooks/useGetAniZipMappings'
 import useGetAnimeByMalId from '../hooks/useGetAnimeByMalId'
 import { autop } from '@wordpress/autop'
@@ -134,7 +134,7 @@ export default function AnimePage() {
             <div className="animate-fade-down">
               <img
                 src={data?.bannerImage}
-                className="absolute top-0 saturate-150 z-0 h-72 w-full object-cover opacity-70 blur-3xl brightness-75"
+                className="absolute top-0 z-0 h-72 w-full object-cover opacity-70 blur-3xl brightness-75 saturate-150"
                 alt=""
               />
             </div>
@@ -151,7 +151,7 @@ export default function AnimePage() {
           <img
             src={data?.coverImage.extraLarge}
             alt=""
-            className={`duration-400 relative ${data?.bannerImage ? 'bottom-[4rem]' : ''} h-[25rem]  w-72 animate-fade-up rounded-md object-cover shadow-xl drop-shadow-2xl transition-all ease-in-out`}
+            className={`duration-400 relative ${data?.bannerImage ? 'bottom-[4rem]' : ''} shadow-xl drop-shadow-2xl h-[25rem] w-72 animate-fade-up rounded-md object-cover transition-all ease-in-out`}
             // className={`duration-400 relative h-96 w-72 animate-fade rounded-md object-cover transition-all ease-in-out`}
           />
           <div className="flex-1 justify-start gap-y-0">
@@ -170,6 +170,19 @@ export default function AnimePage() {
               </p>
               <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
               <p className="opacity-60">{data?.season}</p>
+              <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
+              {data.averageScore && (
+                <>
+                  <div className="flex gap-x-1 tracking-wide opacity-90">
+                    <StarIcon /> {data.averageScore} / 100
+                  </div>
+                  <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
+                </>
+              )}
+              <div className="flex gap-x-1 tracking-wide opacity-90">
+                <PersonIcon />
+                {data.popularity.toLocaleString()}
+              </div>
             </div>
             <div className="my-3 h-[1px] w-1/2 bg-[#333]"></div> {/* Divider */}
             <div className="animate-fade animate-duration-1000">

@@ -6,6 +6,7 @@ import {
   DividerVerticalIcon,
   ExclamationTriangleIcon,
   GitHubLogoIcon,
+  LayersIcon,
   LightningBoltIcon,
   MinusIcon,
   PersonIcon,
@@ -132,18 +133,21 @@ export default function Header({ theme }) {
             <div className="p-1 font-space-mono text-[.8rem]">New Releases</div>
           </Link>
         </Button>
-        <Button
-          className="nodrag"
-          size="1"
-          color="green"
-          variant="soft"
-          onClick={checkBackendRunning}
-        >
-          Ping Backend
-        </Button>
+        <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
+        <Tooltip content="Ping Backend">
+          <Button
+            className="nodrag"
+            size="1"
+            color="green"
+            variant="soft"
+            onClick={checkBackendRunning}
+          >
+            <LayersIcon />
+          </Button>
+        </Tooltip>
       </div>
 
-      <div className="w-2/6 nodrag">
+      <div className="nodrag w-2/6">
         <SearchBar />
       </div>
       <div className="nodrag flex items-center justify-center gap-x-8">
@@ -206,15 +210,6 @@ export default function Header({ theme }) {
             <ShadowNoneIcon className="my-1" width={16} height={16} />
           )}
         </Button>
-        {/* <Button color="gray" variant="ghost" size={'3'} onClick={minimizeApp}>
-          <MinusIcon className="my-1" width={12} height={12} />
-        </Button>
-        <Button color="gray" variant="ghost" size={'3'} onClick={maximizeApp}>
-          <SquareIcon className="my-1" width={12} height={12} />
-        </Button>
-        <Button color="gray" variant="ghost" size={'3'} onClick={closeApp}>
-          <Cross1Icon className="my-1" width={12} height={12} />
-        </Button> */}
         <div className="w-32"></div>
       </div>
     </div>

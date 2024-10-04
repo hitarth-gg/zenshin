@@ -17,6 +17,7 @@ import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { autop } from '@wordpress/autop'
 import HTMLReactParser from 'html-react-parser/lib/index'
+import { useNavigate } from 'react-router-dom'
 
 export default function Home() {
   // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
@@ -83,6 +84,7 @@ export default function Home() {
   }
 
   const [topAnime, setTopAnime] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (data) {
@@ -121,7 +123,7 @@ export default function Home() {
 
       {topAiringAnime?.length > 0 && (
         <div
-          className={`w-full`}
+          className={`w-full animate-fade-up`}
           style={{
             opacity: 1 - bgOpacity
           }}
@@ -130,9 +132,11 @@ export default function Home() {
             axis="horizontal"
             showArrows={true}
             showThumbs={false}
-            // autoPlay
-            interval={4000}
+            autoPlay
+            interval={5000}
             infiniteLoop
+            renderIndicator={false}
+            emulateTouch
           >
             {topAiringAnime
               ?.filter(
@@ -145,7 +149,10 @@ export default function Home() {
                 // gradient from left to right black to transparent
                 <div key={anime.id + 'bannerAnime'} className="relative h-72">
                   <div className="mask absolute h-full w-8/12 bg-gradient-to-r from-[#141414] backdrop-blur-md"></div>
-                  <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2">
+                  <div
+                    className="absolute ml-5 flex h-full cursor-pointer flex-col items-start justify-center gap-y-2 px-2"
+                    onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
+                  >
                     <div className="line-clamp-1 max-w-xl bg-gradient-to-r from-[#14141480] py-1 text-start text-2xl font-semibold tracking-wider text-white drop-shadow-3xl">
                       {anime.title.romaji}
                     </div>
