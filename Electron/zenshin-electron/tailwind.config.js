@@ -7,6 +7,24 @@ module.exports = {
       inter: ['Inter', 'ui-sans-serif', 'system-ui'],
       'space-mono': ['Space Mono', 'ui-sans-serif', 'system-ui']
     },
+    screens: {
+      sm: '640px',
+      // => @media (min-width: 640px) { ... }
+
+      md: '768px',
+      // => @media (min-width: 768px) { ... }
+
+      lg: '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      lg2: '1152px',
+
+      xl: '1380px',
+      // => @media (min-width: 1280px) { ... }
+
+      '2xl': '1836px'
+      // => @media (min-width: 1536px) { ... }
+    },
     extend: {}
   },
   plugins: [require('tailwindcss-animated', '@tailwindcss/line-clamp')]

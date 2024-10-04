@@ -1,24 +1,22 @@
-import { useEffect, useState } from "react";
-import useGetNewReleases from "../hooks/useGetNewReleases";
-import CenteredLoader from "../ui/CenteredLoader";
-import NewReleaseCard from "../components/NewReleaseCard";
+import { useEffect, useState } from 'react'
+import useGetNewReleases from '../hooks/useGetNewReleases'
+import CenteredLoader from '../ui/CenteredLoader'
+import NewReleaseCard from '../components/NewReleaseCard'
 
 export default function NewReleases() {
-  const packer = "[SubsPlease]";
-  const { isLoading, data, error, status } = useGetNewReleases(packer);
-  const [newReleases, setNewReleases] = useState([]);
-  const [displayedReleases, setDisplayedReleases] = useState([]);
-  const [cardErrorShown, setCardErrorShown] = useState(false); // Track whether error toast was shown
+  const packer = '[SubsPlease]'
+  const { isLoading, data, error, status } = useGetNewReleases(packer)
+  const [newReleases, setNewReleases] = useState([])
+  const [displayedReleases, setDisplayedReleases] = useState([])
+  const [cardErrorShown, setCardErrorShown] = useState(false) // Track whether error toast was shown
 
   useEffect(() => {
     if (data) {
-      const HQ_Releases = data.filter((release) =>
-        release.title[0].includes("1080p"),
-      );
-      setNewReleases(HQ_Releases.slice(0, 12));
+      const HQ_Releases = data.filter((release) => release.title[0].includes('1080p'))
+      setNewReleases(HQ_Releases.slice(0, 12))
       //   setNewReleases(HQ_Releases);
     }
-  }, [data]);
+  }, [data])
 
   //   useEffect(() => {
   //     if (newReleases.length > 0) {
@@ -32,30 +30,30 @@ export default function NewReleases() {
 
   useEffect(() => {
     async function insertReleases() {
-      const chunkSize = 5;
+      const chunkSize = 5
       for (let i = 0; i < newReleases.length; i += chunkSize) {
-        const chunk = newReleases.slice(i, i + chunkSize);
+        const chunk = newReleases.slice(i, i + chunkSize)
         for (let j = 0; j < chunk.length; j++) {
-          await new Promise((resolve) => setTimeout(resolve, 300)); // 200ms delay between each insertion
-          setDisplayedReleases((prev) => [...prev, chunk[j]]);
+          await new Promise((resolve) => setTimeout(resolve, 300)) // 200ms delay between each insertion
+          setDisplayedReleases((prev) => [...prev, chunk[j]])
         }
         if (i + chunkSize < newReleases.length) {
-          await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2 seconds before next chunk
+          await new Promise((resolve) => setTimeout(resolve, 2000)) // Wait 2 seconds before next chunk
         }
       }
     }
 
     if (newReleases.length > 0) {
-      insertReleases();
+      insertReleases()
     }
-  }, [newReleases]);
+  }, [newReleases])
 
   if (isLoading) {
-    return <CenteredLoader />;
+    return <CenteredLoader />
   }
 
   if (error) {
-    throw new Error(error);
+    throw new Error(error)
   }
 
   return (
@@ -65,9 +63,14 @@ export default function NewReleases() {
       </div>
       <div className="grid animate-fade grid-cols-4">
         {displayedReleases.map((release) => (
-          <NewReleaseCard key={release.title} data={release} cardErrorShown={cardErrorShown} setCardErrorShown={setCardErrorShown}/>
+          <NewReleaseCard
+            key={release.title}
+            data={release}
+            cardErrorShown={cardErrorShown}
+            setCardErrorShown={setCardErrorShown}
+          />
         ))}
       </div>
     </div>
-  );
+  )
 }

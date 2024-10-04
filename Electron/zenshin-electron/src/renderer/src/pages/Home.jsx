@@ -87,10 +87,8 @@ export default function Home() {
 
   // TOO LAZY TOO MAKE THIS RESPONSIVE
   return (
-    <div className="font-space-mono tracking-tight">
-      {/* <div className="to-purple-800-500 absolute left-40 top-[10rem] h-96 w-96 rounded-full bg-gradient-to-r from-blue-400 via-purple-500 opacity-20 blur-[100px]"></div> */}
+    <div className="font-space-mono tracking-tight select-none">
       <div
-        // className="flex min-h-[94svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
         className="flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
         style={{
           backgroundImage: `url(${gradient1})`,
@@ -123,10 +121,10 @@ export default function Home() {
 
       {status === 'success' && !error && (
         <div className="mx-5 mt-8">
-          <div className="mb-2 ml-8 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+          <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Airing Anime
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg2:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-9">
             {!isLoading &&
               !error &&
               topAiringAnime?.map((anime) => (
@@ -142,10 +140,11 @@ export default function Home() {
 
       {!infiniteQueryError && topAnime.length > 0 && (
         <div className="mx-5 mt-12">
-          <div className="mb-2 ml-8 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+          <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Anime
           </div>
           <InfiniteScroll
+            style={{ all: 'unset' }}
             dataLength={topAnime.length}
             next={() => fetchNextPage()}
             hasMore={topAnime?.length < 500}
@@ -156,7 +155,7 @@ export default function Home() {
               </div>
             }
           >
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg2:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-9">
               {topAnime?.map((anime) => {
                 return <AnimeCard key={anime.id + 'topAnime'} data={anime} />
               })}

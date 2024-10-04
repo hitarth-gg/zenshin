@@ -20,7 +20,6 @@ function createWindow() {
     // frame: false,
     // frame: process.platform === 'darwin', // Only keep the native frame on Mac
     titleBarStyle: 'hidden',
-    icon: icon,
     titleBarOverlay: {
       color: '#17191c00',
       symbolColor: '#eee',
@@ -31,7 +30,7 @@ function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
-      nodeIntegration: true,
+      nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
       devTools: true
@@ -53,7 +52,6 @@ function createWindow() {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    // don't throw an error if the file doesn't exist
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
@@ -143,6 +141,8 @@ import('chalk').then((module) => {
   chalk = module.default
   console.log(chalk.green('Chalk is loaded!'))
 })
+
+
 
 // Get the current directory
 // const __filename = fileURLToPath(import.meta.url)
@@ -288,7 +288,7 @@ app2.get('/metadata/:magnet', async (req, res) => {
   }
   /* ------------------------------------------------------ */
 
-  const torrent = client.add(magnet, { path: downloadsDir, deselect: true })
+  const torrent = client.add(magnet, { deselect: true, path: downloadsDir })
 
   torrent.on('metadata', () => {
     const files = torrent.files.map((file) => ({
@@ -296,11 +296,6 @@ app2.get('/metadata/:magnet', async (req, res) => {
       length: file.length
     }))
     console.log(files)
-
-    // deselect all files
-    torrent.files.forEach((file) => {
-      file.deselect()
-    })
 
     res.status(200).json(files)
   })
@@ -388,16 +383,12 @@ app2.get('/deselect/:magnet/:filename', async (req, res) => {
 
   let file = tor.files.find((f) => f.name === filename)
 
-  // deselect all files
-
   if (!file) {
     return res.status(404).send('No file found in the torrent')
   }
 
   console.log(chalk.bgRed('Download Stopped:') + ' ' + chalk.cyan(file.name))
 
-  file.deselect()
-  file.deselect()
   file.deselect()
 
   res.status(200).send('File deselected successfully')

@@ -1,126 +1,116 @@
-import { useNavigate } from "react-router-dom";
-import {
-  parseISO,
-  differenceInMinutes,
-  differenceInSeconds,
-  differenceInHours,
-} from "date-fns";
-import { useEffect, useState } from "react";
-import { searchAiringAnime } from "../utils/helper";
-import useGetAniZipMappings from "../hooks/useGetAniZipMappings";
-import { Skeleton } from "@radix-ui/themes";
-import { toast } from "sonner";
+import { useNavigate } from 'react-router-dom'
+import { parseISO, differenceInMinutes, differenceInSeconds, differenceInHours } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { searchAiringAnime } from '../utils/helper'
+import useGetAniZipMappings from '../hooks/useGetAniZipMappings'
+import { Skeleton } from '@radix-ui/themes'
+import { toast } from 'sonner'
 
 function magnetRegex(magnet) {
-  const magnetRegex = /<a href="([^"]*)">Magnet<\/a>/i;
-  let magnetRegex2 = /<a href="(magnet:[^"]*)">Magnet<\/a>/i;
-  const match1 = magnet?.match(magnetRegex);
-  const match2 = match1[0]?.match(magnetRegex2);
-  const match3 = match2[0]?.split('"')[1];
-  return match3 || "";
+  const magnetRegex = /<a href="([^"]*)">Magnet<\/a>/i
+  let magnetRegex2 = /<a href="(magnet:[^"]*)">Magnet<\/a>/i
+  const match1 = magnet?.match(magnetRegex)
+  const match2 = match1[0]?.match(magnetRegex2)
+  const match3 = match2[0]?.split('"')[1]
+  return match3 || ''
 }
 
 const tempImg =
-  "https://artworks.thetvdb.com/banners/v4/episode/10166490/screencap/6685897a8dc6c.jpg";
+  'https://artworks.thetvdb.com/banners/v4/episode/10166490/screencap/6685897a8dc6c.jpg'
 
 function timeAgo(dateString) {
   // Parse the date string
-  const pastDate = new Date(dateString);
-  const now = new Date();
+  const pastDate = new Date(dateString)
+  const now = new Date()
   // Calculate differences
-  const minutesAgo = differenceInMinutes(now, pastDate);
-  const secondsAgo = differenceInSeconds(now, pastDate);
-  const hoursAgo = differenceInHours(now, pastDate);
+  const minutesAgo = differenceInMinutes(now, pastDate)
+  const secondsAgo = differenceInSeconds(now, pastDate)
+  const hoursAgo = differenceInHours(now, pastDate)
 
   // Format the output
-  let result = `${secondsAgo} seconds ago`;
+  let result = `${secondsAgo} seconds ago`
   if (minutesAgo >= 1) {
-    result = `${minutesAgo} minutes ago`;
+    result = `${minutesAgo} minutes ago`
   }
   if (hoursAgo >= 1) {
-    result = `${hoursAgo} hours ago`;
+    result = `${hoursAgo} hours ago`
   }
-  return result;
+  return result
 }
 
 export default function NewReleaseCard({ data, cardErrorShown, setCardErrorShown }) {
-  const navigate = useNavigate();
-  const magnet = magnetRegex(data?.description[0]) || "";
+  const navigate = useNavigate()
+  const magnet = magnetRegex(data?.description[0]) || ''
 
-  console.log(data);
+  console.log(data)
 
   function handleClick() {
-    navigate(`/player/${encodeURIComponent(magnet)}`);
+    navigate(`/player/${encodeURIComponent(magnet)}`)
   }
-  const filename = data?.title[0];
-  const [anilistData, setAnilistData] = useState(null);
+  const filename = data?.title[0]
+  const [anilistData, setAnilistData] = useState(null)
 
-  let title = filename.slice(
-    filename.indexOf("]") + 1,
-    filename.lastIndexOf("-") - 1,
-  );
-  let episode = Number(
-    filename.slice(filename.lastIndexOf("-") + 2, filename.indexOf("(") - 1),
-  );
+  let title = filename.slice(filename.indexOf(']') + 1, filename.lastIndexOf('-') - 1)
+  let episode = Number(filename.slice(filename.lastIndexOf('-') + 2, filename.indexOf('(') - 1))
 
-  const [anilistId, setAnilistId] = useState(null);
+  const [anilistId, setAnilistId] = useState(null)
   useEffect(() => {
     async function fetchAnilistId() {
       try {
-        const data = await searchAiringAnime(title);
-        console.log(data);
-        setAnilistData(data[0]);
-        setAnilistId(data[0]?.id);
+        const data = await searchAiringAnime(title)
+        console.log(data)
+        setAnilistData(data[0])
+        setAnilistId(data[0]?.id)
       } catch (error) {
-        setCardErrorShown(true); // Set the flag to true to prevent duplicate toasts
+        setCardErrorShown(true) // Set the flag to true to prevent duplicate toasts
         if (cardErrorShown === false) {
-          toast.error("Error fetching Anilist ID", {
+          toast.error('Error fetching Anilist ID', {
             description: error?.message,
             classNames: {
-              title: "text-rose-500",
-            },
-          });
+              title: 'text-rose-500'
+            }
+          })
         }
-        return;
+        return
       }
     }
-    fetchAnilistId();
-  }, [cardErrorShown, setCardErrorShown, title]);
+    fetchAnilistId()
+  }, [cardErrorShown, setCardErrorShown, title])
 
   const {
     isLoading: isLoadingMappings,
     data: mappingsData,
     error: errorMappings,
-    status: statusMappings,
-  } = useGetAniZipMappings(anilistId);
+    status: statusMappings
+  } = useGetAniZipMappings(anilistId)
 
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null)
 
   useEffect(() => {
-    if (!mappingsData) return;
-    let episodesObj = mappingsData?.episodes;
+    if (!mappingsData) return
+    let episodesObj = mappingsData?.episodes
     // convert episodes object to array
-    let episodesArr = Object.keys(episodesObj).map((key) => episodesObj[key]);
-    console.log(episodesArr);
+    let episodesArr = Object.keys(episodesObj).map((key) => episodesObj[key])
+    console.log(episodesArr)
 
     for (let i = 0; i < episodesArr.length; i++) {
       if (
         episode === episodesArr[i].episodeNumber ||
         episode === episodesArr[i].absoluteEpisodeNumber
       ) {
-        setImageUrl(episodesArr[i].image);
-        break;
+        setImageUrl(episodesArr[i].image)
+        break
       }
     }
-  }, [episode, mappingsData]);
+  }, [episode, mappingsData])
 
   if (errorMappings) {
-    toast.error("Error fetching AniZip Mappings", {
+    toast.error('Error fetching AniZip Mappings', {
       description: errorMappings?.message,
       classNames: {
-        title: "text-rose-500",
-      },
-    });
+        title: 'text-rose-500'
+      }
+    })
   }
 
   return (
@@ -141,9 +131,7 @@ export default function NewReleaseCard({ data, cardErrorShown, setCardErrorShown
         )}
       </div>
       <div className="flex w-full flex-col gap-y-1">
-        <div className="w-full truncate text-sm font-medium opacity-90">
-          {title}
-        </div>
+        <div className="w-full truncate text-sm font-medium opacity-90">{title}</div>
 
         <div className="flex justify-between text-xs opacity-60">
           <p className="text-nowrap">{timeAgo(data.pubDate[0])}</p>
@@ -152,5 +140,5 @@ export default function NewReleaseCard({ data, cardErrorShown, setCardErrorShown
         <div></div>
       </div>
     </div>
-  );
+  )
 }
