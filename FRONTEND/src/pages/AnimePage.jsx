@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import { useState } from 'react'
 import CenteredLoader from '../ui/CenteredLoader'
 import Episode from '../components/Episode'
-import { Button } from '@radix-ui/themes'
+import { Button, Skeleton } from '@radix-ui/themes'
 import { toast } from 'sonner'
 import { ExclamationTriangleIcon, PersonIcon, StarIcon } from '@radix-ui/react-icons'
 import useGetAniZipMappings from '../hooks/useGetAniZipMappings'
@@ -55,12 +55,15 @@ export default function AnimePage() {
   if (episodesAnizip) {
     episodesAnizip = Object.keys(episodesAnizip)?.map((key) => episodesAnizip[key])
     let tempEps = episodesAnizip.map((ep) => {
-      if (!ep.title.en && !ep.title['x-jat'] && !ep.title.jp) return null
+      if (isNaN(ep.episode)) return null
       return {
-        title: ep.title.en || ep.title['x-jat'] || ep.title.jp,
+        epNum: ep.episode,
+        title: ep.title.en || ep.title['x-jat'] || ep.title.jp || `Episode ${ep.episode}`,
         thumbnail: ep.image,
-        airdate: ep.airDate,
-        overview: ep.overview
+        airdate: ep.airdate,
+        overview: ep.overview,
+        aids: mappingsData?.mappings?.anidb_id,
+        eids: ep.anidbEid
       }
     })
 
@@ -69,7 +72,7 @@ export default function AnimePage() {
     episodesAnizip = tempEps
   }
 
-  const [englishDub, setEnglishDub] = useState(false)
+  const [dualAudio, setDualAudio] = useState(false)
   const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
 
   if (isLoading) return <CenteredLoader />
@@ -88,19 +91,8 @@ export default function AnimePage() {
     throw new Error(error)
   }
 
-  // if (errorEpisodes) {
-  //   toast.error("Error fetching Top Animes", {
-  //     icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
-  //     description: `Couldn't fetch episodes: ${errorEpisodes?.message}`,
-  //     classNames: {
-  //       title: "text-rose-500",
-  //     },
-  //   });
-  // }
-
   if (status !== 'success') return <CenteredLoader />
 
-  // const data = animeData?.data;
   const data = animeData
 
   const startDate = data?.startDate
@@ -125,7 +117,7 @@ export default function AnimePage() {
   // }
 
   return (
-    <>
+    <div>
       {/* {false && ( */}
       {data?.bannerImage && (
         // <div className="p-4 px-8">
@@ -146,7 +138,7 @@ export default function AnimePage() {
           />
         </div>
       )}
-      <div className="z-10 mx-auto animate-fade p-4 px-8 lg:container">
+      <div className="z-10 mx-auto animate-fade px-6 py-4 lg:container">
         <div className="flex justify-between gap-x-7">
           <img
             src={data?.coverImage.extraLarge}
@@ -215,13 +207,13 @@ export default function AnimePage() {
         </div>
 
         {true && (
-          <div className="mt-5">
+          <div className="mb-64 mt-5">
             <div className="flex items-center gap-x-3">
               <p className="font-space-mono text-lg font-medium opacity-90">Episodes</p>
               <Button
                 size={'1'}
-                onClick={() => setEnglishDub(!englishDub)}
-                color={englishDub ? 'blue' : 'gray'}
+                onClick={() => setDualAudio(!dualAudio)}
+                color={dualAudio ? 'blue' : 'gray'}
               >
                 English Dub
               </Button>
@@ -233,23 +225,38 @@ export default function AnimePage() {
                 Hide Watched Episodes
               </Button>
             </div>
-            <div className="mt-3 grid grid-cols-1 gap-y-3">
-              <Episode anime={data.title} englishDub={englishDub} bannerImage={data?.bannerImage} />
-              {animeEpisodes?.map((episode, ix) => (
+            {!isLoadingMappings && (
+              <div className="mt-3 grid grid-cols-1 gap-y-3">
                 <Episode
-                  key={'ep -' + ix}
+                  all={true}
                   anime={data.title}
-                  animeId={data.id}
-                  data={{ ...episode, progress: episodesWatched, hideWatchedEpisodes }}
-                  englishDub={englishDub}
-                  episodeNumber={ix + 1}
-                  aniZip_titles={aniZip_titles}
+                  dualAudio={dualAudio}
+                  data={{ aids: mappingsData?.mappings?.anidb_id, quality: '1080p', eids: 0 }}
+                  bannerImage={data?.bannerImage}
                 />
-              ))}
-            </div>
+                {animeEpisodes?.map((episode, ix) => (
+                  <Episode
+                    key={'ep -' + ix}
+                    anime={data.title}
+                    animeId={data.id}
+                    data={{
+                      ...episode,
+                      progress: episodesWatched,
+                      hideWatchedEpisodes,
+                      quality: '1080p'
+                    }}
+                    dualAudio={dualAudio}
+                    episodeNumber={ix + 1}
+                    aniZip_titles={aniZip_titles}
+                    bannerImage={data?.bannerImage}
+                  />
+                ))}
+              </div>
+            )}
+            {isLoadingMappings && <Skeleton className="mt-3 h-12" />}
           </div>
         )}
       </div>
-    </>
+    </div>
   )
 }

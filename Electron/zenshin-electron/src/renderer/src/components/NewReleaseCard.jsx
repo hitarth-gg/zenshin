@@ -124,7 +124,8 @@ export default function NewReleaseCard({
       onClick={() => handleClick()}
       className="m-4 flex animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out hover:scale-110"
     >
-      <div className="h-42 relative aspect-video w-auto">
+      {/* w-auto */}
+      <div className="h-42 relative aspect-video w-full">
         {(imageUrl || anilistCover) && (
           <div>
             <div className="absolute z-10 h-full w-full opacity-0 transition-all duration-150 ease-in-out hover:opacity-100">
@@ -139,8 +140,9 @@ export default function NewReleaseCard({
             />
           </div>
         )}
+        {/* {true && ( */}
         {imgIsLoading && (
-          <Skeleton className="duration-400 aspect-video h-full w-80 rounded-sm transition-all ease-in-out" />
+          <Skeleton className="duration-400 aspect-video h-full flex-grow rounded-sm transition-all ease-in-out" />
         )}
       </div>
       <div

@@ -4,6 +4,7 @@ import {
   GET_ANIME_EPISODES_BY_ID,
   GET_ANIME_MAPPING_BY_ANILIST_ID,
   GET_TOSHO_RSS,
+  GET_TOSHO_RSS_BY_QUERY,
   SEARCH_ANIME,
   SEARCH_TORRENT,
   TOP_AIRING_ANIME,
@@ -166,7 +167,7 @@ export async function getTopAiringAnime() {
   const query = `
     query {
       Page(perPage: 49, page: 1) {
-        media(type: ANIME, sort: TRENDING_DESC, status: RELEASING, isAdult: false) {
+        media(type: ANIME, sort: TRENDING_DESC, status_in: [RELEASING], isAdult: false) {
           id
           idMal
           bannerImage
@@ -175,9 +176,8 @@ export async function getTopAiringAnime() {
             english
             native
           }
-          seasonYear
           season
-          bannerImage
+          seasonYear
           coverImage {
             extraLarge
           }
@@ -193,7 +193,7 @@ export async function getTopAiringAnime() {
           format
           ${
             token
-              ? `mediaListEntry { 
+              ? `mediaListEntry {
             id
             status
             score
@@ -276,7 +276,7 @@ export async function getTopAnime(page = 1) {
           format
           ${
             token
-              ? `mediaListEntry { 
+              ? `mediaListEntry {
             id
             status
             score
@@ -389,7 +389,7 @@ export async function getAnimeById(id) {
         }
         ${
           token
-            ? `mediaListEntry { 
+            ? `mediaListEntry {
           id
           status
           score
@@ -526,9 +526,11 @@ export async function getAnimeEpisodesById(id) {
   }
 }
 
-export async function getAniZipMappings(anilist_id) {
+export async function getAniZipMappings(anilist_id, anidb = false) {
   try {
-    const response = await fetch(GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id));
+    const response = await fetch(
+      GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id, anidb),
+    );
 
     if (response.status === 429) {
       throw new Error(
@@ -635,9 +637,11 @@ export async function getNewReleases(packer = "[SubsPlease]") {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const xml = await response.text();
-    const data = await parseStringPromise(xml, { mergeAttrs: true });
-    return data.rss.channel[0].item;
+    // const xml = await response.text()
+    // const data = await parseStringPromise(xml, { mergeAttrs: true })
+    // return data.rss.channel[0].item
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -697,5 +701,20 @@ export async function setWatchedEpisodes(animeId, episodesWatched) {
     return data.data.SaveMediaListEntry;
   } catch (error) {
     throw new Error(error.message);
+  }
+}
+
+export async function getToshoEpisodes(quality, aids, eids) {
+  try {
+    const response = await fetch(GET_TOSHO_RSS_BY_QUERY(quality, aids, eids));
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(error);
   }
 }
