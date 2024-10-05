@@ -9,6 +9,12 @@ A web based anime torrent streamer which can stream torrents in the browser and 
 ## Electron Port (Beta) :
 ![image](https://github.com/user-attachments/assets/ed4e9255-69d7-4652-a488-7d5a3cfbb759)
 ![image](https://github.com/user-attachments/assets/5538c7ac-68bc-4ce1-9ddf-4f6018a39cac)
+![image](https://github.com/user-attachments/assets/0d9623ff-b7c3-49ab-86fe-d0690c3b928b)
+![image](https://github.com/user-attachments/assets/712893ba-0561-48be-8e40-445a4601418b)
+![image](https://github.com/user-attachments/assets/714741a2-0695-4698-a799-5f44021ada26)
+![image](https://github.com/user-attachments/assets/014fdbd0-6304-4f3d-8679-767dd5323cff)
+![image](https://github.com/user-attachments/assets/1f4eba60-c6d1-4e64-bf53-9007e68a77f9)
+
 
 ## Summary
 Built it as a mini project to familiarize myself with video streaming using ExpressJS and handling of streams and APIs in a ReactJS based frontend webapp.
