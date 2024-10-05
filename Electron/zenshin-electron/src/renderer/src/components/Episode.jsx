@@ -64,7 +64,7 @@ export default function Episode({
 
   function onTorrentClick(torrent) {
     navigate(
-      `/player/${encodeURIComponent(torrent.magnet)}/${animeId}/${progress}/${episodeNumber}`
+      `/player/${encodeURIComponent(torrent.magnet_uri)}/${animeId}/${progress}/${episodeNumber}`
     )
   }
 
