@@ -3,18 +3,19 @@ import useNyaaTracker from '../hooks/useNyaaTracker'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Skeleton, Tooltip } from '@radix-ui/themes'
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
+import { DownloadIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import useGetoToshoEpisodes from '../hooks/useGetToshoEpisodes'
-
+import nFormatter from '../utils/nFormatter'
+import formatBytes from '../utils/formatBytes'
 export default function Episode({
   data,
   anime,
   animeId,
   englishDub,
   episodeNumber,
-  all
-  // aniZip_titles,
-  // bannerImage
+  all,
+  episodeActive,
+  setEpisodeActive
 }) {
   console.log(data)
 
@@ -43,6 +44,7 @@ export default function Episode({
       return
     }
     setActive((prevActive) => !prevActive)
+    setEpisodeActive(true)
   }
 
   function onTorrentClick(torrent) {
@@ -70,7 +72,7 @@ export default function Episode({
             </div>
           </div>
         </div>
-        {active && (
+        {active && episodeActive && (
           <div className="mt-3 flex flex-col gap-y-2">
             {isLoading && <Skeleton width={'50%'} />}
             {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
@@ -129,7 +131,7 @@ export default function Episode({
                 </Tooltip>
               )}
               <p className="line-clamp-1">
-                {episodeNumber}. {data.title}
+                {data.epNum}. {data.title}
               </p>
             </p>
             {data.overview && (
@@ -154,7 +156,7 @@ export default function Episode({
           {/* <p className="opacity-60">{data.score}</p> */}
         </div>
       </div>
-      {active && (
+      {active && episodeActive && (
         <div className="mt-3 flex flex-col gap-y-2">
           {isLoading && <Skeleton width={'50%'} />}
           {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
@@ -164,13 +166,20 @@ export default function Episode({
           {torrentData?.map((torrent) => (
             <div
               key={torrent.title}
-              className="flex animate-fade-down items-center animate-duration-500"
+              className="flex animate-fade-down flex-col gap-y-1 border-gray-800 bg-[#00000050] px-2 py-2 animate-duration-500"
             >
-              <div className="flex min-w-20 items-center gap-x-1 border border-gray-800 p-1">
-                <p className="font-space-mono text-xs opacity-60">{torrent.seeders}</p>
+              <div className="mr-1 flex min-w-32 items-center gap-x-1 p-1">
+                <p className="font-space-mono text-xs opacity-60">{nFormatter(torrent.seeders)}</p>
                 <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <p className="font-space-mono text-xs opacity-60">{torrent.leechers}</p>
+                <p className="font-space-mono text-xs opacity-60">{nFormatter(torrent.leechers)}</p>
                 <div className="h-2 w-2 rounded-full bg-red-500"></div>
+                <p className="font-space-mono text-xs opacity-60">
+                  {nFormatter(torrent.torrent_downloaded_count)}
+                </p>
+                <DownloadIcon height={12} width={12} color="gray" />
+                <p className="text-nowrap font-space-mono text-xs opacity-60">
+                  {formatBytes(torrent.total_size, 1)}
+                </p>
               </div>
               <p
                 onClick={() => onTorrentClick(torrent)}

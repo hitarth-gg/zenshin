@@ -50,7 +50,7 @@ export function GET_TOSHO_RSS(packer = '[SubsPlease]') {
   return `${TOSHO}/rss2?qx=1&q=${packer}`
 }
 
-// https://feed.animetosho.org/json?qx=1&q=1080p&aids=18290&eid=286699
+// https://feed.animetosho.org/json?qx=1&q=1080p&aids=18290&eids=286699
 export function GET_TOSHO_RSS_BY_QUERY(quality, aids, eids) {
   if (eids === 0) return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}`
   return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}&eids=${eids}`

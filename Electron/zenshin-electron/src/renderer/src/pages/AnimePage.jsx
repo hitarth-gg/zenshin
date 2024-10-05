@@ -21,6 +21,7 @@ export default function AnimePage() {
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId)
   const malId = animeData?.idMal
   const episodesWatched = animeData?.mediaListEntry?.progress || 0
+  const [episodeActive, setEpisodeActive] = useState(false)
 
   const {
     isLoading: isLoadingMappings,
@@ -55,11 +56,12 @@ export default function AnimePage() {
   if (episodesAnizip) {
     episodesAnizip = Object.keys(episodesAnizip)?.map((key) => episodesAnizip[key])
     let tempEps = episodesAnizip.map((ep) => {
-      if (!ep.title.en && !ep.title['x-jat'] && !ep.title.jp) return null
+      if ((!ep.title.en && !ep.title['x-jat'] && !ep.title.jp) || isNaN(ep.episode)) return null
       return {
+        epNum: ep.episode,
         title: ep.title.en || ep.title['x-jat'] || ep.title.jp,
         thumbnail: ep.image,
-        airdate: ep.airDate,
+        airdate: ep.airdate,
         overview: ep.overview,
         aids: mappingsData?.mappings?.anidb_id,
         eids: ep.anidbEid
@@ -116,7 +118,7 @@ export default function AnimePage() {
   // }
 
   return (
-    <>
+    <div onClick={() => setEpisodeActive(false)}>
       {/* {false && ( */}
       {data?.bannerImage && (
         // <div className="p-4 px-8">
@@ -137,7 +139,7 @@ export default function AnimePage() {
           />
         </div>
       )}
-      <div className="z-10 mx-auto animate-fade p-4 px-8 lg:container">
+      <div className="z-10 mx-auto animate-fade px-6 py-4 lg:container">
         <div className="flex justify-between gap-x-7">
           <img
             src={data?.coverImage.extraLarge}
@@ -231,6 +233,8 @@ export default function AnimePage() {
                 englishDub={englishDub}
                 data={{ aids: mappingsData?.mappings?.anidb_id, quality: '1080p' }}
                 bannerImage={data?.bannerImage}
+                episodeActive={episodeActive}
+                setEpisodeActive={setEpisodeActive}
               />
               {animeEpisodes?.map((episode, ix) => (
                 <Episode
@@ -246,13 +250,15 @@ export default function AnimePage() {
                   englishDub={englishDub}
                   episodeNumber={ix + 1}
                   aniZip_titles={aniZip_titles}
+                  episodeActive={episodeActive}
+                  setEpisodeActive={setEpisodeActive}
                 />
               ))}
             </div>
           </div>
         )}
       </div>
-    </>
+    </div>
   )
 }
 

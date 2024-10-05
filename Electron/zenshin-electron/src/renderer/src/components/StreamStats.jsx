@@ -1,39 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
+import formatBytes from '../utils/formatBytes'
+// const formatBytes = (bytes, decimals = 2) => {
+//   if (bytes === 0) return '0 Bytes'
 
-const formatBytes = (bytes, decimals = 2) => {
-  if (bytes === 0) return "0 Bytes";
+//   const k = 1024
+//   const dm = decimals < 0 ? 0 : decimals
+//   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+//   const i = Math.floor(Math.log(bytes) / Math.log(k))
 
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-};
+//   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+// }
 
 export default function StreamStats({ magnetURI }) {
-  const [details, setDetails] = useState(null);
+  const [details, setDetails] = useState(null)
 
   useEffect(() => {
     const fetchDetails = () => {
       fetch(`http://localhost:8000/details/${encodeURIComponent(magnetURI)}`)
         .then((response) => response.json())
         .then((data) => setDetails(data))
-        .catch((error) =>
-          console.error("Error fetching torrent details:", error),
-        );
-    };
+        .catch((error) => console.error('Error fetching torrent details:', error))
+    }
 
     // Fetch details immediately
-    fetchDetails();
+    fetchDetails()
 
     // Set interval to fetch details every 1 second
-    const intervalId = setInterval(fetchDetails, 1000);
+    const intervalId = setInterval(fetchDetails, 1000)
 
     // Clear interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [magnetURI]);
+    return () => clearInterval(intervalId)
+  }, [magnetURI])
 
   return (
     <div className="mt-2 flex flex-col gap-y-1 font-space-mono">
@@ -53,7 +51,7 @@ export default function StreamStats({ magnetURI }) {
         <div className="flex gap-x-16 overflow-hidden text-sm">
           {/* <div className="relative grid grid-flow-col-dense grid-cols-3 gap-x-12 overflow-hidden border text-sm"> */}
           <p className="flex gap-x-2">
-            <p className="text-nowrap">Download Speed: </p>{" "}
+            <p className="text-nowrap">Download Speed: </p>{' '}
             <p className="min-w-56">{formatBytes(details?.downloadSpeed)} /sec</p>
           </p>
           <p className="flex gap-x-2">
@@ -75,5 +73,5 @@ export default function StreamStats({ magnetURI }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

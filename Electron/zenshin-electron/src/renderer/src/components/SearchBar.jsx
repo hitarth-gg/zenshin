@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
-import { Code, Spinner, TextField } from '@radix-ui/themes'
+import { Code, Skeleton, Spinner, TextField } from '@radix-ui/themes'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import SearchResults from './SearchResults'
@@ -102,10 +102,19 @@ export default function SearchBar() {
       </TextField.Root>
 
       {isActive && (
-        <div className="absolute mt-1 flex w-full animate-fade-down flex-col justify-center animate-duration-[400ms]">
+        <div className="absolute mt-1 flex w-full animate-fade-down flex-col justify-center rounded-sm animate-duration-[400ms]">
+          {/* {true && ( */}
           {searching && (
-            <div className="flex flex-col items-center justify-center gap-y-5 bg-[#000000] backdrop-blur-sm">
-              <Spinner />
+            <div className="flex flex-col items-center justify-center gap-y-5 bg-[#111113] p-2 backdrop-blur-sm">
+              <div className="flex w-full items-start gap-x-4">
+                <Skeleton className="h-12 w-12" />
+                <div className="flex flex-col gap-y-1">
+                  <Skeleton  className="h-3 w-32" />
+                  <Skeleton className="h-2 w-48" />
+                  <Skeleton className="h-2 w-16" />
+                </div>
+              </div>
+              {/* <Spinner /> */}
             </div>
           )}
 
