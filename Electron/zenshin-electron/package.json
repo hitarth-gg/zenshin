@@ -28,6 +28,7 @@
     "@tanstack/react-query": "^5.51.1",
     "@tanstack/react-query-devtools": "^5.51.1",
     "@videojs/http-streaming": "^3.13.2",
+    "@vidstack/react": "^1.12.11",
     "@wordpress/autop": "^4.6.0",
     "axios": "^1.7.4",
     "chalk": "^5.0.0",
@@ -49,6 +50,7 @@
     "sonner": "^1.5.0",
     "tailwindcss-animated": "^1.1.2",
     "webtorrent": "^1.5.0",
+    "webtorrent-player": "github:ThaUnknown/webtorrent-player",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { getTopAnime } from "../utils/helper";
+import { useQuery } from '@tanstack/react-query'
+import { getTopAnime } from '../utils/helper'
 
 export default function useGetTopAnime(page) {
   const {
@@ -8,10 +8,10 @@ export default function useGetTopAnime(page) {
     error,
     status
   } = useQuery({
-    queryKey: ["top_anime"],
+    queryKey: ['top_anime'],
     queryFn: () => getTopAnime(page),
-    staleTime: 1000 * 60 * 60, // 1 hour
-  });
+    staleTime: 1000 * 60 * 60 // 1 hour
+  })
 
-  return { isLoading, topAnime, error, status };
+  return { isLoading, topAnime, error, status }
 }

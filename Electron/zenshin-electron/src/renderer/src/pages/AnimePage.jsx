@@ -60,7 +60,9 @@ export default function AnimePage() {
         title: ep.title.en || ep.title['x-jat'] || ep.title.jp,
         thumbnail: ep.image,
         airdate: ep.airDate,
-        overview: ep.overview
+        overview: ep.overview,
+        aids: mappingsData?.mappings?.anidb_id,
+        eids: ep.anidbEid
       }
     })
 
@@ -88,19 +90,8 @@ export default function AnimePage() {
     throw new Error(error)
   }
 
-  // if (errorEpisodes) {
-  //   toast.error("Error fetching Top Animes", {
-  //     icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
-  //     description: `Couldn't fetch episodes: ${errorEpisodes?.message}`,
-  //     classNames: {
-  //       title: "text-rose-500",
-  //     },
-  //   });
-  // }
-
   if (status !== 'success') return <CenteredLoader />
 
-  // const data = animeData?.data;
   const data = animeData
 
   const startDate = data?.startDate
@@ -234,13 +225,24 @@ export default function AnimePage() {
               </Button>
             </div>
             <div className="mt-3 grid grid-cols-1 gap-y-3">
-              <Episode anime={data.title} englishDub={englishDub} bannerImage={data?.bannerImage} />
+              <Episode
+                all={true}
+                anime={data.title}
+                englishDub={englishDub}
+                data={{ aids: mappingsData?.mappings?.anidb_id, quality: '1080p' }}
+                bannerImage={data?.bannerImage}
+              />
               {animeEpisodes?.map((episode, ix) => (
                 <Episode
                   key={'ep -' + ix}
                   anime={data.title}
                   animeId={data.id}
-                  data={{ ...episode, progress: episodesWatched, hideWatchedEpisodes }}
+                  data={{
+                    ...episode,
+                    progress: episodesWatched,
+                    hideWatchedEpisodes,
+                    quality: '1080p'
+                  }}
                   englishDub={englishDub}
                   episodeNumber={ix + 1}
                   aniZip_titles={aniZip_titles}

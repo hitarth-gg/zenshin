@@ -4,6 +4,7 @@ import {
   GET_ANIME_EPISODES_BY_ID,
   GET_ANIME_MAPPING_BY_ANILIST_ID,
   GET_TOSHO_RSS,
+  GET_TOSHO_RSS_BY_QUERY,
   SEARCH_ANIME,
   SEARCH_TORRENT,
   TOP_AIRING_ANIME,
@@ -674,5 +675,20 @@ export async function setWatchedEpisodes(animeId, episodesWatched) {
     return data.data.SaveMediaListEntry
   } catch (error) {
     throw new Error(error.message)
+  }
+}
+
+export async function getToshoEpisodes(quality, aids, eids) {
+  try {
+    const response = await fetch(GET_TOSHO_RSS_BY_QUERY(quality, aids, eids))
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    throw new Error(error)
   }
 }

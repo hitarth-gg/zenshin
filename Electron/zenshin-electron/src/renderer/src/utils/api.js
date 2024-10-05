@@ -1,11 +1,10 @@
 const BASE_URL_JIKAN = 'https://api.jikan.moe/v4'
 const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
 export const BASE_URL_ANILIST = 'https://graphql.anilist.co'
-const BASE_URL_ANIZIP = "https://api.ani.zip"
-const TOSHO = "https://feed.animetosho.org"
+const BASE_URL_ANIZIP = 'https://api.ani.zip'
+const TOSHO = 'https://feed.animetosho.org'
 
-
-export function SEARCH_ANIME(query, limit=10) {
+export function SEARCH_ANIME(query, limit = 10) {
   return `${BASE_URL_JIKAN}/anime?q=${query}&limit=${limit}`
 }
 
@@ -36,8 +35,8 @@ export function GET_ANIME_DETAILS_BY_ID(id) {
 
 // https://api.ani.zip/mappings?anilist_id=153406
 export function GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id) {
-  console.log(`${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`);
-  
+  console.log(`${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`)
+
   return `${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`
 }
 
@@ -46,8 +45,13 @@ export function GET_ANIME_EPISODES_BY_ID(id) {
   return `${BASE_URL_JIKAN}/anime/${id}/episodes`
 }
 
-
 // https://feed.animetosho.org/rss2?qx=1&q="[SubsPlease]"
-export function GET_TOSHO_RSS(packer = "[SubsPlease]") {
+export function GET_TOSHO_RSS(packer = '[SubsPlease]') {
   return `${TOSHO}/rss2?qx=1&q=${packer}`
+}
+
+// https://feed.animetosho.org/json?qx=1&q=1080p&aids=18290&eid=286699
+export function GET_TOSHO_RSS_BY_QUERY(quality, aids, eids) {
+  if (eids === 0) return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}`
+  return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}&eids=${eids}`
 }
