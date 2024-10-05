@@ -7,16 +7,7 @@ import { DownloadIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import useGetoToshoEpisodes from '../hooks/useGetToshoEpisodes'
 import nFormatter from '../utils/nFormatter'
 import formatBytes from '../utils/formatBytes'
-export default function Episode({
-  data,
-  anime,
-  animeId,
-  englishDub,
-  episodeNumber,
-  all,
-  episodeActive,
-  setEpisodeActive
-}) {
+export default function Episode({ data, anime, animeId, englishDub, episodeNumber, all }) {
   console.log(data)
 
   const navigate = useNavigate()
@@ -39,12 +30,12 @@ export default function Episode({
   torrentData.sort((a, b) => b.seeders - a.seeders)
 
   function handleClick() {
+    // e.stopPropagation()
     if (active) {
       setActive(false)
       return
     }
     setActive((prevActive) => !prevActive)
-    setEpisodeActive(true)
   }
 
   function onTorrentClick(torrent) {
@@ -72,7 +63,7 @@ export default function Episode({
             </div>
           </div>
         </div>
-        {active && episodeActive && (
+        {active && (
           <div className="mt-3 flex flex-col gap-y-2">
             {isLoading && <Skeleton width={'50%'} />}
             {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
@@ -156,7 +147,7 @@ export default function Episode({
           {/* <p className="opacity-60">{data.score}</p> */}
         </div>
       </div>
-      {active && episodeActive && (
+      {active && (
         <div className="mt-3 flex flex-col gap-y-2">
           {isLoading && <Skeleton width={'50%'} />}
           {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}

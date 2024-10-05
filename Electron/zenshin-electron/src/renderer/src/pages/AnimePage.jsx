@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import { useState } from 'react'
 import CenteredLoader from '../ui/CenteredLoader'
 import Episode from '../components/Episode'
-import { Button } from '@radix-ui/themes'
+import { Button, Skeleton } from '@radix-ui/themes'
 import { toast } from 'sonner'
 import { ExclamationTriangleIcon, PersonIcon, StarIcon } from '@radix-ui/react-icons'
 import useGetAniZipMappings from '../hooks/useGetAniZipMappings'
@@ -21,7 +21,6 @@ export default function AnimePage() {
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId)
   const malId = animeData?.idMal
   const episodesWatched = animeData?.mediaListEntry?.progress || 0
-  const [episodeActive, setEpisodeActive] = useState(false)
 
   const {
     isLoading: isLoadingMappings,
@@ -118,11 +117,11 @@ export default function AnimePage() {
   // }
 
   return (
-    <div onClick={() => setEpisodeActive(false)}>
+    <div>
       {/* {false && ( */}
       {data?.bannerImage && (
         // <div className="p-4 px-8">
-        <div className="relative">
+        <div className="relative" onClick={() => setEpisodeActive(false)}>
           {glow && (
             <div className="animate-fade-down">
               <img
@@ -208,7 +207,7 @@ export default function AnimePage() {
         </div>
 
         {true && (
-          <div className="mt-5">
+          <div className="mb-64 mt-5">
             <div className="flex items-center gap-x-3">
               <p className="font-space-mono text-lg font-medium opacity-90">Episodes</p>
               <Button
@@ -226,35 +225,34 @@ export default function AnimePage() {
                 Hide Watched Episodes
               </Button>
             </div>
-            <div className="mt-3 grid grid-cols-1 gap-y-3">
-              <Episode
-                all={true}
-                anime={data.title}
-                englishDub={englishDub}
-                data={{ aids: mappingsData?.mappings?.anidb_id, quality: '1080p' }}
-                bannerImage={data?.bannerImage}
-                episodeActive={episodeActive}
-                setEpisodeActive={setEpisodeActive}
-              />
-              {animeEpisodes?.map((episode, ix) => (
+            {!isLoadingMappings && (
+              <div className="mt-3 grid grid-cols-1 gap-y-3">
                 <Episode
-                  key={'ep -' + ix}
+                  all={true}
                   anime={data.title}
-                  animeId={data.id}
-                  data={{
-                    ...episode,
-                    progress: episodesWatched,
-                    hideWatchedEpisodes,
-                    quality: '1080p'
-                  }}
                   englishDub={englishDub}
-                  episodeNumber={ix + 1}
-                  aniZip_titles={aniZip_titles}
-                  episodeActive={episodeActive}
-                  setEpisodeActive={setEpisodeActive}
+                  data={{ aids: mappingsData?.mappings?.anidb_id, quality: '1080p' }}
+                  bannerImage={data?.bannerImage}
                 />
-              ))}
-            </div>
+                {animeEpisodes?.map((episode, ix) => (
+                  <Episode
+                    key={'ep -' + ix}
+                    anime={data.title}
+                    animeId={data.id}
+                    data={{
+                      ...episode,
+                      progress: episodesWatched,
+                      hideWatchedEpisodes,
+                      quality: '1080p'
+                    }}
+                    englishDub={englishDub}
+                    episodeNumber={ix + 1}
+                    aniZip_titles={aniZip_titles}
+                  />
+                ))}
+              </div>
+            )}
+            {isLoadingMappings && <Skeleton className="mt-3 h-12" />}
           </div>
         )}
       </div>
