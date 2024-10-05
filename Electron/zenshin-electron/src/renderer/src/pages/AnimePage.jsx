@@ -55,10 +55,10 @@ export default function AnimePage() {
   if (episodesAnizip) {
     episodesAnizip = Object.keys(episodesAnizip)?.map((key) => episodesAnizip[key])
     let tempEps = episodesAnizip.map((ep) => {
-      if ((!ep.title.en && !ep.title['x-jat'] && !ep.title.jp) || isNaN(ep.episode)) return null
+      if (isNaN(ep.episode)) return null
       return {
         epNum: ep.episode,
-        title: ep.title.en || ep.title['x-jat'] || ep.title.jp,
+        title: ep.title.en || ep.title['x-jat'] || ep.title.jp || `Episode ${ep.episode}`,
         thumbnail: ep.image,
         airdate: ep.airdate,
         overview: ep.overview,
@@ -72,7 +72,7 @@ export default function AnimePage() {
     episodesAnizip = tempEps
   }
 
-  const [englishDub, setEnglishDub] = useState(false)
+  const [dualAudio, setDualAudio] = useState(false)
   const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
 
   if (isLoading) return <CenteredLoader />
@@ -121,7 +121,7 @@ export default function AnimePage() {
       {/* {false && ( */}
       {data?.bannerImage && (
         // <div className="p-4 px-8">
-        <div className="relative" onClick={() => setEpisodeActive(false)}>
+        <div className="relative">
           {glow && (
             <div className="animate-fade-down">
               <img
@@ -212,8 +212,8 @@ export default function AnimePage() {
               <p className="font-space-mono text-lg font-medium opacity-90">Episodes</p>
               <Button
                 size={'1'}
-                onClick={() => setEnglishDub(!englishDub)}
-                color={englishDub ? 'blue' : 'gray'}
+                onClick={() => setDualAudio(!dualAudio)}
+                color={dualAudio ? 'blue' : 'gray'}
               >
                 English Dub
               </Button>
@@ -230,8 +230,8 @@ export default function AnimePage() {
                 <Episode
                   all={true}
                   anime={data.title}
-                  englishDub={englishDub}
-                  data={{ aids: mappingsData?.mappings?.anidb_id, quality: '1080p' }}
+                  dualAudio={dualAudio}
+                  data={{ aids: mappingsData?.mappings?.anidb_id, quality: '1080p', eids: 0 }}
                   bannerImage={data?.bannerImage}
                 />
                 {animeEpisodes?.map((episode, ix) => (
@@ -245,9 +245,10 @@ export default function AnimePage() {
                       hideWatchedEpisodes,
                       quality: '1080p'
                     }}
-                    englishDub={englishDub}
+                    dualAudio={dualAudio}
                     episodeNumber={ix + 1}
                     aniZip_titles={aniZip_titles}
+                    bannerImage={data?.bannerImage}
                   />
                 ))}
               </div>
@@ -259,23 +260,3 @@ export default function AnimePage() {
     </div>
   )
 }
-
-// {animeEpisodes.length === 0 && (
-//   <div className="mt-5">
-//     <div className="flex items-center gap-x-3">
-//       <p className="font-space-mono text-lg font-medium opacity-90">
-//         Episodes
-//       </p>
-//       <Button
-//         size={"1"}
-//         onClick={() => setEnglishDub(!englishDub)}
-//         color={englishDub ? "blue" : "gray"}
-//       >
-//         English Dub
-//       </Button>
-//     </div>
-//     <div className="mt-3 grid grid-cols-1 gap-y-3">
-//       <Episode anime={data.title} englishDub={englishDub} />
-//     </div>
-//   </div>
-// )}

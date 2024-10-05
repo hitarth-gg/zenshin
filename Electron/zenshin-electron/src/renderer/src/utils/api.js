@@ -19,11 +19,6 @@ export function TOP_AIRING_ANIME() {
 }
 
 // https://api.jikan.moe/v4/top/anime
-// export function TOP_ANIME() {
-//   return `${BASE_URL_JIKAN}/top/anime`
-// }
-
-// https://api.jikan.moe/v4/top/anime
 export function TOP_ANIME(page = 1) {
   return `${BASE_URL_JIKAN}/top/anime?page=${page}&limit=25&sfw=true`
 }
@@ -34,9 +29,9 @@ export function GET_ANIME_DETAILS_BY_ID(id) {
 }
 
 // https://api.ani.zip/mappings?anilist_id=153406
-export function GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id) {
+export function GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id, anidb = false) {
   console.log(`${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`)
-
+  if (anidb) return `${BASE_URL_ANIZIP}/mappings?anidb_id=${anilist_id}`
   return `${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`
 }
 
@@ -46,12 +41,14 @@ export function GET_ANIME_EPISODES_BY_ID(id) {
 }
 
 // https://feed.animetosho.org/rss2?qx=1&q="[SubsPlease]"
-export function GET_TOSHO_RSS(packer = '[SubsPlease]') {
-  return `${TOSHO}/rss2?qx=1&q=${packer}`
+// https://feed.animetosho.org/json?qx=1&q=%22[SubsPlease]%22
+export function GET_TOSHO_RSS(packer = '"[SubsPlease]"') {
+  return `${TOSHO}/json?qx=1&q=${packer}`
 }
 
 // https://feed.animetosho.org/json?qx=1&q=1080p&aids=18290&eids=286699
+// https://feed.animetosho.org/json?qx=1&q=1080p&aids=15063
 export function GET_TOSHO_RSS_BY_QUERY(quality, aids, eids) {
-  if (eids === 0) return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}`
+  if (eids === 0 || eids === null) return `https://feed.animetosho.org/json?qx=1&q=1080p&aids=15063`
   return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}&eids=${eids}`
 }

@@ -1,10 +1,18 @@
 import { useNavigate } from 'react-router-dom'
-import { parseISO, differenceInMinutes, differenceInSeconds, differenceInHours } from 'date-fns'
+import {
+  parseISO,
+  differenceInMinutes,
+  differenceInSeconds,
+  differenceInHours,
+  getUnixTime,
+  formatDistanceToNow
+} from 'date-fns'
 import { useEffect, useState } from 'react'
 import { searchAiringAnime } from '../utils/helper'
 import useGetAniZipMappings from '../hooks/useGetAniZipMappings'
 import { Skeleton } from '@radix-ui/themes'
 import { toast } from 'sonner'
+import { PlayIcon } from '@radix-ui/react-icons'
 
 function magnetRegex(magnet) {
   const magnetRegex = /<a href="([^"]*)">Magnet<\/a>/i
@@ -38,103 +46,114 @@ function timeAgo(dateString) {
   return result
 }
 
-export default function NewReleaseCard({ data, cardErrorShown, setCardErrorShown }) {
+export default function NewReleaseCard({
+  data,
+  cardErrorShown,
+  setCardErrorShown,
+  anilistIds,
+  setAnilistIds,
+  dataAnilist
+}) {
   const navigate = useNavigate()
-  const magnet = magnetRegex(data?.description[0]) || ''
+  // const magnet = magnetRegex(data?.description[0]) || ''
+  const magnet = data.magnet_uri
 
-  console.log(data)
+  // console.log(data)
 
   function handleClick() {
     navigate(`/player/${encodeURIComponent(magnet)}`)
   }
-  const filename = data?.title[0]
+  const filename = data?.title
   const [anilistData, setAnilistData] = useState(null)
 
   let title = filename.slice(filename.indexOf(']') + 1, filename.lastIndexOf('-') - 1)
   let episode = Number(filename.slice(filename.lastIndexOf('-') + 2, filename.indexOf('(') - 1))
 
   const [anilistId, setAnilistId] = useState(null)
-  useEffect(() => {
-    async function fetchAnilistId() {
-      try {
-        const data = await searchAiringAnime(title)
-        console.log(data)
-        setAnilistData(data[0])
-        setAnilistId(data[0]?.id)
-      } catch (error) {
-        setCardErrorShown(true) // Set the flag to true to prevent duplicate toasts
-        if (cardErrorShown === false) {
-          toast.error('Error fetching Anilist ID', {
-            description: error?.message,
-            classNames: {
-              title: 'text-rose-500'
-            }
-          })
-        }
-        return
-      }
-    }
-    fetchAnilistId()
-  }, [cardErrorShown, setCardErrorShown, title])
-
-  const {
-    isLoading: isLoadingMappings,
-    data: mappingsData,
-    error: errorMappings,
-    status: statusMappings
-  } = useGetAniZipMappings(anilistId)
 
   const [imageUrl, setImageUrl] = useState(null)
 
-  useEffect(() => {
-    if (!mappingsData) return
-    let episodesObj = mappingsData?.episodes
-    // convert episodes object to array
-    let episodesArr = Object.keys(episodesObj).map((key) => episodesObj[key])
-    console.log(episodesArr)
+  const aniDbId = data?.anidb_aid
 
-    for (let i = 0; i < episodesArr.length; i++) {
-      if (
-        episode === episodesArr[i].episodeNumber ||
-        episode === episodesArr[i].absoluteEpisodeNumber
-      ) {
-        setImageUrl(episodesArr[i].image)
-        break
-      }
-    }
-  }, [episode, mappingsData])
-
-  if (errorMappings) {
-    toast.error('Error fetching AniZip Mappings', {
-      description: errorMappings?.message,
-      classNames: {
-        title: 'text-rose-500'
-      }
-    })
+  // async function getImageUrl() {
+  //   // https://api.ani.zip/mappings?anidb_id=1
+  //   const data = await fetch(`https://api.ani.zip/mappings?anidb_id=${aniDbId}`)
+  //   const json = await data.json()
+  // }
+  const { isLoading, error, data: anidbMap } = useGetAniZipMappings(aniDbId, true)
+  const timeAgo = (timestamp) => {
+    return formatDistanceToNow(new Date(timestamp * 1000), { addSuffix: true }).replace('about', '')
   }
+  // console.log(anidbMap)
+
+  useEffect(() => {
+    if (anidbMap) {
+      // conver the object into an array
+      setAnilistId(anidbMap.mappings.anilist_id)
+      const arr = anidbMap?.episodes ? Object.values(anidbMap.episodes) : []
+      const img = arr.filter((ep) => ep.anidbEid === data.anidb_eid)
+      console.log(img)
+
+      setAnilistIds((prev) => [...prev, anidbMap.mappings.anilist_id])
+      if (!img[0]?.image) {
+        setImageUrl(tempImg)
+      }
+      setImageUrl(img[0]?.image)
+    }
+  }, [anidbMap])
+  const [episodeNumber, setEpisodeNumber] = useState(0)
+  // get anilist cover image
+  const [anilistCover, setAnilistCover] = useState(null)
+
+  useEffect(() => {
+    if (dataAnilist && anilistId) {
+      const arr = dataAnilist?.data ? Object.values(dataAnilist.data) : []
+      const anilistData = arr.filter((data) => data.id === anilistId)
+      const cover = anilistData[0]?.coverImage?.extraLarge
+      setAnilistCover(cover)
+      console.log(arr)
+    }
+  }, [dataAnilist, anilistId])
+
+  console.log(anilistCover)
+
+  const [imgIsLoading, setImageIsLoading] = useState(true)
 
   return (
     <div
       onClick={() => handleClick()}
       className="m-4 flex animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out hover:scale-110"
     >
-      <div className="h-42 aspect-video w-full">
-        {(imageUrl || anilistData?.coverImage?.extraLarge) && (
-          <img
-            src={imageUrl || anilistData?.coverImage?.extraLarge}
-            alt="episode_image"
-            className="duration-400 h-42 aspect-video animate-fade rounded-sm object-cover transition-all ease-in-out"
-          />
+      <div className="h-42 relative aspect-video w-auto">
+        {(imageUrl || anilistCover) && (
+          <div>
+            <div className="absolute z-10 h-full w-full opacity-0 transition-all duration-150 ease-in-out hover:opacity-100">
+              <PlayIcon className="absolute left-1/2 top-1/2 h-14 w-14 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-[#00000070] p-3 backdrop-blur-[2px]" />
+            </div>
+            <img
+              src={imageUrl || anilistCover}
+              alt="episode_image"
+              className="duration-400 h-42 aspect-video w-96 animate-fade rounded-sm object-cover object-center transition-all ease-in-out"
+              onLoad={() => setImageIsLoading(false)}
+              onError={() => setImageIsLoading(false)}
+            />
+          </div>
         )}
-        {!(imageUrl || anilistData?.coverImage?.extraLarge) && (
-          <Skeleton className="h-full w-full" />
+        {imgIsLoading && (
+          <Skeleton className="duration-400 aspect-video h-full w-80 rounded-sm transition-all ease-in-out" />
         )}
       </div>
-      <div className="flex w-full flex-col gap-y-1">
+      <div
+        className="flex w-full flex-col gap-y-1 transition-all duration-150 ease-in-out hover:text-purple-400"
+        onClick={(e) => {
+          e.stopPropagation()
+          navigate(`/anime/${anilistId}`)
+        }}
+      >
         <div className="w-full truncate text-sm font-medium opacity-90">{title}</div>
 
         <div className="flex justify-between text-xs opacity-60">
-          <p className="text-nowrap">{timeAgo(data.pubDate[0])}</p>
+          <p className="text-nowrap">{timeAgo(data.timestamp)}</p>
           <p className="text-nowrap">Episode {episode}</p>
         </div>
         <div></div>

@@ -1,13 +1,27 @@
-import { format } from 'date-fns'
+import { format, set } from 'date-fns'
 import useNyaaTracker from '../hooks/useNyaaTracker'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Skeleton, Tooltip } from '@radix-ui/themes'
-import { DownloadIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
+import {
+  DiscIcon,
+  DividerVerticalIcon,
+  DownloadIcon,
+  FileIcon,
+  MagnifyingGlassIcon
+} from '@radix-ui/react-icons'
 import useGetoToshoEpisodes from '../hooks/useGetToshoEpisodes'
 import nFormatter from '../utils/nFormatter'
 import formatBytes from '../utils/formatBytes'
-export default function Episode({ data, anime, animeId, englishDub, episodeNumber, all }) {
+export default function Episode({
+  data,
+  anime,
+  animeId,
+  dualAudio,
+  episodeNumber,
+  all,
+  bannerImage
+}) {
   console.log(data)
 
   const navigate = useNavigate()
@@ -20,14 +34,24 @@ export default function Episode({ data, anime, animeId, englishDub, episodeNumbe
     error
   } = useGetoToshoEpisodes(active ? data?.quality : null, data?.aids, data?.eids ? data.eids : null)
 
-  useEffect(() => {
-    if (toshoEps) {
-      setTorrentData(toshoEps)
-    }
-  }, [toshoEps])
+  // useEffect(() => {
+  //   if (toshoEps) {
+  //     setTorrentData(toshoEps)
+  //   }
+  // }, [toshoEps])
 
   // sort the torrents by seeders
-  torrentData.sort((a, b) => b.seeders - a.seeders)
+
+  // on pressing escape, close the dropdown
+  useEffect(() => {
+    function handleEscape(e) {
+      if (e.key === 'Escape') {
+        setActive(false)
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [])
 
   function handleClick() {
     // e.stopPropagation()
@@ -43,6 +67,32 @@ export default function Episode({ data, anime, animeId, englishDub, episodeNumbe
       `/player/${encodeURIComponent(torrent.magnet)}/${animeId}/${progress}/${episodeNumber}`
     )
   }
+
+  useEffect(() => {
+    if (dualAudio) {
+      const temp = toshoEps?.filter((torrent) => {
+        const title = torrent?.title
+
+        // Ensure that the title exists and is a string before using toLowerCase
+        if (typeof title === 'string') {
+          const lowerCaseTitle = title.toLowerCase()
+          return (
+            lowerCaseTitle.includes('dual audio') ||
+            lowerCaseTitle.includes('dual-audio') ||
+            lowerCaseTitle.includes('english dub') ||
+            lowerCaseTitle.includes('eng dub')
+          )
+        }
+        return false
+      })
+
+      setTorrentData(temp)
+    } else {
+      setTorrentData(toshoEps)
+    }
+  }, [dualAudio, toshoEps])
+
+  torrentData?.sort((a, b) => b.seeders - a.seeders)
 
   // if the data is undefined, then it is a filler episode or a recap episode ot a movie
   if (all)
@@ -68,26 +118,53 @@ export default function Episode({ data, anime, animeId, englishDub, episodeNumbe
             {isLoading && <Skeleton width={'50%'} />}
             {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
 
-            {!isLoading && torrentData.length === 0 && (
+            {!isLoading && torrentData?.length === 0 && (
               <p className="font-space-mono text-red-500">No torrents found</p>
             )}
 
             {torrentData?.map((torrent) => (
               <div
-                className="flex animate-fade-down items-center animate-duration-500"
                 key={torrent.title}
+                className="group flex animate-fade-down cursor-pointer flex-col gap-y-1 border-2 border-[#2c2d3c] bg-[#111113] px-2 py-2 transition-all duration-150 ease-in-out animate-duration-500 hover:border-[#c084fc90]" //0f1012
+                onClick={() => onTorrentClick(torrent)}
               >
-                <div className="flex min-w-20 items-center gap-x-1 border border-gray-800 p-1">
-                  <p className="font-space-mono text-xs opacity-60">{torrent.seeders}</p>
-                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                  <p className="font-space-mono text-xs opacity-60">{torrent.leechers}</p>
-                  <div className="h-2 w-2 rounded-full bg-red-500"></div>
+                <div className="mr-1 flex min-w-32 items-center gap-x-4 p-1">
+                  <div className="flex items-center gap-x-1">
+                    <p className="font-space-mono text-xs opacity-60">
+                      {nFormatter(torrent.seeders)}
+                    </p>
+                    <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                  </div>
+
+                  <div className="flex items-center gap-x-1">
+                    <p className="font-space-mono text-xs opacity-60">
+                      {nFormatter(torrent.leechers)}
+                    </p>
+                    <div className="h-2 w-2 rounded-full bg-red-500"></div>
+                  </div>
+
+                  <div className="flex items-center gap-x-1">
+                    <p className="font-space-mono text-xs opacity-60">
+                      {nFormatter(torrent.torrent_downloaded_count)}
+                    </p>
+                    <DownloadIcon height={12} width={12} color="gray" />
+                  </div>
+
+                  <div className="flex items-center gap-x-1">
+                    <p className="text-nowrap font-space-mono text-xs opacity-60">
+                      {torrent.num_files}
+                    </p>
+                    <FileIcon height={12} width={12} color="gray" />
+                  </div>
+
+                  <div className="flex items-center gap-x-1">
+                    <p className="text-nowrap font-space-mono text-xs opacity-60">
+                      {formatBytes(torrent.total_size, 1)}
+                    </p>
+                    <DiscIcon height={12} width={12} color="gray" />
+                  </div>
                 </div>
-                <p
-                  key={torrent.title}
-                  onClick={() => onTorrentClick(torrent)}
-                  className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 hover:text-purple-400 hover:opacity-85"
-                >
+                <p className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 transition-all duration-150 ease-in-out group-hover:text-purple-400 group-hover:opacity-100">
                   {torrent.title}
                 </p>
               </div>
@@ -151,31 +228,52 @@ export default function Episode({ data, anime, animeId, englishDub, episodeNumbe
         <div className="mt-3 flex flex-col gap-y-2">
           {isLoading && <Skeleton width={'50%'} />}
           {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
-          {!isLoading && torrentData.length === 0 && (
+          {!isLoading && torrentData?.length === 0 && (
             <p className="font-space-mono text-red-500">No torrents found</p>
           )}
           {torrentData?.map((torrent) => (
             <div
               key={torrent.title}
-              className="flex animate-fade-down flex-col gap-y-1 border-gray-800 bg-[#00000050] px-2 py-2 animate-duration-500"
+              className="group flex animate-fade-down cursor-pointer flex-col gap-y-1 border-2 border-[#2c2d3c] bg-[#111113] px-2 py-2 transition-all duration-150 ease-in-out animate-duration-500 hover:border-[#c084fc90]" //0f1012
+              onClick={() => onTorrentClick(torrent)}
             >
-              <div className="mr-1 flex min-w-32 items-center gap-x-1 p-1">
-                <p className="font-space-mono text-xs opacity-60">{nFormatter(torrent.seeders)}</p>
-                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <p className="font-space-mono text-xs opacity-60">{nFormatter(torrent.leechers)}</p>
-                <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                <p className="font-space-mono text-xs opacity-60">
-                  {nFormatter(torrent.torrent_downloaded_count)}
-                </p>
-                <DownloadIcon height={12} width={12} color="gray" />
-                <p className="text-nowrap font-space-mono text-xs opacity-60">
-                  {formatBytes(torrent.total_size, 1)}
-                </p>
+              <div className="mr-1 flex min-w-32 items-center gap-x-4 p-1">
+                <div className="flex items-center gap-x-1">
+                  <p className="font-space-mono text-xs opacity-60">
+                    {nFormatter(torrent.seeders)}
+                  </p>
+                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                </div>
+
+                <div className="flex items-center gap-x-1">
+                  <p className="font-space-mono text-xs opacity-60">
+                    {nFormatter(torrent.leechers)}
+                  </p>
+                  <div className="h-2 w-2 rounded-full bg-red-500"></div>
+                </div>
+
+                <div className="flex items-center gap-x-1">
+                  <p className="font-space-mono text-xs opacity-60">
+                    {nFormatter(torrent.torrent_downloaded_count)}
+                  </p>
+                  <DownloadIcon height={12} width={12} color="gray" />
+                </div>
+
+                <div className="flex items-center gap-x-1">
+                  <p className="text-nowrap font-space-mono text-xs opacity-60">
+                    {torrent.num_files}
+                  </p>
+                  <FileIcon height={12} width={12} color="gray" />
+                </div>
+
+                <div className="flex items-center gap-x-1">
+                  <p className="text-nowrap font-space-mono text-xs opacity-60">
+                    {formatBytes(torrent.total_size, 1)}
+                  </p>
+                  <DiscIcon height={12} width={12} color="gray" />
+                </div>
               </div>
-              <p
-                onClick={() => onTorrentClick(torrent)}
-                className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 hover:text-purple-400 hover:opacity-85"
-              >
+              <p className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 transition-all duration-150 ease-in-out group-hover:text-purple-400 group-hover:opacity-100">
                 {torrent.title}
               </p>
             </div>

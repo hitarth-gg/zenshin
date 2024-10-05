@@ -10,12 +10,9 @@ export default function useGetoToshoEpisodes(quality, aids, eids) {
       }
       return null
     },
-    enabled: !!(quality && aids), // Ensures the query only runs when the query string is not null
+    enabled: !!(quality && aids), // Ensures the query only runs when the quality + aids is not null,
     staleTime: 1000 * 60 * 10 // 10 mins
   })
-
-  console.log('Query Status:', aids, eids) // Log to check if the query is running
-  // console.log("Torrent Data:", torrents); // Log the returned data to see its structure
 
   return { isLoading, data, error, status }
 }

@@ -512,9 +512,10 @@ export async function getAnimeEpisodesById(id) {
   }
 }
 
-export async function getAniZipMappings(anilist_id) {
+export async function getAniZipMappings(anilist_id, anidb = false) {
+
   try {
-    const response = await fetch(GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id))
+    const response = await fetch(GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id, anidb))
 
     if (response.status === 429) {
       throw new Error(
@@ -617,9 +618,11 @@ export async function getNewReleases(packer = '[SubsPlease]') {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
 
-    const xml = await response.text()
-    const data = await parseStringPromise(xml, { mergeAttrs: true })
-    return data.rss.channel[0].item
+    // const xml = await response.text()
+    // const data = await parseStringPromise(xml, { mergeAttrs: true })
+    // return data.rss.channel[0].item
+    const data = await response.json()
+    return data
   } catch (error) {
     console.log(error)
     throw new Error(error)
