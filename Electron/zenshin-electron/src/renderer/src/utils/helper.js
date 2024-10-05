@@ -538,7 +538,7 @@ export async function getAniZipMappings(anilist_id, anidb = false) {
 //     const response = await fetch(SEARCH_TORRENT(searchQuery));
 //     const data2 = await response.json();
 export async function searchTorrent(query) {
-  await new Promise((resolve) => setTimeout(resolve, 300)) // 300 milliseconds delay
+  // await new Promise((resolve) => setTimeout(resolve, 300)) // 300 milliseconds delay
   try {
     const response = await fetch(SEARCH_TORRENT(query))
     const data = await response.json()

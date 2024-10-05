@@ -1,14 +1,14 @@
-import { Button } from "@radix-ui/themes";
-import { useState } from "react";
+import { Button } from '@radix-ui/themes'
+import { useState } from 'react'
 
 export default function EpisodesPlayer({
   file,
   handleStreamBrowser,
   handleStreamVlc,
   stopEpisodeDownload,
-  setCurrentEpisode,
+  setCurrentEpisode
 }) {
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(false)
 
   return (
     <div
@@ -26,9 +26,9 @@ export default function EpisodesPlayer({
               <div className="ml-2 mt-2 flex animate-fade-down gap-x-3 animate-duration-500">
                 <Button
                   onClick={(e) => {
-                    e.stopPropagation();
-                    setCurrentEpisode(file.name);
-                    handleStreamBrowser(file.name);
+                    e.stopPropagation()
+                    setCurrentEpisode(file.name)
+                    handleStreamBrowser(file.name)
                   }}
                   size="1"
                   color="blue"
@@ -42,9 +42,9 @@ export default function EpisodesPlayer({
                   color="orange"
                   variant="soft"
                   onClick={(e) => {
-                    e.stopPropagation();
-                    setCurrentEpisode(file.name);
-                    handleStreamVlc(file.name);
+                    e.stopPropagation()
+                    setCurrentEpisode(file.name)
+                    handleStreamVlc(file.name)
                   }}
                 >
                   Open in VLC
@@ -54,9 +54,9 @@ export default function EpisodesPlayer({
                   color="red"
                   variant="soft"
                   onClick={(e) => {
-                    e.stopPropagation();
-                    setCurrentEpisode("");
-                    stopEpisodeDownload(file.name);
+                    e.stopPropagation()
+                    setCurrentEpisode('')
+                    stopEpisodeDownload(file.name)
                   }}
                 >
                   Stop downloading the episode
@@ -67,5 +67,5 @@ export default function EpisodesPlayer({
         </div>
       </div>
     </div>
-  );
+  )
 }
