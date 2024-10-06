@@ -71,3 +71,5 @@ If you are a content owner and believe that your rights are being violated, plea
 - react-infinite-scroll-component
 - TailwindCSS w/ tailwindcss-animated and line-clamp
 - ExpressJS
+
+Inspired by Miru :)
