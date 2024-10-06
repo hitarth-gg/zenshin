@@ -247,7 +247,7 @@ export async function getTopAnime(page = 1) {
   console.log("Fetching top anime with page:", page);
 
   // Set a timeout to prevent too many requests
-  await new Promise((resolve) => setTimeout(resolve, 900)); // 900 milliseconds delay
+  await new Promise((resolve) => setTimeout(resolve, 2000)); // 900 milliseconds delay
 
   const query = `
     query ($page: Int) {

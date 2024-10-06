@@ -1,22 +1,20 @@
-import { useEffect, useState } from 'react'
-import RecentActivityCard from './RecentActivityCard'
+import { useEffect, useState } from "react";
+import RecentActivityCard from "./RecentActivityCard";
 
 export default function RecentActivity({ data }) {
-  const [scrollY, setScrollY] = useState(0)
+  const [scrollY, setScrollY] = useState(0);
 
-  // Update scrollY when the page is scrolled
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY) // Get current vertical scroll position
-    }
+      setScrollY(window.scrollY);
+    };
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener("scroll", handleScroll);
 
-    // Cleanup event listener on unmount
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="tripp relative my-4 flex h-[30rem] w-2/6 min-w-[30rem] gap-x-2 overflow-hidden">
@@ -33,7 +31,7 @@ export default function RecentActivity({ data }) {
               className="flex flex-col"
               style={{
                 transform: `translateY(-${scrollY * 0.4}px)`,
-                transition: 'transform 0.1s ease-out'
+                transition: "transform 0.1s ease-out",
               }}
             >
               {data.slice(0, 3).map((item, index) => (
@@ -46,7 +44,7 @@ export default function RecentActivity({ data }) {
               className="flex flex-col"
               style={{
                 transform: `translateY(${scrollY * 0.4}px)`,
-                transition: 'transform 0.1s ease-out'
+                transition: "transform 0.1s ease-out",
               }}
             >
               {data.slice(3, 6).map((item, index) => (
@@ -57,5 +55,5 @@ export default function RecentActivity({ data }) {
         </>
       )}
     </div>
-  )
+  );
 }

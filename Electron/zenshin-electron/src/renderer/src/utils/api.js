@@ -48,7 +48,12 @@ export function GET_TOSHO_RSS(packer = '"[SubsPlease]"') {
 
 // https://feed.animetosho.org/json?qx=1&q=1080p&aids=18290&eids=286699
 // https://feed.animetosho.org/json?qx=1&q=1080p&aids=15063
-export function GET_TOSHO_RSS_BY_QUERY(quality, aids, eids) {
-  if (eids === 0 || eids === null) return `https://feed.animetosho.org/json?qx=1&q=1080p&aids=${aids}`
+// quality === all : https://feed.animetosho.org/json?qx=1&aids=19eids=17843
+export function GET_TOSHO_RSS_BY_QUERY(quality = 'all', aids, eids) {
+  if (eids === 0 || eids === null) {
+    if (quality.toLowerCase() === 'all') return `${TOSHO}/json?qx=1&aids=${aids}`
+    return `https://feed.animetosho.org/json?qx=1&q=${quality}&aids=${aids}`
+  }
+  if (quality.toLowerCase() === 'all') return `${TOSHO}/json?qx=1&aids=${aids}&eids=${eids}`
   return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}&eids=${eids}`
 }

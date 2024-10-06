@@ -72,15 +72,37 @@ export default function Home() {
     gcTime: 1000 * 60 * 60 // 1 hour
   })
 
-  if (infiniteQueryError) {
-    toast.error('Error fetching Top Animes', {
-      icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
-      description: infiniteQueryError?.message,
-      classNames: {
-        title: 'text-rose-500'
-      }
-    })
-  }
+  // if (infiniteQueryError) {
+  //   toast.error('Error fetching Top Animes', {
+  //     icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
+  //     description: infiniteQueryError?.message,
+  //     classNames: {
+  //       title: 'text-rose-500'
+  //     }
+  //   })
+  // }
+
+  useEffect(() => {
+    if (errorRecentActivity) {
+      toast.error('Error fetching Recent Activity', {
+        icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
+        description: errorRecentActivity?.message,
+        classNames: {
+          title: 'text-rose-500'
+        }
+      })
+    }
+
+    if (infiniteQueryError) {
+      toast.error('Error fetching Top Animes', {
+        icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
+        description: infiniteQueryError?.message,
+        classNames: {
+          title: 'text-rose-500'
+        }
+      })
+    }
+  }, [errorRecentActivity, infiniteQueryError])
 
   const [topAnime, setTopAnime] = useState([])
   const navigate = useNavigate()
@@ -108,7 +130,7 @@ export default function Home() {
         }
       >
         <div
-          className="stroke-text absolute top-[-230px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
+          className="stroke-text absolute top-[-200px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
           style={{
             opacity: bgOpacity
           }}
@@ -124,7 +146,7 @@ export default function Home() {
           ZENSHIN ZENSHIN ZENSHIN
         </div>
         <div
-          className="stroke-text absolute bottom-[-230px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
+          className="stroke-text absolute bottom-[-200px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
           style={{
             opacity: bgOpacity
           }}
@@ -133,7 +155,7 @@ export default function Home() {
         </div>
 
         <div className="my-12 flex h-full w-8/12 flex-col items-center justify-start gap-y-1 p-3 lg:w-2/5">
-          <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[5rem] object-scale-down" />
+          <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[6rem] object-scale-down" />
           <p className="font-space-mono">
             Stream your favourite torrents instantly with our service, no waiting for downloads,
             reliable and seamless streaming directly to your browser / VLC Media Player.
