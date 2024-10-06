@@ -7,26 +7,20 @@
 A web based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
 
 ## Electron Port (Beta) :
-![image](https://github.com/user-attachments/assets/ed4e9255-69d7-4652-a488-7d5a3cfbb759)
-![image](https://github.com/user-attachments/assets/5538c7ac-68bc-4ce1-9ddf-4f6018a39cac)
-![image](https://github.com/user-attachments/assets/0d9623ff-b7c3-49ab-86fe-d0690c3b928b)
-![image](https://github.com/user-attachments/assets/712893ba-0561-48be-8e40-445a4601418b)
-![image](https://github.com/user-attachments/assets/714741a2-0695-4698-a799-5f44021ada26)
-![image](https://github.com/user-attachments/assets/014fdbd0-6304-4f3d-8679-767dd5323cff)
-![image](https://github.com/user-attachments/assets/1f4eba60-c6d1-4e64-bf53-9007e68a77f9)
+![image](https://github.com/user-attachments/assets/2b11e7a9-9667-43b4-a95d-38b1365467f7)
+![image](https://github.com/user-attachments/assets/e1114387-0432-4bf2-a692-c0e1c3f46df6)
+![image](https://github.com/user-attachments/assets/30d6e6b4-f63f-4ed5-97f1-96b898a2c1d0)
+![image](https://github.com/user-attachments/assets/d9906902-0756-4d16-ad20-77fcadcb5d82)
+![image](https://github.com/user-attachments/assets/0d5720ff-c06e-452d-b0cd-c2078ba3f115)
+![image](https://github.com/user-attachments/assets/01939941-c2d4-4d2d-8596-36cbdab82f86)
+![image](https://github.com/user-attachments/assets/cc748b8a-ad4b-4eb9-a9f9-a4625ee428b3)
+![image](https://github.com/user-attachments/assets/a3662bff-c799-45ec-a77d-2b11ff313465)
+![image](https://github.com/user-attachments/assets/844af4d5-9dbb-41a3-b6de-7ee0d5016440)
+![image](https://github.com/user-attachments/assets/f2190575-a983-40d8-9a32-41e34d0a1fc2)
 
 
 ## Summary
 Built it as a mini project to familiarize myself with video streaming using ExpressJS and handling of streams and APIs in a ReactJS based frontend webapp.
-
-![image](https://github.com/user-attachments/assets/5d93d3a7-533c-4615-a25d-34e7af901108)
-![image](https://github.com/user-attachments/assets/8ccb3ec0-c162-4017-95e4-b90d33000eb7)
-![image](https://github.com/user-attachments/assets/0936fbc4-fe18-42ca-a000-a3de70741bd3)
-![image](https://github.com/user-attachments/assets/d2b00ee5-4242-4c9b-9492-64829ed655fe)
-![image](https://github.com/user-attachments/assets/bec74950-27c7-4b1a-ac7c-974e6d699739)
-![image](https://github.com/user-attachments/assets/e9baf709-dc2a-4b90-95b2-ff4dcfdd986d)
-![image](https://github.com/user-attachments/assets/1341c03b-0674-4d70-be95-e4d1bff3119e)
-![image](https://github.com/user-attachments/assets/ab95917b-11f5-4f02-a73f-43cfa2afc40f)
 
 ---
 
