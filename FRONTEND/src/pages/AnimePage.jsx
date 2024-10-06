@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import { useState } from 'react'
 import CenteredLoader from '../ui/CenteredLoader'
 import Episode from '../components/Episode'
-import { Button, Skeleton } from '@radix-ui/themes'
+import { Button, DropdownMenu, Skeleton } from '@radix-ui/themes'
 import { toast } from 'sonner'
 import { ExclamationTriangleIcon, PersonIcon, StarIcon } from '@radix-ui/react-icons'
 import useGetAniZipMappings from '../hooks/useGetAniZipMappings'
@@ -21,7 +21,7 @@ export default function AnimePage() {
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId)
   const malId = animeData?.idMal
   const episodesWatched = animeData?.mediaListEntry?.progress || 0
-
+  const [quality, setQuality] = useState('All')
   const {
     isLoading: isLoadingMappings,
     data: mappingsData,
@@ -207,10 +207,11 @@ export default function AnimePage() {
         </div>
 
         {true && (
-          <div className="mb-64 mt-5">
+          <div className="mb-64 mt-12">
             <div className="flex items-center gap-x-3">
               <p className="font-space-mono text-lg font-medium opacity-90">Episodes</p>
               <Button
+                variant="soft"
                 size={'1'}
                 onClick={() => setDualAudio(!dualAudio)}
                 color={dualAudio ? 'blue' : 'gray'}
@@ -218,12 +219,43 @@ export default function AnimePage() {
                 English Dub
               </Button>
               <Button
+                variant="soft"
                 size={'1'}
                 onClick={() => setHideWatchedEpisodes(!hideWatchedEpisodes)}
                 color={hideWatchedEpisodes ? 'blue' : 'gray'}
               >
                 Hide Watched Episodes
               </Button>
+              <DropdownMenu.Root className="nodrag" modal={false}>
+                <DropdownMenu.Trigger>
+                  <Button variant="soft" color="gray" size={'1'}>
+                    <div className="flex animate-fade items-center gap-x-2">Quality: {quality}</div>
+                    <DropdownMenu.TriggerIcon />
+                  </Button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Item
+                    color={`${quality === 'All' ? 'indigo' : 'gray'}`}
+                    onClick={() => setQuality('All')}
+                  >
+                    All
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    color={`${quality === '1080p' ? 'indigo' : 'gray'}`}
+                    shortcut="HD"
+                    onClick={() => setQuality('1080p')}
+                  >
+                    1080p
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    color={`${quality === '720p' ? 'indigo' : 'gray'}`}
+                    shortcut="SD"
+                    onClick={() => setQuality('720p')}
+                  >
+                    720p
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
             </div>
             {!isLoadingMappings && (
               <div className="mt-3 grid grid-cols-1 gap-y-3">
@@ -231,7 +263,7 @@ export default function AnimePage() {
                   all={true}
                   anime={data.title}
                   dualAudio={dualAudio}
-                  data={{ aids: mappingsData?.mappings?.anidb_id, quality: '1080p', eids: 0 }}
+                  data={{ aids: mappingsData?.mappings?.anidb_id, quality, eids: 0 }}
                   bannerImage={data?.bannerImage}
                 />
                 {animeEpisodes?.map((episode, ix) => (
@@ -243,7 +275,7 @@ export default function AnimePage() {
                       ...episode,
                       progress: episodesWatched,
                       hideWatchedEpisodes,
-                      quality: '1080p'
+                      quality
                     }}
                     dualAudio={dualAudio}
                     episodeNumber={ix + 1}

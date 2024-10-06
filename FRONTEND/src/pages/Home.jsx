@@ -284,6 +284,65 @@ export default function Home() {
           <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Anime
           </div>
+
+          <div className={`w-full mb-2`}>
+            <div className="animate-fade">
+              <Carousel
+                axis="horizontal"
+                showArrows={true}
+                showThumbs={false}
+                autoPlay
+                interval={5000}
+                infiniteLoop
+                renderIndicator={false}
+                emulateTouch
+              >
+                {topAnime.slice(0, 8).map((anime) => (
+                  // gradient from left to right black to transparent
+                  <div
+                    key={anime.id + 'bannerAnime'}
+                    className="relative h-72 cursor-pointer"
+                    onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
+                  >
+                    <div className="mask absolute h-full w-8/12 bg-gradient-to-r from-[#141414] backdrop-blur-md"></div>
+                    <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2">
+                      <div className="line-clamp-1 max-w-xl bg-gradient-to-r from-[#14141480] py-1 text-start text-2xl font-semibold tracking-wider text-white drop-shadow-3xl">
+                        {anime.title.romaji}
+                      </div>
+                      <div className="mb-4 line-clamp-1 max-w-2xl text-start text-xs tracking-wider text-white drop-shadow-3xl">
+                        {anime.title.english}
+                      </div>
+
+                      {anime.description && (
+                        <div className="line-clamp-[9] w-80 text-left text-xs tracking-wide">
+                          {HTMLReactParser(anime.description)}
+                        </div>
+                      )}
+
+                      <div className="flex gap-x-8 border border-[#ffffff70] bg-[#00000050] px-1 py-1 text-xs backdrop-blur-[2px]">
+                        <div>{anime.episodes || 0} episodes</div>
+                        {anime.averageScore && (
+                          <div className="flex items-center gap-x-1 tracking-wide">
+                            <StarIcon /> {anime.averageScore} / 100
+                          </div>
+                        )}
+                        <div className="flex items-center gap-x-1 tracking-wide">
+                          <PersonIcon />
+                          {anime.popularity.toLocaleString()}
+                        </div>
+                        <div className="flex items-center gap-x-1 tracking-wide">
+                          <VideoIcon className="h-4 w-4 text-white" />
+                          {anime.format.slice(0, 3)}
+                        </div>
+                      </div>
+                    </div>
+                    <img src={anime.bannerImage} alt="" className="h-72 w-full object-cover" />
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+          </div>
+
           <InfiniteScroll
             style={{ all: 'unset' }}
             dataLength={topAnime.length}
