@@ -31,7 +31,7 @@ export default function Header({ theme }) {
 
   const checkBackendRunning = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/ping')
+      const response = await axios.get('http://localhost:64621/ping')
       console.log(response)
 
       if (response.status === 200) {
@@ -150,7 +150,7 @@ export default function Header({ theme }) {
       <div className="nodrag w-2/6">
         <SearchBar />
       </div>
-      <div className="nodrag flex items-center justify-center gap-x-8">
+      <div className="nodrag mr-36 flex items-center justify-center gap-x-8">
         {!anilistToken && (
           <Tooltip content="Login With Anilist">
             <Button color="gray" variant="ghost" size={'1'} onClick={handleLogin}>
@@ -210,7 +210,7 @@ export default function Header({ theme }) {
             <ShadowNoneIcon className="my-1" width={16} height={16} />
           )}
         </Button>
-        <div className="w-32"></div>
+        {/* <div className="w-32"></div> */}
       </div>
     </div>
   )

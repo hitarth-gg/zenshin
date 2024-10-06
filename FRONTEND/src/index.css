@@ -41,14 +41,23 @@
 .mask {
   -webkit-mask: -webkit-gradient(
     linear,
-    left top, /* Start point of the gradient */
-    right top, /* End point of the gradient */
-    from(rgba(0, 0, 0, 1)), /* Fully opaque at the left */
-    to(rgba(0, 0, 0, 0)) /* Fully transparent at the right */
+    left top,
+    /* Start point of the gradient */ right top,
+    /* End point of the gradient */ from(rgba(0, 0, 0, 1)),
+    /* Fully opaque at the left */ to(rgba(0, 0, 0, 0)) /* Fully transparent at the right */
   );
-  mask: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1) 30%,
-    rgba(0, 0, 0, 0) 60%
-  );
+  mask: linear-gradient(to right, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0) 60%);
+}
+
+.skew3d {
+  transform: matrix(1, 0, -0.05, 1, 0, 0);
+}
+
+.tripp {
+  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
+.stroke-text {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.086); /* Stroke width and color */
+  color: transparent; /* Text fill color */
 }

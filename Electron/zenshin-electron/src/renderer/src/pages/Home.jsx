@@ -1,32 +1,33 @@
 import AnimeCard from '../components/AnimeCard'
 import useTopAiringAnime from '../hooks/useTopAiringAnime'
-import zenshin1 from '../assets/zenshin2.png'
+// import zenshin1 from '../assets/zenshin2.png'
 import zenshinLogo from '../assets/zenshinLogo.png'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { getTopAnime } from '../utils/helper'
 import { useEffect, useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { Skeleton, Spinner } from '@radix-ui/themes'
+import { Spinner } from '@radix-ui/themes'
 import { toast } from 'sonner'
 import { ExclamationTriangleIcon, PersonIcon, StarIcon, VideoIcon } from '@radix-ui/react-icons'
 // import loundraw from "../assets/loundraw.jpg";
-import gradient1 from '../assets/gradient1.jpg'
+// import gradient1 from '../assets/gradient1.jpg'
 import SkeletonAnimeCard from '../skeletons/SkeletonAnimeCard'
 import { getCurrentSeason } from '../utils/currentSeason'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import { autop } from '@wordpress/autop'
 import HTMLReactParser from 'html-react-parser/lib/index'
 import { useNavigate } from 'react-router-dom'
+import useGetRecentGlobalActivity from '../hooks/useGetRecentGlobalActivity'
+import RecentActivity from '../components/RecentActivity'
 
 export default function Home() {
   // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
-  // const {
-  //   isLoading: isLoadingRecentActivity,
-  //   data: recentActivity,
-  //   error: errorRecentActivity,
-  //   status: statusRecentActivity,
-  // } = useGetRecentGlobalActivity();
+  const {
+    isLoading: isLoadingRecentActivity,
+    data: recentActivity,
+    error: errorRecentActivity,
+    status: statusRecentActivity
+  } = useGetRecentGlobalActivity()
 
   // State to store background opacity
   const [bgOpacity, setBgOpacity] = useState(1)
@@ -53,8 +54,6 @@ export default function Home() {
   const currentYear = new Date().getFullYear()
   // season: WINTER, SPRING, SUMMER, FALL
   const currentSeason = getCurrentSeason()
-
-  const scrollPosition = window.scrollY
 
   const {
     data,
@@ -99,14 +98,41 @@ export default function Home() {
   return (
     <div className="select-none font-space-mono tracking-tight">
       <div
-        className="flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
-        style={{
-          // backgroundImage: `url(${gradient1})`,
-          // backgroundSize: 'cover',
-          background: `linear-gradient(rgba(17,17,19,${1 - bgOpacity}), rgba(17,17,19,${1 - bgOpacity})), url(${gradient1})`
-        }}
+        className="relative flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
+        style={
+          {
+            // backgroundImage: `url(${gradient1})`,
+            // backgroundSize: 'cover',
+            // background: `linear-gradient(rgba(17,17,19,${1 - bgOpacity}), rgba(17,17,19,${1 - bgOpacity})), url(${gradient1})`
+          }
+        }
       >
-        <div className="flex h-full w-8/12 flex-col items-center justify-start gap-y-10 p-3 lg:w-2/5">
+        <div
+          className="stroke-text absolute top-[-200px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
+          style={{
+            opacity: bgOpacity
+          }}
+        >
+          全身全身全身
+        </div>
+        <div
+          className="stroke-text absolute w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
+          style={{
+            opacity: bgOpacity
+          }}
+        >
+          ZENSHIN ZENSHIN ZENSHIN
+        </div>
+        <div
+          className="stroke-text absolute bottom-[-200px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
+          style={{
+            opacity: bgOpacity
+          }}
+        >
+          七転び八起き
+        </div>
+
+        <div className="my-12 flex h-full w-8/12 flex-col items-center justify-start gap-y-1 p-3 lg:w-2/5">
           <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[6rem] object-scale-down" />
           <p className="font-space-mono">
             Stream your favourite torrents instantly with our service, no waiting for downloads,
@@ -114,80 +140,85 @@ export default function Home() {
           </p>
         </div>
 
-        <img
+        {/* <img
           src={zenshin1}
           alt="zenshin"
           className="drop-shadow-lg h-48 object-scale-down sm:h-64 md:h-80 lg:h-96"
-        />
+        /> */}
+
+        {recentActivity && <RecentActivity data={Object.values(recentActivity).slice(0, 9)} />}
       </div>
 
       {topAiringAnime?.length > 0 && (
         <div
-          className={`w-full animate-fade`}
+          className={`w-full`}
           style={{
             opacity: 1 - bgOpacity
           }}
         >
-          <Carousel
-            axis="horizontal"
-            showArrows={true}
-            showThumbs={false}
-            autoPlay
-            interval={5000}
-            infiniteLoop
-            renderIndicator={false}
-            emulateTouch
-          >
-            {topAiringAnime
-              ?.filter(
-                (anime) =>
-                  anime.seasonYear === currentYear &&
-                  anime.season.toLowerCase() === currentSeason.toLowerCase() &&
-                  anime.bannerImage !== null
-              )
-              .map((anime) => (
-                // gradient from left to right black to transparent
-                <div
-                  key={anime.id + 'bannerAnime'}
-                  className="relative h-72 cursor-pointer"
-                  onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
-                >
-                  <div className="mask absolute h-full w-8/12 bg-gradient-to-r from-[#141414] backdrop-blur-md"></div>
-                  <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2">
-                    <div className="line-clamp-1 max-w-xl bg-gradient-to-r from-[#14141480] py-1 text-start text-2xl font-semibold tracking-wider text-white drop-shadow-3xl">
-                      {anime.title.romaji}
-                    </div>
-                    <div className="mb-4 line-clamp-1 max-w-2xl text-start text-xs tracking-wider text-white drop-shadow-3xl">
-                      {anime.title.english}
-                    </div>
-
-                    {anime.description && (
-                      <div className="line-clamp-[9] w-80 text-left text-xs tracking-wide">
-                        {HTMLReactParser(anime.description)}
+          <div className="animate-fade">
+            <Carousel
+              axis="horizontal"
+              showArrows={true}
+              showThumbs={false}
+              autoPlay
+              interval={5000}
+              infiniteLoop
+              renderIndicator={false}
+              emulateTouch
+            >
+              {topAiringAnime
+                ?.filter(
+                  (anime) =>
+                    anime.seasonYear === currentYear &&
+                    anime.season.toLowerCase() === currentSeason.toLowerCase() &&
+                    anime.bannerImage !== null
+                )
+                .slice(0, 5)
+                .map((anime) => (
+                  // gradient from left to right black to transparent
+                  <div
+                    key={anime.id + 'bannerAnime'}
+                    className="relative h-72 cursor-pointer"
+                    onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
+                  >
+                    <div className="mask absolute h-full w-8/12 bg-gradient-to-r from-[#141414] backdrop-blur-md"></div>
+                    <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2">
+                      <div className="line-clamp-1 max-w-xl bg-gradient-to-r from-[#14141480] py-1 text-start text-2xl font-semibold tracking-wider text-white drop-shadow-3xl">
+                        {anime.title.romaji}
                       </div>
-                    )}
+                      <div className="mb-4 line-clamp-1 max-w-2xl text-start text-xs tracking-wider text-white drop-shadow-3xl">
+                        {anime.title.english}
+                      </div>
 
-                    <div className="flex gap-x-8 border border-[#ffffff70] bg-[#00000050] px-1 py-1 text-xs backdrop-blur-[2px]">
-                      <div>{anime.episodes || 0} episodes</div>
-                      {anime.averageScore && (
-                        <div className="flex items-center gap-x-1 tracking-wide">
-                          <StarIcon /> {anime.averageScore} / 100
+                      {anime.description && (
+                        <div className="line-clamp-[9] w-80 text-left text-xs tracking-wide">
+                          {HTMLReactParser(anime.description)}
                         </div>
                       )}
-                      <div className="flex items-center gap-x-1 tracking-wide">
-                        <PersonIcon />
-                        {anime.popularity.toLocaleString()}
-                      </div>
-                      <div className="flex items-center gap-x-1 tracking-wide">
-                        <VideoIcon className="h-4 w-4 text-white" />
-                        {anime.format.slice(0, 3)}
+
+                      <div className="flex gap-x-8 border border-[#ffffff70] bg-[#00000050] px-1 py-1 text-xs backdrop-blur-[2px]">
+                        <div>{anime.episodes || 0} episodes</div>
+                        {anime.averageScore && (
+                          <div className="flex items-center gap-x-1 tracking-wide">
+                            <StarIcon /> {anime.averageScore} / 100
+                          </div>
+                        )}
+                        <div className="flex items-center gap-x-1 tracking-wide">
+                          <PersonIcon />
+                          {anime.popularity.toLocaleString()}
+                        </div>
+                        <div className="flex items-center gap-x-1 tracking-wide">
+                          <VideoIcon className="h-4 w-4 text-white" />
+                          {anime.format.slice(0, 3)}
+                        </div>
                       </div>
                     </div>
+                    <img src={anime.bannerImage} alt="" className="h-72 w-full object-cover" />
                   </div>
-                  <img src={anime.bannerImage} alt="" className="h-72 w-full object-cover" />
-                </div>
-              ))}
-          </Carousel>
+                ))}
+            </Carousel>
+          </div>
         </div>
       )}
 

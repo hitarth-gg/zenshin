@@ -17,7 +17,7 @@ export default function StreamStats({ magnetURI }) {
 
   useEffect(() => {
     const fetchDetails = () => {
-      fetch(`http://localhost:8000/details/${encodeURIComponent(magnetURI)}`)
+      fetch(`http://localhost:64621/details/${encodeURIComponent(magnetURI)}`)
         .then((response) => response.json())
         .then((data) => setDetails(data))
         .catch((error) => console.error('Error fetching torrent details:', error))

@@ -98,8 +98,8 @@ app.whenReady().then(() => {
     app.setAsDefaultProtocolClient('zenshin2')
   }
 
-  app2.listen(8000, () => {
-    console.log('Server running at http://localhost:8000')
+  app2.listen(64621, () => {
+    console.log('Server running at http://localhost:64621')
   })
 
   app.on('activate', function () {
@@ -578,6 +578,6 @@ app2.get('/ping', (req, res) => {
 
 // do not start the server again if it is already running
 
-// app2.listen(8000, () => {
-//   console.log('Server running at http://localhost:8000')
+// app2.listen(64621, () => {
+//   console.log('Server running at http://localhost:64621')
 // })

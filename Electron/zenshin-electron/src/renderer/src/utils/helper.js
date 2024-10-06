@@ -552,7 +552,7 @@ export async function searchTorrent(query) {
 export async function getRecentActivity() {
   const query = `
     query {
-      Page(perPage: 30, page: 1) {
+      Page(perPage: 10, page: 1) {
         activities(type: ANIME_LIST, sort: ID_DESC) {
           ... on ListActivity {
             id
@@ -569,6 +569,7 @@ export async function getRecentActivity() {
               coverImage {
                 extraLarge
               }
+            isAdult
             }
             user {
               id

@@ -34,14 +34,6 @@ export default function Episode({
     error
   } = useGetoToshoEpisodes(active ? data?.quality : null, data?.aids, data?.eids ? data.eids : null)
 
-  // useEffect(() => {
-  //   if (toshoEps) {
-  //     setTorrentData(toshoEps)
-  //   }
-  // }, [toshoEps])
-
-  // sort the torrents by seeders
-
   // on pressing escape, close the dropdown
   useEffect(() => {
     function handleEscape(e) {
@@ -93,6 +85,13 @@ export default function Episode({
   }, [dualAudio, toshoEps])
 
   torrentData?.sort((a, b) => b.seeders - a.seeders)
+
+  // check if the episode was released after the last 2 days
+  const isRecent =
+    data?.airdate &&
+    new Date(data.airdate) > set(new Date(), { date: -2 }) &&
+    new Date(data.airdate) <= new Date()
+  const isUpcoming = data?.airdate && new Date(data.airdate) > new Date()
 
   // if the data is undefined, then it is a filler episode or a recap episode ot a movie
   if (all)
@@ -181,7 +180,7 @@ export default function Episode({
       onClick={() => handleClick()}
       className={`m-1 w-full cursor-default border border-gray-700 p-2 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100`}
     >
-      <div className="flex items-center justify-between">
+      <div className={`flex items-center justify-between ${isUpcoming ? 'opacity-25' : ''}`}>
         <div className="flex items-center gap-x-1 font-space-mono font-medium opacity-90">
           {data.thumbnail && (
             <img
@@ -211,15 +210,16 @@ export default function Episode({
             )}
           </div>
         </div>
-        <div className="flex w-fit gap-x-2 text-xs opacity-60">
+        <div className="flex w-fit gap-x-2 text-xs">
           {/* <p className="">{data.filler ? "Filler" : "Not Filler"}</p> */}
           {/* <p>{data.recap ? "Recap" : "Not Recap"}</p> */}
           <div className="ml-4 h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
           {data.airdate && (
-            <p className="text-nowrap opacity-60">
-              {format(new Date(data.airdate), 'dd MMMM yyyy')}
+            <p className={`text-nowrap ${isRecent ? 'text-purple-400 opacity-90' : 'opacity-50'}`}>
+              {format(new Date(data.airdate), 'dd MMM yyyy')}
             </p>
           )}
+          {/* {isRecent && <div className="h-5 w-[1px] bg-[#333]"></div>} Divider */}
           <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
           {/* <p className="opacity-60">{data.score}</p> */}
         </div>

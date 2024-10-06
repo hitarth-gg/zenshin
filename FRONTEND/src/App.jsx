@@ -10,7 +10,6 @@ import NewReleases from "./pages/NewReleases";
 import AnilistAuthCallback from "./components/AnilistAuthCallback";
 
 // import { lazy } from "react";
-
 // const AnimePage = lazy(() => import("./pages/AnimePage"));
 // const Player = lazy(() => import("./pages/Player"));
 
@@ -53,8 +52,10 @@ const router = createBrowserRouter(
   },
 );
 
+
 function App() {
   // the idea of integrating react-query is similar to that of context api
+
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -65,10 +66,10 @@ function App() {
   });
 
   return (
-      <QueryClientProvider client={queryClient}>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 }
 
