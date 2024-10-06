@@ -45,8 +45,14 @@ If you are a content owner and believe that your rights are being violated, plea
 
 ---
 
-### How to use / build : 
+### Building the Electron App
+1. Navigate to `Electron\zenshin-electron`.
+2. Run `npm i` or `npm install`
+3. Run `npm run build:win`
+4. Check the `dist` folder (`Electron\zenshin-electron\dist`), `zenshin-electron-x.x.x-setup.exe` is the setup and the folder `win-unpacked` contains pre-installed / unpacked files.
+5. `Zenshin.exe` inside the `win-unpacked` folder (`dist\win-unpacked\Zenshin.exe`) can be used if you want to avoid installing the setup. 
 
+### How to use / build (WebApp): (kind of outdated) 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/DiVczJ92sAU/0.jpg)](https://www.youtube.com/watch?v=DiVczJ92sAU)
 
 [YouTube: How to use / build](https://youtu.be/DiVczJ92sAU?si=NvqnDvXE_LW7EHW8)
