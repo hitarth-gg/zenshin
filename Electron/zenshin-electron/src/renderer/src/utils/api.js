@@ -57,3 +57,5 @@ export function GET_TOSHO_RSS_BY_QUERY(quality = 'all', aids, eids) {
   if (quality.toLowerCase() === 'all') return `${TOSHO}/json?qx=1&aids=${aids}&eids=${eids}`
   return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}&eids=${eids}`
 }
+// {{apiurl}}/series/289744/episodes/default?episodeNumber=10&season=1
+// http://api.anidb.net:9001/httpapi?request=anime&client=zenshin&clientver=1&protover=1&aid=24
