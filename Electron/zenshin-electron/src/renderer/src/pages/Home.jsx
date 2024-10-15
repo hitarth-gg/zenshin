@@ -285,7 +285,7 @@ export default function Home() {
             Top Anime
           </div>
 
-          <div className={`w-full mb-2`}>
+          <div className={`mb-2 w-full`}>
             <div className="animate-fade">
               <Carousel
                 axis="horizontal"

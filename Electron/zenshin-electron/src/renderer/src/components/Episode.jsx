@@ -89,9 +89,24 @@ export default function Episode({
   // check if the episode was released after the last 2 days
   const isRecent =
     data?.airdate &&
-    new Date(data.airdate) > set(new Date(), { date: -2 }) &&
-    new Date(data.airdate) <= new Date()
-  const isUpcoming = data?.airdate && new Date(data.airdate) > new Date()
+    (() => {
+      const airDate = new Date(data.airdate) // Convert airdate to Date object
+      const twoDaysAgo = new Date()
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2) // Set to two days ago
+
+      return airDate > twoDaysAgo && airDate <= new Date() // Check if within the last two days
+    })()
+
+  const isUpcoming =
+    data?.airdate &&
+    (() => {
+      const airDate = new Date(data.airdate)
+      const today = new Date()
+      // Normalize both dates to YYYY-MM-DD (ignoring time)
+      airDate.setHours(0, 0, 0, 0) // Set airDate to the start of the day (00:00:00)
+      today.setHours(0, 0, 0, 0)
+      return airDate > today
+    })()
 
   // if the data is undefined, then it is a filler episode or a recap episode ot a movie
   if (all)
@@ -176,57 +191,67 @@ export default function Episode({
   // if the data is defined, then it is a normal episode
   if (episodeNumber <= progress && data?.hideWatchedEpisodes) return null
   return (
-    <div
-      onClick={() => handleClick()}
-      className={`m-1 w-full cursor-default border border-gray-700 p-2 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100`}
-    >
-      <div className={`flex items-center justify-between ${isUpcoming ? 'opacity-25' : ''}`}>
-        <div className="flex items-center gap-x-1 font-space-mono font-medium opacity-90">
-          {data.thumbnail && (
-            <img
-              src={data.thumbnail}
-              alt="episode_img"
-              className="duration-400 mr-3 h-24 animate-fade object-cover transition-all ease-in-out hover:z-20 hover:scale-150 hover:rounded-md"
-            />
-          )}
-          {/* <p className="text-lg">{episodeNumber}. </p> */}
-          <div>
-            <p className="flex items-center gap-2 font-space-mono text-lg font-medium opacity-100">
-              {episodeNumber <= progress && (
-                <Tooltip content="Watched">
-                  <p className="h-2 min-h-2 w-2 min-w-2 rounded-full bg-green-500"></p>
-                </Tooltip>
+    <div className="flex w-full cursor-default flex-col border border-gray-700 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100">
+      <div className="flex">
+        {data.thumbnail && (
+          <img
+            src={data.thumbnail}
+            alt="episode_img"
+            className="duration-400 mr-3 h-28 animate-fade object-cover transition-all ease-in-out hover:z-20 hover:scale-150 hover:rounded-md"
+          />
+        )}
+
+        <div
+          onClick={() => handleClick()}
+          className={`h-full w-full cursor-default p-2 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100`}
+        >
+          <div
+            className={`flex h-full items-center justify-between ${isUpcoming ? 'opacity-25' : ''}`}
+          >
+            <div className="flex items-center gap-x-1 font-space-mono font-medium opacity-90">
+              {/* <p className="text-lg">{episodeNumber}. </p> */}
+              <div>
+                <p className="flex items-center gap-2 font-space-mono text-lg font-medium opacity-100">
+                  {episodeNumber <= progress && (
+                    <Tooltip content="Watched">
+                      <p className="h-2 min-h-2 w-2 min-w-2 rounded-full bg-green-500"></p>
+                    </Tooltip>
+                  )}
+                  <p className="line-clamp-1">
+                    {data.epNum}. {data.title}
+                  </p>
+                </p>
+                {data.overview && (
+                  // <Tooltip content={data.overview}>
+                  <p className="line-clamp-3 font-space-mono text-sm font-medium opacity-60">
+                    {data.overview}
+                  </p>
+                  // </Tooltip>
+                )}
+              </div>
+            </div>
+            <div className="flex w-fit gap-x-2 text-xs">
+              {/* <p className="">{data.filler ? "Filler" : "Not Filler"}</p> */}
+              {/* <p>{data.recap ? "Recap" : "Not Recap"}</p> */}
+              <div className="ml-4 h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
+              {data.airdate && (
+                <p
+                  className={`text-nowrap ${isRecent ? 'text-purple-400 opacity-90' : 'opacity-50'}`}
+                >
+                  {format(new Date(data.airdate), 'dd MMM yyyy')}
+                </p>
               )}
-              <p className="line-clamp-1">
-                {data.epNum}. {data.title}
-              </p>
-            </p>
-            {data.overview && (
-              // <Tooltip content={data.overview}>
-              <p className="line-clamp-3 font-space-mono text-sm font-medium opacity-60">
-                {data.overview}
-              </p>
-              // </Tooltip>
-            )}
+              {/* {isRecent && <div className="h-5 w-[1px] bg-[#333]"></div>} Divider */}
+              <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
+              {/* <p className="opacity-60">{data.score}</p> */}
+            </div>
           </div>
         </div>
-        <div className="flex w-fit gap-x-2 text-xs">
-          {/* <p className="">{data.filler ? "Filler" : "Not Filler"}</p> */}
-          {/* <p>{data.recap ? "Recap" : "Not Recap"}</p> */}
-          <div className="ml-4 h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
-          {data.airdate && (
-            <p className={`text-nowrap ${isRecent ? 'text-purple-400 opacity-90' : 'opacity-50'}`}>
-              {format(new Date(data.airdate), 'dd MMM yyyy')}
-            </p>
-          )}
-          {/* {isRecent && <div className="h-5 w-[1px] bg-[#333]"></div>} Divider */}
-          <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
-          {/* <p className="opacity-60">{data.score}</p> */}
-        </div>
       </div>
+
       {active && (
-        <div className="mt-3 flex flex-col gap-y-2">
-          {isLoading && <Skeleton width={'50%'} />}
+        <div className="mx-3 my-3 flex flex-col gap-y-2">
+          {isLoading && <Skeleton width={'50%'} className="mb-3" />}
           {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
           {!isLoading && torrentData?.length === 0 && (
             <p className="font-space-mono text-red-500">No torrents found</p>

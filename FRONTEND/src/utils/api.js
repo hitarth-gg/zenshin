@@ -1,7 +1,8 @@
 const BASE_URL_JIKAN = 'https://api.jikan.moe/v4'
 const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
 export const BASE_URL_ANILIST = 'https://graphql.anilist.co'
-const BASE_URL_ANIZIP = 'https://api.ani.zip'
+// const BASE_URL_ANIZIP = 'https://api.ani.zip'
+const BASE_URL_ANIZIP = 'http://localhost:3000' // http://localhost:3000/mappings?anilist_id=21
 const TOSHO = 'https://feed.animetosho.org'
 
 export function SEARCH_ANIME(query, limit = 10) {

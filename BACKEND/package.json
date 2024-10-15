@@ -5,6 +5,8 @@
     "cors": "^2.8.5",
     "dev-null": "^0.1.1",
     "express": "^4.19.2",
+    "matroska-subtitles": "^3.3.2",
+    "readable-stream-clone": "^1.0.0",
     "webtorrent": "^2.4.12"
   }
 }

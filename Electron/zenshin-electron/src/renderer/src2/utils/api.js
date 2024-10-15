@@ -37,7 +37,7 @@ export function GET_ANIME_DETAILS_BY_ID(id) {
 // https://api.ani.zip/mappings?anilist_id=153406
 export function GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id) {
   console.log(`${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`);
-  
+
   return `${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`
 }
 

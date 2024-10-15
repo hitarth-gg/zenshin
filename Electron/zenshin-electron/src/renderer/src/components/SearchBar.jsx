@@ -109,7 +109,7 @@ export default function SearchBar() {
               <div className="flex w-full items-start gap-x-4">
                 <Skeleton className="h-12 w-12" />
                 <div className="flex flex-col gap-y-1">
-                  <Skeleton  className="h-3 w-32" />
+                  <Skeleton className="h-3 w-32" />
                   <Skeleton className="h-2 w-48" />
                   <Skeleton className="h-2 w-16" />
                 </div>
