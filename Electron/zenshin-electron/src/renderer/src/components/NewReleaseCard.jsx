@@ -91,7 +91,7 @@ export default function NewReleaseCard({
       // conver the object into an array
       setAnilistId(anidbMap.mappings.anilist_id)
       const arr = anidbMap?.episodes ? Object.values(anidbMap.episodes) : []
-      const img = arr.filter((ep) => ep.anidbEid === data.anidb_eid)
+      const img = arr.filter((ep) => ep.anidbEid == data.anidb_eid)
       console.log(img)
 
       setAnilistIds((prev) => [...prev, anidbMap.mappings.anilist_id])
