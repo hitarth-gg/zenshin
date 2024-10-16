@@ -61,3 +61,30 @@
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.086); /* Stroke width and color */
   color: transparent; /* Text fill color */
 }
+
+/* -------------- FOR PLYR LOADING SPINNER -------------- */
+.plyr.plyr--loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px; /* Adjust size of the spinner */
+  height: 40px; /* Adjust size of the spinner */
+  border: 5px solid transparent; /* Create border for spinner */
+  border-top: 5px solid #ffffff; /* Color of the spinner */
+  border-radius: 50%; /* Make it circular */
+  animation: spin 1s linear infinite; /* Spin animation */
+  transform: translate(-50%, -50%); /* Center the spinner */
+  z-index: 10;
+}
+
+/* Keyframes for spinning animation */
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+/* ------------------------------------------------------ */
