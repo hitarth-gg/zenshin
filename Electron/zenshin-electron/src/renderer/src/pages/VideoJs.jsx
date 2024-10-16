@@ -1,49 +1,44 @@
 import React, { useEffect } from 'react';
-import videojs from 'video.js';
-import 'video.js/dist/video-js.css';
+import Plyr from 'plyr';
+import 'plyr-react/plyr.css';
 
-export const VideoJS = (props) => {
+export const PlyrPlayer = (props) => {
   const videoRef = React.useRef(null);
   const playerRef = React.useRef(null);
-  const {options, onReady} = props;
+  const { options, onReady } = props;
 
   useEffect(() => {
-
     if (!playerRef.current) {
-      const videoElement = document.createElement("video-js");
+      const player = playerRef.current = new Plyr(videoRef.current, options);
 
-      videoElement.classList.add('vjs-big-play-centered');
-      videoRef.current.appendChild(videoElement);
-
-      const player = playerRef.current = videojs(videoElement, options, () => {
-        videojs.log('player is ready');
+      // Log when the player is ready
+      player.on('ready', () => {
+        console.log('Plyr player is ready');
         onReady && onReady(player);
       });
     } else {
-      const player = playerRef.current;
-
-      player.autoplay(options.autoplay);
-      player.src(options.sources);
+      // Update source or other options when props change
+      playerRef.current.source = options.sources;
     }
-  }, [options, videoRef]);
+  }, [options]);
 
-  // Dispose the Video.js player when the functional component unmounts, otherwise memory leak ho jayega lmao
+  // Clean up Plyr instance on component unmount
   useEffect(() => {
     const player = playerRef.current;
 
     return () => {
-      if (player && !player.isDisposed()) {
-        player.dispose();
+      if (player) {
+        player.destroy();
         playerRef.current = null;
       }
     };
-  }, [playerRef]);
+  }, []);
 
   return (
-    <div data-vjs-player>
-      <div ref={videoRef} />
+    <div>
+      <video ref={videoRef} className="plyr-react plyr" />
     </div>
   );
-}
+};
 
-export default VideoJS;
+export default PlyrPlayer;

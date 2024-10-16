@@ -34,7 +34,7 @@ export default function StreamStats({ magnetURI }) {
   }, [magnetURI])
 
   return (
-    <div className="mt-2 flex flex-col gap-y-1 font-space-mono">
+    <div className="mt-2  flex flex-col gap-y-1 font-space-mono">
       <div className="text-cyan-200">{details?.name}</div>
       <div className="opacity-45">
         <div className="flex gap-x-32">
@@ -48,19 +48,19 @@ export default function StreamStats({ magnetURI }) {
             <strong>Uploaded:</strong> {formatBytes(details?.uploaded)}
           </p>
         </div>
-        <div className="flex gap-x-16 overflow-hidden text-sm">
+        <div className="flex w-fit gap-x-4 overflow-hidden text-sm lg:gap-x-16">
           {/* <div className="relative grid grid-flow-col-dense grid-cols-3 gap-x-12 overflow-hidden border text-sm"> */}
           <p className="flex gap-x-2">
             <p className="text-nowrap">Download Speed: </p>{' '}
-            <p className="min-w-56">{formatBytes(details?.downloadSpeed)} /sec</p>
+            <p className="min-w-28 lg:min-w-56">{formatBytes(details?.downloadSpeed)} /sec</p>
           </p>
           <p className="flex gap-x-2">
             <p className="text-nowrap">Upload Speed:</p>
-            <p className="min-w-56">{formatBytes(details?.uploadSpeed)} /sec</p>
+            <p className="min-w-28 lg:min-w-56">{formatBytes(details?.uploadSpeed)} /sec</p>
           </p>
           <p className="flex gap-x-2">
             <p className="text-nowrap">Progress:</p>
-            <p className="min-w-56">{(details?.progress * 100)?.toFixed(2)}%</p>
+            <p className="">{(details?.progress * 100)?.toFixed(2)}%</p>
           </p>
         </div>
         <div className="flex gap-x-16 text-sm">

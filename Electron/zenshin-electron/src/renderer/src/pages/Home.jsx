@@ -33,9 +33,13 @@ export default function Home() {
   const [bgOpacity, setBgOpacity] = useState(1)
 
   // Update opacity on scroll
+
+  // const [scrollY, setScrollY] = useState(0)
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
+      // setScrollY(scrollY)
       // Adjust the value as per your requirement, this reduces opacity with scroll
       const newOpacity = Math.max(0, 1 - scrollY / 500) // Minimum opacity is 0.3
       setBgOpacity(newOpacity)

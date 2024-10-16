@@ -160,7 +160,6 @@ export async function searchAiringAnime(text, limit = 2) {
 
 /* ------------------------------------------------------ */
 export async function getTopAiringAnime() {
-
   const query = `
     query {
       Page(perPage: 49, page: 1) {
@@ -514,9 +513,12 @@ export async function getAnimeEpisodesById(id) {
 }
 
 export async function getAniZipMappings(anilist_id, anidb = false) {
-
   try {
     const response = await fetch(GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id, anidb))
+
+    if (response.status === 404) {
+      throw new Error('No mappings found for this anime.')
+    }
 
     if (response.status === 429) {
       throw new Error(
@@ -530,7 +532,7 @@ export async function getAniZipMappings(anilist_id, anidb = false) {
     const data = await response.json()
     return data
   } catch (error) {
-    console.log(error)
+    // console.log(error)
     throw new Error(error)
   }
 }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import VideoJS from './VideoJs'
+import VideoJS, { PlyrPlayer } from './VideoJs'
 import videojs from 'video.js'
 import StreamStats from '../components/StreamStats'
 import { Button } from '@radix-ui/themes'
@@ -9,6 +9,8 @@ import { toast } from 'sonner'
 import { ExclamationTriangleIcon, LightningBoltIcon, TrashIcon } from '@radix-ui/react-icons'
 import EpisodesPlayer from '../components/EpisodesPlayer'
 import StreamStatsEpisode from '../components/StreamStatsEpisode'
+import 'plyr-react/plyr.css'
+import Plyr from 'plyr-react'
 
 export default function Player(query) {
   const magnetURI = useParams().magnetId
@@ -22,7 +24,9 @@ export default function Player(query) {
     e.preventDefault()
     try {
       // Step 1: Add the torrent
-      const response = await axios.get(`http://localhost:64621/add/${encodeURIComponent(magnetURI)}`)
+      const response = await axios.get(
+        `http://localhost:64621/add/${encodeURIComponent(magnetURI)}`
+      )
       console.log(response)
       // Step 2: Set the video source for streaming
       setVideoSrc(`http://localhost:64621/stream/${encodeURIComponent(magnetURI)}`)
@@ -154,6 +158,27 @@ export default function Player(query) {
     })
   }
 
+  const plyrProps = {
+    source: {
+      type: 'video',
+      sources: [
+        {
+          src: videoSrc,
+          type: 'video/webm'
+        }
+      ],
+      autoplay: true
+      // tracks: [
+      //   {
+      //     kind: 'captions',
+      //     label: 'English',
+      //     srclang: 'en',
+      //     src: subtitleSrc
+      //   }
+      // ]
+    }
+  }
+
   /* ---------------- Handling batch files ---------------- */
 
   const handleStreamBrowser = (eipsode) => {
@@ -272,11 +297,13 @@ export default function Player(query) {
   }
 
   return (
-    <div className="flex items-center justify-center font-space-mono">
+    <div className="mb-32 flex items-center justify-center px-8 font-space-mono">
       <div className="">
         {videoSrc && (
-          <div className="flex justify-center">
-            <VideoJS options={videoPlayerOptions} onReady={handlePlayerReady} />
+          <div className="flex w-full justify-center">
+            <div className="aspect-video w-4/6">
+              <Plyr {...plyrProps} />
+            </div>
           </div>
         )}
 
@@ -293,7 +320,7 @@ export default function Player(query) {
           />
         )}
 
-        <div className="fixed-width border border-gray-700 bg-[#1d1d20] p-4">
+        <div className="fixed-width w-full border border-gray-700 bg-[#1d1d20] p-4">
           <StreamStats magnetURI={magnetURI} />
 
           <div className="mt-5 flex gap-x-3">
