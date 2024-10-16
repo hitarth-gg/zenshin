@@ -130,7 +130,8 @@ export default function Header({ theme }) {
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
         <Button className="nodrag" color="gray" variant="ghost" size={'1'}>
           <Link to="/newreleases">
-            <div className="p-1 font-space-mono text-[.8rem]">New Releases</div>
+            {/* <div className="p-1 font-space-mono text-[.8rem]">New Releases</div> */}
+            <div className="p-1 font-space-mono text-[.8rem]">New</div>
           </Link>
         </Button>
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />

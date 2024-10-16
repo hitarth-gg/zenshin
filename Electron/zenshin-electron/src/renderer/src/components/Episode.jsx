@@ -251,7 +251,7 @@ export default function Episode({
 
       {active && (
         <div className="mx-3 my-3 flex flex-col gap-y-2">
-          {isLoading && <Skeleton width={'50%'} className="mb-3" />}
+          {isLoading && <Skeleton width={'50%'} className="mb-1" />}
           {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
           {!isLoading && torrentData?.length === 0 && (
             <p className="font-space-mono text-red-500">No torrents found</p>
