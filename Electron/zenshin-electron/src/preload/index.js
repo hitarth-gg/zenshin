@@ -7,7 +7,8 @@ const api = {
   minimize: () => ipcRenderer.send('minimize-window'),
   maximize: () => ipcRenderer.send('maximize-window'),
   close: () => ipcRenderer.send('close-window'),
-  oauth: (url) => ipcRenderer.send('oauth-login', url)
+  oauth: (url) => ipcRenderer.send('oauth-login', url),
+  openVlc: (url) => ipcRenderer.send('open-vlc', url)
 }
 
 const deeplinks = {
@@ -19,8 +20,7 @@ const combinedAPI = {
   ...electronAPI, // Include the toolkit API if needed
   ...deeplinks,
   ...api // Include your custom APIs
-};
-
+}
 
 if (process.contextIsolated) {
   try {

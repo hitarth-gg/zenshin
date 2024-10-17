@@ -1,10 +1,11 @@
 import SearchBar from './SearchBar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import zenshinLogo from '../assets/zenshinLogo.png'
 import {
   Cross1Icon,
   DividerVerticalIcon,
   ExclamationTriangleIcon,
+  GearIcon,
   GitHubLogoIcon,
   LayersIcon,
   LightningBoltIcon,
@@ -15,7 +16,7 @@ import {
   SquareIcon
 } from '@radix-ui/react-icons'
 import { Button, DropdownMenu, Tooltip } from '@radix-ui/themes'
-import { useZenshinContext } from '../utils/ContextProvider'
+// import { useZenshinContext } from '../utils/ContextProvider'
 import { anilistAuthUrl } from '../utils/auth'
 import { ANILIST_CLIENT_ID } from '../utils/auth'
 import { useEffect, useState } from 'react'
@@ -24,10 +25,7 @@ import { toast } from 'sonner'
 import axios from 'axios'
 
 export default function Header({ theme }) {
-  const zenshinContext = useZenshinContext()
-  function toggleGlow() {
-    zenshinContext.setGlow(!zenshinContext.glow)
-  }
+  const navigate = useNavigate()
 
   const checkBackendRunning = async () => {
     try {
@@ -203,13 +201,15 @@ export default function Header({ theme }) {
           color="gray"
           variant="ghost"
           size={'1'}
-          onClick={() => toggleGlow()}
+          // onClick={() => toggleGlow()}
+          onClick={() => navigate('/settings')}
         >
-          {zenshinContext.glow ? (
+          {/* {zenshinContext.glow ? (
             <ShadowIcon className="my-1" width={16} height={16} />
           ) : (
             <ShadowNoneIcon className="my-1" width={16} height={16} />
-          )}
+          )} */}
+          <GearIcon className="my-1 cursor-pointer" width={16} height={16} />
         </Button>
         {/* <div className="w-32"></div> */}
       </div>

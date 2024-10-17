@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { fork } from 'child_process'
 import { Deeplink } from 'electron-deeplink'
+import { exec } from 'child_process'
 // import isDev from 'electron-is-dev'
 
 let mainWindow // Define mainWindow here
@@ -70,6 +71,17 @@ function createWindow() {
 
   ipcMain.on('oauth-login', (event, authUrl) => {
     shell.openExternal(authUrl) // Open the OAuth URL in the default browser
+  })
+
+  ipcMain.on('open-vlc', (event, command) => {
+    exec(command, (error) => {
+      if (error) {
+        dialog.showErrorBox(
+          'Error launching VLC, make sure the path to VLC.exe is correct. You can specify the correct path to it in the settings\n',
+          error.message
+        )
+      }
+    })
   })
 }
 
@@ -527,7 +539,6 @@ app2.get('/details/:magnet', async (req, res) => {
 })
 
 /* --------------- Handling VLC streaming --------------- */
-import { exec } from 'child_process'
 import { get } from 'http'
 import { fileURLToPath } from 'url'
 // Full path to VLC executable, change it as needed

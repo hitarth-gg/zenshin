@@ -11,6 +11,7 @@ import EpisodesPlayer from '../components/EpisodesPlayer'
 import StreamStatsEpisode from '../components/StreamStatsEpisode'
 import 'plyr-react/plyr.css'
 import Plyr from 'plyr-react'
+import { useZenshinContext } from '../utils/ContextProvider'
 
 export default function Player(query) {
   const magnetURI = useParams().magnetId
@@ -125,38 +126,9 @@ export default function Player(query) {
 
   /* ------------------------------------------------------ */
 
-  const videoPlayerOptions = {
-    autoplay: true,
-    controls: true,
-    // fluid: true,
-    // preload: "auto",
-    height: 480,
-    width: 854,
-    textTrackSettings: true,
-    sources: [
-      {
-        src: videoSrc,
-        type: 'video/webm'
-      }
-    ],
-    tracks: [{ src: subtitleSrc, kind: 'captions', srclang: 'en', label: 'English' }]
-  }
   const playerRef = useRef(null)
   const [isActive, setIsActive] = useState(false)
   const [currentEpisode, setCurrentEpisode] = useState('')
-
-  const handlePlayerReady = (player) => {
-    playerRef.current = player
-
-    // You can handle player events here, for example:
-    player.on('waiting', () => {
-      videojs.log('player is waiting')
-    })
-
-    player.on('dispose', () => {
-      videojs.log('player will dispose')
-    })
-  }
 
   const plyrProps = {
     source: {
@@ -168,14 +140,6 @@ export default function Player(query) {
         }
       ],
       autoplay: true
-      // tracks: [
-      //   {
-      //     kind: 'captions',
-      //     label: 'English',
-      //     srclang: 'en',
-      //     src: subtitleSrc
-      //   }
-      // ]
     }
   }
 
@@ -187,13 +151,13 @@ export default function Player(query) {
     )
   }
 
+  const { vlcPath } = useZenshinContext()
+  // const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"'
+
   const handleStreamVlc = async (episode) => {
     try {
-      // Send a request to the server to open VLC with the video stream URL
-      await axios.get(
-        `http://localhost:64621/stream-to-vlc?url=${encodeURIComponent(
-          `http://localhost:64621/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
-        )}`
+      window.api.openVlc(
+        `${vlcPath} http://localhost:64621/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
       )
     } catch (error) {
       console.error('Error streaming to VLC', error)

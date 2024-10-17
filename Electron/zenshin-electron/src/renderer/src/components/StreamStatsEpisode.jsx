@@ -1,20 +1,21 @@
-import { Button } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { toast } from "sonner";
-import { setWatchedEpisodes } from "../utils/helper";
+import { Button } from '@radix-ui/themes'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { toast } from 'sonner'
+import { setWatchedEpisodes } from '../utils/helper'
+import { useZenshinContext } from '../utils/ContextProvider'
 
 const formatBytes = (bytes, decimals = 2) => {
-  if (bytes === 0) return "0 Bytes";
+  if (bytes === 0) return '0 Bytes'
 
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  const k = 1024
+  const dm = decimals < 0 ? 0 : decimals
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-};
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+}
 
 export default function StreamStatsEpisode({
   magnetURI,
@@ -23,59 +24,62 @@ export default function StreamStatsEpisode({
   setCurrentEpisode,
   currentEpisode,
   handleStreamVlc,
-  setVideoSrc,
+  setVideoSrc
 }) {
-  const [details, setDetails] = useState(null);
-  const animeId = useParams().animeId || null;
-  const priorProgress = useParams().priorProgress || null;
-  const currentEpisodeNum = useParams().currentEpisodeNum || null;
-  const [mountTime, setMountTime] = useState(Date.now());
+  const [details, setDetails] = useState(null)
+  const animeId = useParams().animeId || null
+  const priorProgress = useParams().priorProgress || null
+  const currentEpisodeNum = useParams().currentEpisodeNum || null
+  const [mountTime, setMountTime] = useState(Date.now())
 
-  const [episodeUpdated, setEpisodeUpdated] = useState(false);
+  const [episodeUpdated, setEpisodeUpdated] = useState(false)
+
+  const { autoUpdateAnilistEpisode } = useZenshinContext()
 
   useEffect(() => {
     const fetchDetails = () => {
       fetch(
-        `http://localhost:64621/detailsepisode/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
+        `http://localhost:64621/detailsepisode/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
       )
         .then((response) => response.json())
         .then((data) => setDetails(data))
-        .catch((error) =>
-          console.error("Error fetching torrent details:", error),
-        );
-    };
+        .catch((error) => console.error('Error fetching torrent details:', error))
+    }
 
     // Fetch details immediately
-    fetchDetails();
+    fetchDetails()
 
     // Set interval to fetch details every 1 second
-    const intervalId = setInterval(fetchDetails, 1000);
+    const intervalId = setInterval(fetchDetails, 1000)
 
     // Clear interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [episode, magnetURI]);
+    return () => clearInterval(intervalId)
+  }, [episode, magnetURI])
 
-  console.log("details", details?.percentageWatched);
+  console.log('details', details?.percentageWatched)
 
   useEffect(() => {
-    const elapsedTime = Date.now() - mountTime;
+    const elapsedTime = Date.now() - mountTime
 
     if (
       elapsedTime > 5000 && // Check if more than 5 seconds have passed
       !episodeUpdated &&
       details?.percentageWatched > 80 &&
       details?.percentageWatched < 98 &&
-      currentEpisodeNum > priorProgress
-      && animeId && currentEpisodeNum && priorProgress
+      currentEpisodeNum > priorProgress &&
+      animeId &&
+      currentEpisodeNum &&
+      priorProgress &&
+      autoUpdateAnilistEpisode
     ) {
-      setEpisodeUpdated(true);
-      if (!localStorage.getItem("anilist_token")) return;
+      setEpisodeUpdated(true)
+      if (!localStorage.getItem('anilist_token')) return
       try {
-        setWatchedEpisodes(animeId, currentEpisodeNum, priorProgress); // Update watched episodes on AniList, see helper.js
-        toast("Episode updated on AniList!", { type: "success" });
+        setWatchedEpisodes(animeId, currentEpisodeNum, priorProgress) // Update watched episodes on AniList, see helper.js
+        toast('Episode updated on AniList!', { type: 'success' })
       } catch (error) {
-        console.error("Error updating episode on AniList:", error);
-        toast("Error updating episode on AniList!", { type: "error" });
+        console.error('Error updating episode on AniList:', error)
+        toast('Error updating episode on AniList!', { type: 'error' })
       }
     }
   }, [details, episodeUpdated, currentEpisodeNum, priorProgress, animeId, mountTime])
@@ -99,9 +103,9 @@ export default function StreamStatsEpisode({
             color="red"
             variant="soft"
             onClick={(e) => {
-              e.stopPropagation();
-              setCurrentEpisode("");
-              stopEpisodeDownload(episode);
+              e.stopPropagation()
+              setCurrentEpisode('')
+              stopEpisodeDownload(episode)
             }}
           >
             Stop downloading the episode
@@ -111,8 +115,8 @@ export default function StreamStatsEpisode({
             color="orange"
             variant="soft"
             onClick={(e) => {
-              e.stopPropagation();
-              handleStreamVlc(episode);
+              e.stopPropagation()
+              handleStreamVlc(episode)
             }}
           >
             Open VLC
@@ -120,5 +124,5 @@ export default function StreamStatsEpisode({
         </div>
       </div>
     </div>
-  );
+  )
 }
