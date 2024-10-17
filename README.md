@@ -9,6 +9,10 @@
   </a>
 </p>
 
+<p align="center" >
+    <img src="https://github.com/user-attachments/assets/0a30842e-d6ed-4a65-b57a-d478b0930941">
+</p>
+
 
 A web based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
 
