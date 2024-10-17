@@ -14,7 +14,7 @@
 </p>
 
 
-A web based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
+A web and electron based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
 
 ## Electron Port (Beta) :
 ![image](https://github.com/user-attachments/assets/2b11e7a9-9667-43b4-a95d-38b1365467f7)
