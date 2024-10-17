@@ -1,7 +1,11 @@
 # zenshin. <img src="https://github.com/user-attachments/assets/87dd28e0-8c0a-43ce-a953-f58c604ccf62" width="23">
 
-<img src="https://github.com/user-attachments/assets/af797fd4-e7ca-428f-82fc-c50d13b9407c" width="120">
-
+<p align="center" >
+  <img src="https://github.com/user-attachments/assets/af797fd4-e7ca-428f-82fc-c50d13b9407c" width="120">
+</p>
+<!-- <p align="center"> -->
+<!--   <img src="https://img.shields.io/github/downloads/hitarth-gg/zenshin/total?style=flat-square&color=blue" width="90"> -->
+<!-- </p> -->
 
 
 A web based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
