@@ -23,7 +23,7 @@ A web and electron based anime torrent streamer which can stream torrents in the
 ![image](https://github.com/user-attachments/assets/d9906902-0756-4d16-ad20-77fcadcb5d82)
 ![image](https://github.com/user-attachments/assets/0d5720ff-c06e-452d-b0cd-c2078ba3f115)
 ![image](https://github.com/user-attachments/assets/01939941-c2d4-4d2d-8596-36cbdab82f86)
-![image](https://github.com/user-attachments/assets/cc748b8a-ad4b-4eb9-a9f9-a4625ee428b3)
+![image](https://github.com/user-attachments/assets/8e0588c3-e44e-49a3-bea8-55dbe27f4f8f)
 ![image](https://github.com/user-attachments/assets/a3662bff-c799-45ec-a77d-2b11ff313465)
 ![image](https://github.com/user-attachments/assets/844af4d5-9dbb-41a3-b6de-7ee0d5016440)
 ![image](https://github.com/user-attachments/assets/f2190575-a983-40d8-9a32-41e34d0a1fc2)
