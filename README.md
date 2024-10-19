@@ -28,6 +28,9 @@ A web and electron based anime torrent streamer which can stream torrents in the
 ![image](https://github.com/user-attachments/assets/844af4d5-9dbb-41a3-b6de-7ee0d5016440)
 ![image](https://github.com/user-attachments/assets/f2190575-a983-40d8-9a32-41e34d0a1fc2)
 
+## Demo : (Click the image)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/NXB1stMmNbQ/0.jpg)](https://www.youtube.com/watch?v=NXB1stMmNbQ)
+
 
 ## Summary
 Built it as a mini project to familiarize myself with video streaming using ExpressJS and handling of streams and APIs in a ReactJS based frontend webapp.
