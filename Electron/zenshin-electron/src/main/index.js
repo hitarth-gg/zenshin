@@ -541,6 +541,7 @@ app2.get('/details/:magnet', async (req, res) => {
 /* --------------- Handling VLC streaming --------------- */
 import { get } from 'http'
 import { fileURLToPath } from 'url'
+import { animepaheRouter } from './animepahe/routes/search'
 // Full path to VLC executable, change it as needed
 const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"' // Adjust this path as needed
 
@@ -592,3 +593,9 @@ app2.get('/ping', (req, res) => {
 // app2.listen(64621, () => {
 //   console.log('Server running at http://localhost:64621')
 // })
+
+/* ------------------------------------------------------ */
+/* ---------------------- ANIMEPAHE --------------------- */
+/* ------------------------------------------------------ */
+
+app2.use('/animepahe', animepaheRouter)
