@@ -8,7 +8,7 @@ import AnimePage from './pages/AnimePage'
 import Player from './pages/Player'
 import NewReleases from './pages/NewReleases'
 import AnilistAuthCallback from './components/AnilistAuthCallback'
-import Settings from './pages/settings'
+import Settings from './pages/Settings'
 
 // import { lazy } from "react";
 
