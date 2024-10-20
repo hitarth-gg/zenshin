@@ -9,6 +9,7 @@ import Player from './pages/Player'
 import NewReleases from './pages/NewReleases'
 import AnilistAuthCallback from './components/AnilistAuthCallback'
 import Settings from './pages/settings'
+import AnimePahe from './extensions/animepahe/AnimePahe'
 
 // import { lazy } from "react";
 
@@ -43,6 +44,11 @@ const router = createHashRouter([
       {
         path: '/anilistauthcallback',
         element: <AnilistAuthCallback />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/animepahe',
+        element: <AnimePahe />,
         errorElement: <ErrorPage />
       },
       {

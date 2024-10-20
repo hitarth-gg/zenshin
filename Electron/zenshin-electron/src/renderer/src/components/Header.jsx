@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import zenshinLogo from '../assets/zenshinLogo.png'
 import {
   Cross1Icon,
+  DashboardIcon,
   DividerVerticalIcon,
   ExclamationTriangleIcon,
   GearIcon,
@@ -144,6 +145,15 @@ export default function Header({ theme }) {
             <LayersIcon />
           </Button>
         </Tooltip>
+        <Button
+          className="nodrag"
+          size="1"
+          color="blue"
+          variant="soft"
+          onClick={() => navigate('/animepahe')}
+        >
+          <DashboardIcon />
+        </Button>
       </div>
 
       <div className="nodrag w-2/6">

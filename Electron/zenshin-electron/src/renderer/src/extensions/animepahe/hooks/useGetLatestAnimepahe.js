@@ -1,13 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { getAnimeByMalId } from '../utils/helper'
 
-export default function useGetAnimeByMalId(id) {
-  console.log('Fetching anime with id:', id)
-
+export default function useGetLatestAnimepahe(page) {
   const { isLoading, data, error, status } = useQuery({
-    queryKey: ['cur_anime_mal', id],
+    queryKey: ['cur_anime_mal', page],
     queryFn: () => {
-      if (id) return getAnimeByMalId(id)
+      if (page) return useGetLatestAnimepahe(page)
       return null
     },
     staleTime: 1000 * 60 * 20 // 20 mins
