@@ -3,12 +3,18 @@
 <p align="center" >
   <img src="https://github.com/user-attachments/assets/af797fd4-e7ca-428f-82fc-c50d13b9407c" width="120">
 </p>
-<!-- <p align="center"> -->
-<!--   <img src="https://img.shields.io/github/downloads/hitarth-gg/zenshin/total?style=flat-square&color=blue" width="90"> -->
-<!-- </p> -->
+<p align="center">
+  <a href="https://github.com/hitarth-gg/zenshin/releases/tag/v2.0.0">
+    <img src="https://img.shields.io/github/downloads/hitarth-gg/zenshin/total?style=flat-square&color=blue" width="90">
+  </a>
+</p>
+
+<p align="center" >
+    <img src="https://github.com/user-attachments/assets/0a30842e-d6ed-4a65-b57a-d478b0930941">
+</p>
 
 
-A web based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
+A web and electron based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
 
 ## Electron Port (Beta) :
 ![image](https://github.com/user-attachments/assets/2b11e7a9-9667-43b4-a95d-38b1365467f7)
@@ -17,10 +23,13 @@ A web based anime torrent streamer which can stream torrents in the browser and 
 ![image](https://github.com/user-attachments/assets/d9906902-0756-4d16-ad20-77fcadcb5d82)
 ![image](https://github.com/user-attachments/assets/0d5720ff-c06e-452d-b0cd-c2078ba3f115)
 ![image](https://github.com/user-attachments/assets/01939941-c2d4-4d2d-8596-36cbdab82f86)
-![image](https://github.com/user-attachments/assets/cc748b8a-ad4b-4eb9-a9f9-a4625ee428b3)
+![image](https://github.com/user-attachments/assets/8e0588c3-e44e-49a3-bea8-55dbe27f4f8f)
 ![image](https://github.com/user-attachments/assets/a3662bff-c799-45ec-a77d-2b11ff313465)
 ![image](https://github.com/user-attachments/assets/844af4d5-9dbb-41a3-b6de-7ee0d5016440)
 ![image](https://github.com/user-attachments/assets/f2190575-a983-40d8-9a32-41e34d0a1fc2)
+
+## Demo : (Click the image)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/NXB1stMmNbQ/0.jpg)](https://www.youtube.com/watch?v=NXB1stMmNbQ)
 
 
 ## Summary
