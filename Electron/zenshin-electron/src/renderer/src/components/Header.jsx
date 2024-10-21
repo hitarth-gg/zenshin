@@ -2,6 +2,8 @@ import SearchBar from './SearchBar'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import zenshinLogo from '../assets/zenshinLogo.png'
 import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
   Cross1Icon,
   DashboardIcon,
   DividerVerticalIcon,
@@ -154,7 +156,7 @@ export default function Header({ theme }) {
         <Button
           className="nodrag"
           size="1"
-          color="blue"
+          color="gray"
           variant="soft"
           onClick={() => navigate('/animepahe')}
         >
@@ -163,8 +165,16 @@ export default function Header({ theme }) {
         </Button>
       </div>
 
-      <div className="nodrag w-2/6">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
+      <div className="nodrag w-2/6 mx-5">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
       <div className="nodrag mr-36 flex items-center justify-center gap-x-8">
+        <div className='flex gap-3'>
+          <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(-1)}>
+            <ArrowLeftIcon className="my-1" width={16} height={16} />
+          </Button>
+          <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(1)}>
+            <ArrowRightIcon className="my-1" width={16} height={16} />
+          </Button>
+        </div>
         {!anilistToken && (
           <Tooltip content="Login With Anilist">
             <Button color="gray" variant="ghost" size={'1'} onClick={handleLogin}>
@@ -172,6 +182,7 @@ export default function Header({ theme }) {
             </Button>
           </Tooltip>
         )}
+
         {userProfile && (
           <DropdownMenu.Root className="nodrag" modal={false}>
             <DropdownMenu.Trigger>

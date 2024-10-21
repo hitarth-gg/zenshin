@@ -53,7 +53,7 @@ const MyComponent = () => {
   }, [videoSrc])
 
   return (
-    <div className="aspect-video w-4/6">
+    <div className="w-4/6">
       <Plyr
         id="plyr"
         options={{
@@ -69,7 +69,7 @@ const MyComponent = () => {
             'pip'
           ],
           autoplay: true,
-          seekTime: 5,
+          seekTime: 5
         }}
         source={{}} // Pass an empty source since HLS will load it
         ref={ref}

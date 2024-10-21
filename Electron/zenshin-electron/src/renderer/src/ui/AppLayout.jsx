@@ -27,11 +27,22 @@ export default function AppLayout({ props }) {
         navigate(1)
       }
     })
-
     return () => {
       document.removeEventListener('keydown', () => {})
     }
   }, [navigation])
+
+  // use crtl + r to refresh the page
+  useEffect(() => {
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'r') {
+        window.location.reload()
+      }
+    })
+    return () => {
+      document.removeEventListener('keydown', () => {})
+    }
+  }, [])
 
   return (
     <ReactLenis root options={{ lerp: 0.15 }}>
