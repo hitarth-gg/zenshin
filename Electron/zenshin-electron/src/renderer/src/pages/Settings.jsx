@@ -94,12 +94,12 @@ export default function Settings() {
               <p className="text-xs">Navigate between pages using Alt + Arrow Left/Right</p>
             </div>
           </div>
-          <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          {/* <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
             <div className="switch_card">
               <p className="font-bold">Ctrl + R</p>
               <p className="text-xs">Refresh the page using Ctrl + R</p>
             </div>
-          </div>
+          </div> */}
           <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
             <div className="switch_card">
               <p className="font-bold">Ctrl + K</p>

@@ -76,8 +76,7 @@ function AnimePahe() {
         {data?.pages[0]?.error && (
           <div className="mx-5 my-4 w-4/6 rounded-md border border-rose-600 bg-[#1c1317] p-6 font-space-mono text-red-500">
             Refresh AnimePahe cookies using webview by clicking the button below, after animepahe
-            loads completely close the webview and press <Code color="gray">ctrl + r</Code> to
-            refresh this page
+            loads completely close the webview and <Code color="gray">restart</Code> the app.
           </div>
         )}
         {!infiniteQueryError && (

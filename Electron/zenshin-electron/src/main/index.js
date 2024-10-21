@@ -157,6 +157,14 @@ app.whenReady().then(() => {
     })
   })
 
+  ipcMain.on('reload-window', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (win) {
+      win.webContents.reload()
+    }
+  })
+
+
   createWindow()
 
   if (process.argv.length >= 2) {

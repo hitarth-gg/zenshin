@@ -32,17 +32,19 @@ export default function AppLayout({ props }) {
     }
   }, [navigation])
 
-  // use crtl + r to refresh the page
-  useEffect(() => {
-    document.addEventListener('keydown', (e) => {
-      if (e.ctrlKey && e.key === 'r') {
-        window.location.reload()
-      }
-    })
-    return () => {
-      document.removeEventListener('keydown', () => {})
-    }
-  }, [])
+  // // use crtl + r to refresh the page
+  // useEffect(() => {
+  //   document.addEventListener('keydown', (e) => {
+  //     if (e.ctrlKey && e.key === 'r') {
+  //       e.preventDefault()
+  //       navigate('/')
+  //       // window.location.reload()
+  //     }
+  //   })
+  //   return () => {
+  //     document.removeEventListener('keydown', () => {})
+  //   }
+  // }, [navigate])
 
   return (
     <ReactLenis root options={{ lerp: 0.15 }}>

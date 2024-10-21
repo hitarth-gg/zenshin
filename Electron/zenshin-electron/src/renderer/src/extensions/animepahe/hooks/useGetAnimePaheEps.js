@@ -8,7 +8,7 @@ export default function useGetAnimePaheEps(id, page) {
       if (id) return animepaheEpisodes(id, page)
       return null
     },
-    staleTime: 1000 * 60 * 5 // 5 mins
+    staleTime: 1000 * 60 * 10 // 5 mins
   })
 
   return { isLoading, data, error, status }
