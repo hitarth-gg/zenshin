@@ -25,13 +25,52 @@ const MyComponent = () => {
     }
 
     loadVideo()
-  }, [])
+
+    const handleKeyDown = (event) => {
+      if (ref.current && ref.current.plyr) {
+        const player = ref.current.plyr
+        switch (event.key) {
+          case 'ArrowLeft':
+            event.preventDefault() // Prevent default browser behavior (scrolling)
+            player.currentTime = Math.max(player.currentTime - 5, 0) // Seek backward 5 seconds
+            break
+          case 'ArrowRight':
+            event.preventDefault() // Prevent default browser behavior
+            player.currentTime = Math.min(player.currentTime + 5, player.duration) // Seek forward 5 seconds
+            break
+          default:
+            break
+        }
+      }
+    }
+
+    // Attach event listener to the entire window
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [videoSrc])
 
   return (
     <div className="aspect-video w-4/6">
       <Plyr
         id="plyr"
-        options={{ volume: 0.1 }}
+        options={{
+          volume: 0.1,
+          controls: [
+            'play',
+            'progress',
+            'current-time',
+            'mute',
+            'volume',
+            'settings',
+            'fullscreen',
+            'pip'
+          ],
+          autoplay: true,
+          seekTime: 5,
+        }}
         source={{}} // Pass an empty source since HLS will load it
         ref={ref}
       />

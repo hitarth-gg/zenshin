@@ -53,8 +53,7 @@ function AnimepaheEpisodeCard({ data }) {
         className="flex w-full flex-col gap-y-1 transition-all duration-150 ease-in-out hover:text-purple-400"
         onClick={(e) => {
           e.stopPropagation()
-          // navigate(`anime/${id}`)
-          navigate(`anime/04980e94-e51c-90c0-7f1c-0c1b760475e4`)
+          navigate(`/animepahe/anime/${anime_session}`)
         }}
       >
         <div className="w-full truncate text-sm font-medium opacity-90">{anime_title}</div>

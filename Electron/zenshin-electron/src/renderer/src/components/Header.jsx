@@ -1,5 +1,5 @@
 import SearchBar from './SearchBar'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import zenshinLogo from '../assets/zenshinLogo.png'
 import {
   Cross1Icon,
@@ -16,6 +16,7 @@ import {
   ShadowNoneIcon,
   SquareIcon
 } from '@radix-ui/react-icons'
+import Pikacon from '../assets/pikacon.ico'
 import { Button, DropdownMenu, Tooltip } from '@radix-ui/themes'
 // import { useZenshinContext } from '../utils/ContextProvider'
 import { anilistAuthUrl } from '../utils/auth'
@@ -24,6 +25,7 @@ import { useEffect, useState } from 'react'
 import useGetAnilistProfile from '../hooks/useGetAnilistProfile'
 import { toast } from 'sonner'
 import axios from 'axios'
+import AnimePaheSearchBar from '../extensions/animepahe/components/AnimePaheSearchBar'
 
 export default function Header({ theme }) {
   const navigate = useNavigate()
@@ -110,6 +112,10 @@ export default function Header({ theme }) {
       }
     })
   }
+  // get current route and check if it is /animepahe
+  const { pathname } = useLocation()
+
+  const animepahe = pathname.includes('/animepahe')
 
   return (
     <div className="draggable sticky top-0 z-20 flex h-11 items-center justify-between border-[#5a5e6750] bg-[#111113] bg-opacity-60 px-4 py-3 backdrop-blur-md">
@@ -152,13 +158,12 @@ export default function Header({ theme }) {
           variant="soft"
           onClick={() => navigate('/animepahe')}
         >
-          <DashboardIcon />
+          {/* <DashboardIcon /> */}
+          <img src={Pikacon} alt="pikacon" className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="nodrag w-2/6">
-        <SearchBar />
-      </div>
+      <div className="nodrag w-2/6">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
       <div className="nodrag mr-36 flex items-center justify-center gap-x-8">
         {!anilistToken && (
           <Tooltip content="Login With Anilist">

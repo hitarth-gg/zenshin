@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
 import { format } from 'date-fns'
-import { Skeleton } from '@radix-ui/themes'
+import { Code, Skeleton } from '@radix-ui/themes'
 import useGetAnimePaheEps from '../hooks/useGetAnimePahePlayData'
 export default function AnimePaheEpisode({ data }) {
   const {
@@ -91,9 +91,30 @@ export default function AnimePaheEpisode({ data }) {
               className="group flex animate-fade-down cursor-pointer flex-col gap-y-1 border-2 border-[#2c2d3c] bg-[#111113] px-2 py-2 transition-all duration-150 ease-in-out animate-duration-500 hover:border-[#c084fc90]" //0f1012
               onClick={() => navigate(`/animepahe/player/${encodeURIComponent(epdata.videoSrc)}`)}
             >
-              <p className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 transition-all duration-150 ease-in-out group-hover:text-purple-400 group-hover:opacity-100">
-                {epdata.fansub} : {epdata.resolution}p
-              </p>
+              <div className="flex gap-7">
+                <p className="min-w-28 cursor-pointer font-space-mono text-sm tracking-wide opacity-55 transition-all duration-150 ease-in-out group-hover:text-purple-400 group-hover:opacity-100">
+                  {epdata.fansub}
+                </p>
+                <p
+                  className={`min-w-16 text-center text-sm tracking-wider ${epdata.resolution === '1080' ? 'text-green-500' : ''} ${
+                    epdata.resolution === '720' ? 'text-blue-500' : ''
+                  } ${epdata.resolution === '360' ? 'text-yellow-500' : ''} `}
+                >
+                  {epdata.resolution}p
+                </p>
+                <Code
+                  color={epdata.audio === 'jpn' ? 'green' : 'blue'}
+                  variant="soft"
+                  size="1"
+                  style={{
+                    // tracking
+                    letterSpacing: '0.1em',
+                    padding: '0.2em 0.5em'
+                  }}
+                >
+                  {epdata.audio.toUpperCase()}
+                </Code>
+              </div>
             </div>
           ))}
         </div>

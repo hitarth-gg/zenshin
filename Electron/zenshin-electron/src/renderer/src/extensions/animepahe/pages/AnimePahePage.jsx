@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import useGetAnimeAnimePahe from '../hooks/useGetAnimeAnimePahe'
 import CenteredLoader from '../../../ui/CenteredLoader'
-import { Button, DropdownMenu } from '@radix-ui/themes'
+import { Button, DropdownMenu, Skeleton } from '@radix-ui/themes'
 import useGetAnimeById from '../../../hooks/useGetAnimeById'
 import { useZenshinContext } from '../../../utils/ContextProvider'
 import { PersonIcon, StarIcon } from '@radix-ui/react-icons'
@@ -14,6 +14,7 @@ import useGetAnimePaheEps from '../hooks/useGetAnimePaheEps'
 import { useState } from 'react'
 import AnimepaheEpisodeCard from '../components/AnimepaheEpisodeCard'
 import AnimePaheEpisode from '../components/AnimePaheEpisode'
+import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
 
 function AnimePahePage() {
   const zenshinContext = useZenshinContext()
@@ -28,7 +29,7 @@ function AnimePahePage() {
     animeData,
     error: errorAnilist,
     status: statusAnilist
-  } = useGetAnimeById(anilistId)
+  } = useGetAnimeById(anilistId || null)
 
   const malId = animeData?.idMal
 
@@ -56,7 +57,7 @@ function AnimePahePage() {
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
     : null
 
-  if (isLoading || isLoadingAnilist) return <CenteredLoader />
+  if (isLoading || (isLoadingAnilist && anilistId)) return <CenteredLoader />
 
   return (
     <div>
@@ -81,7 +82,8 @@ function AnimePahePage() {
       <div className="z-10 mx-auto animate-fade px-6 py-4 lg:container">
         <div className="flex justify-between gap-x-7">
           <img
-            src={data?.coverImage.extraLarge}
+            src={data?.coverImage.extraLarge || parseAnimepaheImage(animepaheData.cover)}
+            // src={data?.coverImage.extraLarge}
             alt=""
             className={`duration-400 relative ${data?.bannerImage ? 'bottom-[4rem]' : ''} shadow-xl drop-shadow-2xl h-[25rem] w-72 animate-fade-up rounded-md object-cover transition-all ease-in-out`}
             // className={`duration-400 relative h-96 w-72 animate-fade rounded-md object-cover transition-all ease-in-out`}
@@ -119,7 +121,14 @@ function AnimePahePage() {
             <div className="my-3 h-[1px] w-1/2 bg-[#333]"></div> {/* Divider */}
             <div className="animate-fade animate-duration-1000">
               <div className="flex flex-col gap-y-2 font-space-mono text-sm opacity-55">
-                {parse(autop(malIdData?.data?.synopsis || data?.description || 'No description'))}
+                {parse(
+                  autop(
+                    malIdData?.data?.synopsis ||
+                      data?.description ||
+                      animepaheData.desc ||
+                      'No description'
+                  )
+                )}
               </div>
             </div>
             <div className="mt-6 flex gap-x-5">
@@ -149,60 +158,17 @@ function AnimePahePage() {
           <div className="mb-64 mt-12">
             <div className="flex items-center gap-x-3">
               <p className="font-space-mono text-lg font-medium opacity-90">Episodes</p>
-              <Button
-                variant="soft"
-                size={'1'}
-                onClick={() => setDualAudio(!dualAudio)}
-                color={dualAudio ? 'blue' : 'gray'}
-              >
-                English Dub
-              </Button>
-              <Button
-                variant="soft"
-                size={'1'}
-                onClick={() => setHideWatchedEpisodes(!hideWatchedEpisodes)}
-                color={hideWatchedEpisodes ? 'blue' : 'gray'}
-              >
-                Hide Watched Episodes
-              </Button>
-              <DropdownMenu.Root className="nodrag" modal={false}>
-                <DropdownMenu.Trigger>
-                  <Button variant="soft" color="gray" size={'1'}>
-                    <div className="flex animate-fade items-center gap-x-2">Quality: {quality}</div>
-                    <DropdownMenu.TriggerIcon />
-                  </Button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                  <DropdownMenu.Item
-                    color={`${quality === 'All' ? 'indigo' : 'gray'}`}
-                    onClick={() => setQuality('All')}
-                  >
-                    All
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    color={`${quality === '1080p' ? 'indigo' : 'gray'}`}
-                    shortcut="HD"
-                    onClick={() => setQuality('1080p')}
-                  >
-                    1080p
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    color={`${quality === '720p' ? 'indigo' : 'gray'}`}
-                    shortcut="SD"
-                    onClick={() => setQuality('720p')}
-                  >
-                    720p
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
             </div>
             {!isLoadingEps && (
               <div className="mt-3 grid grid-cols-1 gap-y-3">
-                {epsData?.data?.map((episode, ix) => (
-                  <AnimePaheEpisode key={episode.id} data={{ ...episode, anime_hash: animeId }} />
-                ))}
+                {epsData?.data
+                  ?.sort((a, b) => parseInt(a.episode) - parseInt(b.episode))
+                  .map((episode, ix) => (
+                    <AnimePaheEpisode key={episode.id} data={{ ...episode, anime_hash: animeId }} />
+                  ))}
               </div>
             )}
+            {isLoadingEps && <Skeleton className="mt-3 h-12" />}
           </div>
         )}
       </div>

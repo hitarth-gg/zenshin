@@ -8,7 +8,7 @@ const router = express.Router() // Use a router to define routes
 
 // Define the /search route with the cookieMiddleware
 router.get('/search', cookieMiddleware, async (req, res) => {
-  console.log(`Search query: ${req.query.q}`)
+  // console.log(`Search query: ${req.query.q}`)
   const { cookiesString, baseUrl } = req // Access baseUrl and cookiesString
 
   try {
@@ -225,20 +225,20 @@ router.get('/play', cookieMiddleware, async (req, res) => {
     }
 
     const resp = await response.text()
-    // fs.writeFileSync('play.html', resp) // Optionally save HTML to a file
 
-    // Parse the HTML to extract buttons with data-fansub defined
+    // Parse the HTML to extract buttons with data-fansub and data-audio defined
     const buttonsData = []
     const buttonRegex =
-      /<button[^>]+data-src="(https:\/\/kwik\.si.+?)"[^>]+data-fansub="(.+?)"[^>]+data-resolution="(.+?)"[^>]*>/g
+      /<button[^>]+data-src="(https:\/\/kwik\.si.+?)"[^>]+data-fansub="(.+?)"[^>]+data-resolution="(.+?)"[^>]+data-audio="(.+?)"[^>]*>/g
     let match
 
     while ((match = buttonRegex.exec(resp)) !== null) {
       const src = match[1]
       const fansub = match[2]
       const resolution = match[3]
+      const audio = match[4]
 
-      buttonsData.push({ src, fansub, resolution })
+      buttonsData.push({ src, fansub, resolution, audio })
     }
 
     if (buttonsData.length === 0) {
@@ -279,7 +279,8 @@ router.get('/play', cookieMiddleware, async (req, res) => {
                   urls.push({
                     videoSrc: urlMatch[1],
                     fansub: button.fansub,
-                    resolution: button.resolution
+                    resolution: button.resolution,
+                    audio: button.audio
                   })
                 } else {
                   console.warn('No URL found in decoded script:', decode_script)
@@ -317,7 +318,7 @@ router.get('/play', cookieMiddleware, async (req, res) => {
 })
 
 // https://i.animepahe.ru/snapshots/069b876a55ac41fbbe3fc992f04297d7902b204a257762ed15a4c2901c21b28f.jpg
-router.get('/image/:id', cookieMiddleware, async (req, res) => {
+router.get('/image/snapshot/:id', cookieMiddleware, async (req, res) => {
   const { id } = req.params // Extract the ID from the URL parameter
 
   try {
@@ -325,6 +326,52 @@ router.get('/image/:id', cookieMiddleware, async (req, res) => {
 
     // Fetch the image from the external source
     const response = await fetch(`https://i.animepahe.ru/snapshots/${id}`, {
+      headers: {
+        Cookie: cookiesString
+      }
+    })
+
+    // Check if the response is ok
+    if (!response.ok) {
+      if (response.status === 403) {
+        return res.status(403).send({
+          status: 403,
+          error: 'Please use webview to enter the website then close the webview window.'
+        })
+      }
+      // Return error status and message without parsing
+      return res.status(response.status).send({
+        status: response.status,
+        error: `HTTP error! Status: ${response.status}`
+      })
+    }
+
+    // Get the image content type from the response
+    const contentType = response.headers.get('content-type')
+
+    // Read the response body as a Buffer
+    // const buffer = await response.buffer() // If using node-fetch v2
+    // Alternatively, if you're using node-fetch v3 or above, use the following:
+    const buffer = await response.arrayBuffer()
+
+    res.set('Content-Type', contentType) // Set the correct content type
+    res.send(Buffer.from(buffer)) // Send the image buffer to the client
+  } catch (error) {
+    console.error(`Failed to fetch image: ${error.message}`)
+    res.status(500).send({
+      status: 500,
+      error: error.message
+    })
+  }
+})
+router.get('/image/poster/:id', cookieMiddleware, async (req, res) => {
+  const { id } = req.params // Extract the ID from the URL parameter
+
+  try {
+    const { cookiesString } = req
+
+    // Fetch the image from the external source
+    const response = await fetch(`https://i.animepahe.ru/posters/${id}`, {
       headers: {
         Cookie: cookiesString
       }
