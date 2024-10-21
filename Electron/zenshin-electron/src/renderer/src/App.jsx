@@ -9,7 +9,9 @@ import Player from './pages/Player'
 import NewReleases from './pages/NewReleases'
 import AnilistAuthCallback from './components/AnilistAuthCallback'
 import Settings from './pages/settings'
-import AnimePahe from './extensions/animepahe/AnimePahe'
+import AnimePahe from './extensions/animepahe/pages/AnimePahe'
+import AnimePahePage from './extensions/animepahe/pages/AnimepahePage'
+import AnimePahePlayer from './extensions/animepahe/pages/AnimePahePlayer'
 
 // import { lazy } from "react";
 
@@ -49,6 +51,16 @@ const router = createHashRouter([
       {
         path: '/animepahe',
         element: <AnimePahe />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/animepahe/anime/:animeId',
+        element: <AnimePahePage />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/animepahe/player/:videoSrc',
+        element: <AnimePahePlayer />,
         errorElement: <ErrorPage />
       },
       {

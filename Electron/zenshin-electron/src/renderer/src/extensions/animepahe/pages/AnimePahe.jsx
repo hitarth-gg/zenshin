@@ -1,12 +1,13 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { animepaheLatest } from './utils'
+import { animepaheLatest } from '../utils'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
-import AnimepaheEpisodeCard from './components/AnimepaheEpisodeCard'
+import AnimepaheEpisodeCard from '../components/AnimepaheEpisodeCard'
 import { Spinner } from '@radix-ui/themes'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import NewReleaseCardSkeleton from '../../../skeletons/NewReleaseCardSkeleton'
 
 function AnimePahe() {
   const [latestEps, setLatestEps] = useState([])
@@ -58,24 +59,48 @@ function AnimePahe() {
       {/* {latestEps.map((ep) => (
           <AnimepaheEpisodeCard key={ep.id} data={ep} />
         ))} */}
-      <InfiniteScroll
-        style={{ all: 'unset' }}
-        dataLength={latestEps.length}
-        next={() => fetchNextPage()}
-        hasMore={latestEps?.length < 500}
-        loader={
-          <div className="flex items-center justify-center gap-x-2 overflow-hidden">
-            <h4>Loading...</h4>
-            <Spinner />
+
+      {infiniteQueryError && (
+        <div className="text-red-500">Failed to fetch Top Anime : {infiniteQueryError.message}</div>
+      )}
+
+      {!infiniteQueryError && (
+        <>
+          <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+            Latest Releases
           </div>
-        }
-      >
-        <div className="grid animate-fade grid-cols-4">
-          {latestEps?.map((anime) => {
-            return <AnimepaheEpisodeCard key={anime.id + 'latestEps'} data={anime} />
-          })}
-        </div>
-      </InfiniteScroll>
+          <InfiniteScroll
+            style={{ all: 'unset' }}
+            dataLength={latestEps.length}
+            next={() => fetchNextPage()}
+            hasMore={latestEps?.length < 500}
+            loader={
+              <div className="flex items-center justify-center gap-x-2 overflow-hidden">
+                <h4>Loading...</h4>
+                <Spinner />
+              </div>
+            }
+          >
+            <div className="grid animate-fade grid-cols-4">
+              {latestEps?.map((anime) => {
+                return <AnimepaheEpisodeCard key={anime.id + 'latestEps'} data={anime} />
+              })}
+              {isFetching && (
+                <>
+                  <NewReleaseCardSkeleton />
+                  <NewReleaseCardSkeleton />
+                  <NewReleaseCardSkeleton />
+                  <NewReleaseCardSkeleton />
+                  <NewReleaseCardSkeleton />
+                  <NewReleaseCardSkeleton />
+                  <NewReleaseCardSkeleton />
+                  <NewReleaseCardSkeleton />
+                </>
+              )}
+            </div>
+          </InfiniteScroll>
+        </>
+      )}
     </div>
   )
 }

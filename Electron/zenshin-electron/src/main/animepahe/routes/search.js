@@ -200,13 +200,14 @@ router.get('/getallepisodes', cookieMiddleware, async (req, res) => {
 
 // Route: /play
 router.get('/play', cookieMiddleware, async (req, res) => {
-  const { id, episode } = req.query
+  const { cookiesString, baseUrl } = req
+
+  console.log(`Play query: ${req.query.id}`)
+  console.log(`Episode: ${req.query.episode}`)
+  console.log('URL: ', `${baseUrl}/play/${req.query.id}/${req.query.episode}`)
 
   try {
-    const { cookiesString, baseUrl } = req
-
-    console.log(`Play query: ${id}, Episode: ${episode}`)
-    const response = await fetch(`${baseUrl}/play/${id}/${episode}`, {
+    const response = await fetch(`${baseUrl}/play/${req.query.id}/${req.query.episode}`, {
       headers: {
         Cookie: cookiesString
       }
@@ -219,43 +220,93 @@ router.get('/play', cookieMiddleware, async (req, res) => {
           error: 'Please use webview to enter the website then close the webview window.'
         })
       }
+
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
 
     const resp = await response.text()
-    fs.writeFileSync('play.html', resp)
+    // fs.writeFileSync('play.html', resp) // Optionally save HTML to a file
 
-    const srcMatch = resp.match(/data-src="(https:\/\/kwik\.si.+?)"/)
-    const src = srcMatch ? srcMatch[1] : null
+    // Parse the HTML to extract buttons with data-fansub defined
+    const buttonsData = []
+    const buttonRegex =
+      /<button[^>]+data-src="(https:\/\/kwik\.si.+?)"[^>]+data-fansub="(.+?)"[^>]+data-resolution="(.+?)"[^>]*>/g
+    let match
 
-    if (src) {
-      console.log('Source: ', src)
+    while ((match = buttonRegex.exec(resp)) !== null) {
+      const src = match[1]
+      const fansub = match[2]
+      const resolution = match[3]
 
-      const hid_res = await fetch(src, {
-        headers: {
-          Referer: 'https://animepahe.com',
-          'user-agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.56'
-        }
-      })
-
-      if (!hid_res.ok) {
-        throw new Error(`HTTP error! Status: ${hid_res.status}`)
-      }
-
-      const hid_data = await hid_res.text()
-      const hid_script = hid_data.match(/eval\(f.+?\}\)\)/g)[1]
-      const decode_script = eval(hid_script.match(/eval(.+)/)[1])
-      const decode_url = decode_script.match(/source='(.+?)'/)[1]
-
-      console.log('Decode URL: ', decode_url)
-
-      res.status(200).send({
-        url: decode_url
-      })
-    } else {
-      throw new Error('Failed to find source in the HTML.')
+      buttonsData.push({ src, fansub, resolution })
     }
+
+    if (buttonsData.length === 0) {
+      throw new Error('No valid data-fansub buttons found in the page.')
+    }
+
+    console.log('Extracted buttons data:', buttonsData)
+
+    // Fetch each src and extract hidden URLs
+    const urls = []
+    for (const button of buttonsData) {
+      try {
+        const hid_res = await fetch(button.src, {
+          headers: {
+            Referer: 'https://animepahe.com',
+            'user-agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.56'
+          }
+        })
+
+        if (!hid_res.ok) {
+          console.error(`Failed to fetch hidden source: ${button.src}, Status: ${hid_res.status}`)
+          continue // Skip this button and continue to the next one
+        }
+
+        const hid_data = await hid_res.text()
+
+        // Extract all the obfuscated scripts that contain hidden URLs
+        const scripts = hid_data.match(/eval\(f.+?\}\)\)/g)
+        if (scripts) {
+          for (const script of scripts) {
+            const evalMatch = script.match(/eval(.+)/)
+            if (evalMatch && evalMatch[1]) {
+              try {
+                const decode_script = eval(evalMatch[1]) // Safely evaluate the script
+                const urlMatch = decode_script.match(/source='(.+?)'/)
+                if (urlMatch && urlMatch[1]) {
+                  urls.push({
+                    videoSrc: urlMatch[1],
+                    fansub: button.fansub,
+                    resolution: button.resolution
+                  })
+                } else {
+                  console.warn('No URL found in decoded script:', decode_script)
+                }
+              } catch (evalError) {
+                console.error('Error evaluating script:', evalError)
+              }
+            } else {
+              console.warn('No valid eval match found in script:', script)
+            }
+          }
+        } else {
+          console.warn('No scripts found in hid_data for button:', button.src)
+        }
+      } catch (fetchError) {
+        console.error(`Error fetching source from button ${button.src}:`, fetchError)
+      }
+    }
+
+    if (urls.length === 0) {
+      throw new Error('No decoded URLs found.')
+    }
+
+    console.log('Decoded URLs: ', urls)
+
+    // Return the decoded URLs as an array
+    res.status(200).send(urls)
   } catch (error) {
     console.error(`Failed to fetch webpage: ${error.message}`)
     res.status(500).send({
@@ -300,7 +351,7 @@ router.get('/image/:id', cookieMiddleware, async (req, res) => {
     // Read the response body as a Buffer
     // const buffer = await response.buffer() // If using node-fetch v2
     // Alternatively, if you're using node-fetch v3 or above, use the following:
-    const buffer = await response.arrayBuffer();
+    const buffer = await response.arrayBuffer()
 
     res.set('Content-Type', contentType) // Set the correct content type
     res.send(Buffer.from(buffer)) // Send the image buffer to the client

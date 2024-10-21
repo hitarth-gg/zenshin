@@ -3,6 +3,7 @@ import { Skeleton } from '@radix-ui/themes'
 import { formatDistanceToNow } from 'date-fns'
 import { useState } from 'react'
 import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
+import { useNavigate } from 'react-router-dom'
 
 function AnimepaheEpisodeCard({ data }) {
   const [imageIsLoading, setImageIsLoading] = useState(true)
@@ -11,6 +12,8 @@ function AnimepaheEpisodeCard({ data }) {
   const timeAgo = (timestamp) => {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true }).replace('about', '')
   }
+
+  const navigate = useNavigate()
 
   const {
     id,
@@ -49,8 +52,9 @@ function AnimepaheEpisodeCard({ data }) {
       <div
         className="flex w-full flex-col gap-y-1 transition-all duration-150 ease-in-out hover:text-purple-400"
         onClick={(e) => {
-          // e.stopPropagation()
-          // navigate(`/anime/${anilistId}`)
+          e.stopPropagation()
+          // navigate(`anime/${id}`)
+          navigate(`anime/04980e94-e51c-90c0-7f1c-0c1b760475e4`)
         }}
       >
         <div className="w-full truncate text-sm font-medium opacity-90">{anime_title}</div>
@@ -59,7 +63,6 @@ function AnimepaheEpisodeCard({ data }) {
           <p className="text-nowrap">{timeAgo(created_at)}</p>
           <p className="text-nowrap">Episode {episode}</p>
         </div>
-        <div></div>
       </div>
     </div>
   )
