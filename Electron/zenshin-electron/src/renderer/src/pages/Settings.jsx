@@ -83,6 +83,37 @@ export default function Settings() {
           ></TextField.Root>
         </div>
       </div>
+      <div className="keyboard_shortcuts mt-8">
+        <div className="mb-8 border-b border-gray-700 pb-2 font-semibold tracking-wider text-[#b5b5b5ff]">
+          Keyboard Shortcuts
+        </div>
+        <div className="flex flex-col gap-4 tracking-wide text-[#b5b5b5ff]">
+          <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+            <div className="switch_card">
+              <p className="font-bold">Alt + Arrow Left/Right</p>
+              <p className="text-xs">Navigate between pages using Alt + Arrow Left/Right</p>
+            </div>
+          </div>
+          <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+            <div className="switch_card">
+              <p className="font-bold">Ctrl + R</p>
+              <p className="text-xs">Refresh the page using Ctrl + R</p>
+            </div>
+          </div>
+          <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+            <div className="switch_card">
+              <p className="font-bold">Ctrl + K</p>
+              <p className="text-xs">Focus on the search bar using Ctrl + K</p>
+            </div>
+          </div>
+          <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+            <div className="switch_card">
+              <p className="font-bold">Arrow Left/Right</p>
+              <p className="text-xs">Seek video by 5s using Arrow Left/Right</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
