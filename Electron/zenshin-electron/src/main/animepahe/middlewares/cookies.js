@@ -10,10 +10,10 @@ const baseUrl = 'https://animepahe.ru' // or use process.env.BASE_URL
 async function cookieMiddleware(req, res, next) {
   try {
     // Get the path to the downloads folder
-    const downloadsDir = path.join(app.getPath('downloads'), 'ZenshinDownloads')
+    const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
 
     // Read the cookies.json file asynchronously
-    const data = await fs.promises.readFile(path.join(downloadsDir, 'cookies.json'), 'utf8')
+    const data = await fs.promises.readFile(path.join(zenshinPathDocuments, 'cookies.json'), 'utf8')
 
     // Parse the cookies and generate the cookie string
     const cookieString = JSON.parse(data)

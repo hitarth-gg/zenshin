@@ -8,7 +8,8 @@ const api = {
   maximize: () => ipcRenderer.send('maximize-window'),
   close: () => ipcRenderer.send('close-window'),
   oauth: (url) => ipcRenderer.send('oauth-login', url),
-  openVlc: (url) => ipcRenderer.send('open-vlc', url)
+  openVlc: (url) => ipcRenderer.send('open-vlc', url),
+  openAnimePahe: (url) => ipcRenderer.send('open-animepahe', url)
 }
 
 const deeplinks = {

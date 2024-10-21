@@ -89,7 +89,9 @@ function AnimePahePage() {
             // className={`duration-400 relative h-96 w-72 animate-fade rounded-md object-cover transition-all ease-in-out`}
           />
           <div className="flex-1 justify-start gap-y-0">
-            <p className="font-space-mono text-xl font-medium opacity-90">{data?.title.romaji}</p>
+            <p className="font-space-mono text-xl font-medium opacity-90">
+              {data?.title.romaji || animepaheData.title}
+            </p>
             <p className="text font-space-mono font-medium opacity-60">{data?.title.english}</p>
             <div className="my-3 h-[1px] w-full bg-[#333]"></div> {/* Divider */}
             <div className="flex w-fit gap-x-2 pr-4 text-xs opacity-60">
@@ -132,11 +134,13 @@ function AnimePahePage() {
               </div>
             </div>
             <div className="mt-6 flex gap-x-5">
-              <Link target="_blank" to={data?.siteUrl}>
-                <Button size={'1'} variant="">
-                  AniList
-                </Button>
-              </Link>
+              {anilistId && (
+                <Link target="_blank" to={data?.siteUrl}>
+                  <Button size={'1'} variant="">
+                    AniList
+                  </Button>
+                </Link>
+              )}
               {malIdData?.data?.url && (
                 <Link target="_blank" to={malIdData?.data?.url}>
                   <Button size={'1'} variant="">

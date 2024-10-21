@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import AnimepaheEpisodeCard from '../components/AnimepaheEpisodeCard'
-import { Spinner } from '@radix-ui/themes'
+import { Button, Spinner } from '@radix-ui/themes'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import NewReleaseCardSkeleton from '../../../skeletons/NewReleaseCardSkeleton'
 import AnimePaheSearchBar from '../components/AnimePaheSearchBar'
@@ -53,6 +53,18 @@ function AnimePahe() {
     }
   }, [data])
 
+  useEffect(() => {
+    if (data?.pages[0]?.error) {
+      toast.error('Refresh AnimePahe Cookies and refresh the page', {
+        icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
+        description: data?.pages[0]?.error,
+        classNames: {
+          title: 'text-rose-500'
+        }
+      })
+    }
+  }, [data])
+
   return (
     <div className="h-full">
       <div className="my-24 px-12">
@@ -64,7 +76,17 @@ function AnimePahe() {
         {!infiniteQueryError && (
           <>
             <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
-              Latest AnimePahe Releases
+              <div className="flex items-center gap-4">
+                <div>Latest AnimePahe Releases:</div>
+                <Button
+                  size={'1'}
+                  variant="soft"
+                  color="gray"
+                  onClick={() => window.api.openAnimePahe()}
+                >
+                  Refresh AnimePahe Cookies
+                </Button>
+              </div>
             </div>
             <InfiniteScroll
               style={{ all: 'unset' }}
@@ -73,8 +95,8 @@ function AnimePahe() {
               hasMore={latestEps?.length < 500}
               loader={
                 <div className="flex items-center justify-center gap-x-2 overflow-hidden">
-                  <h4>Loading...</h4>
-                  <Spinner />
+                  {/* <h4>Loading...</h4> */}
+                  {/* <Spinner /> */}
                 </div>
               }
             >

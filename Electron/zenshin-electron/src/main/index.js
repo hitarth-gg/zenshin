@@ -1,10 +1,22 @@
-import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog, session } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { fork } from 'child_process'
 import { Deeplink } from 'electron-deeplink'
 import { exec } from 'child_process'
+import express from 'express'
+import WebTorrent from 'webtorrent'
+import cors from 'cors'
+import fs from 'fs'
+// import path from 'path'
+// import { fileURLToPath } from 'url'
+let chalk
+import('chalk').then((module) => {
+  chalk = module.default
+  console.log(chalk.green('Chalk is loaded!'))
+})
+
 // import isDev from 'electron-is-dev'
 
 let mainWindow // Define mainWindow here
@@ -103,6 +115,48 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
+  // save cookies my documents directory with in a folder named Zenshin with a file named cookies.json, if the folder does not exist create it
+
+  const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
+  if (!fs.existsSync(zenshinPathDocuments)) {
+    fs.mkdirSync(zenshinPathDocuments)
+  }
+
+  ipcMain.on('open-animepahe', () => {
+    const webview = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+        session: session.defaultSession,
+        preload: join(__dirname, '../preload/webview.js')
+      }
+    })
+    webview.loadURL('https://animepahe.ru/')
+
+    webview.webContents.on('did-finish-load', async () => {
+      const cookies = await webview.webContents.session.cookies.get({})
+      console.log('Cookies from webview:', cookies)
+      // fs.writeFileSync('./cookies.json', JSON.stringify(cookies, null, 2))
+
+      // save cookies in download directory, write file asynchronusly
+      fs.writeFile(
+        path.join(zenshinPathDocuments, 'cookies.json'),
+        JSON.stringify(cookies, null, 2),
+        (err) => {
+          if (err) {
+            console.error('Error writing cookies:', err)
+            return
+          }
+          console.log('Cookies saved successfully')
+        }
+      )
+
+      // webview.webContents.send('send-cookies-to-main', cookies)
+    })
+  })
+
   createWindow()
 
   if (process.argv.length >= 2) {
@@ -144,18 +198,6 @@ deeplink.on('received', (link) => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
-
-import express from 'express'
-import WebTorrent from 'webtorrent'
-import cors from 'cors'
-import fs from 'fs'
-// import path from 'path'
-// import { fileURLToPath } from 'url'
-let chalk
-import('chalk').then((module) => {
-  chalk = module.default
-  console.log(chalk.green('Chalk is loaded!'))
-})
 
 // Get the current directory
 // const __filename = fileURLToPath(import.meta.url)

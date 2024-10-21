@@ -26,17 +26,18 @@ function AnimepaheEpisodeCard({ data }) {
     session,
     created_at
   } = data
+
   return (
     <div
       // onClick={() => handleClick()}
       className="m-4 flex animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out hover:scale-110"
     >
-      <div className="h-42 relative aspect-video w-full">
+      <div
+        className="h-42 relative aspect-video w-full"
+        onClick={() => navigate(`/animepahe/anime/${anime_session}`)}
+      >
         {snapshot ? (
           <div>
-            <div className="absolute z-10 h-full w-full opacity-0 transition-all duration-150 ease-in-out hover:opacity-100">
-              <PlayIcon className="absolute left-1/2 top-1/2 h-14 w-14 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-[#00000070] p-3 backdrop-blur-[2px]" />
-            </div>
             <img
               src={parseAnimepaheImage(snapshot)}
               alt={`${anime_title}`}
