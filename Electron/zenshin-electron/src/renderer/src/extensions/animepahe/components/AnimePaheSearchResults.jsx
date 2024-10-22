@@ -33,7 +33,7 @@ export default function AnimePaheSearchResults({ data, setIsActive }) {
           <p className="text-xs opacity-45">
             {type} - {`${episodes ? episodes : '?'} episodes`} ({status})
           </p>
-          {year && <p className="text-xs opacity-45">{format(new Date(date), 'MMMM yyyy')}</p>}
+          {year && <p className="text-xs opacity-45">{`${season} ${year}`}</p>}
         </div>
       </div>
     </div>

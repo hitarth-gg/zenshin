@@ -115,8 +115,6 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  // save cookies my documents directory with in a folder named Zenshin with a file named cookies.json, if the folder does not exist create it
-
   const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
   if (!fs.existsSync(zenshinPathDocuments)) {
     fs.mkdirSync(zenshinPathDocuments)
