@@ -4,6 +4,10 @@ import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
 import { format } from 'date-fns'
 import { Code, Skeleton } from '@radix-ui/themes'
 import useGetAnimePaheEps from '../hooks/useGetAnimePahePlayData'
+import SlidingPane from 'react-sliding-pane'
+import '../../../sliding-pane.css'
+import AnimePahePlayerEmbedded from '../pages/AnimePahePlayerEmbedded'
+
 export default function AnimePaheEpisode({ data }) {
   const {
     id,
@@ -22,6 +26,10 @@ export default function AnimePaheEpisode({ data }) {
   const progress = data?.progress || 0
 
   // on pressing escape, close the dropdown
+  const [paneState, setPaneState] = useState({
+    isPaneOpen: false,
+    isPaneOpenLeft: false
+  })
 
   const {
     isLoading,
@@ -37,6 +45,15 @@ export default function AnimePaheEpisode({ data }) {
     }
     setActive((prevActive) => !prevActive)
   }
+
+  // disable scrolling when dropdown is open
+  if (active) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = 'auto'
+  }
+
+  const [videoSrc, setVideoSrc] = useState(null)
 
   return (
     <div className="flex w-full cursor-default flex-col border border-gray-700 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100">
@@ -78,18 +95,37 @@ export default function AnimePaheEpisode({ data }) {
           </div>
         </div>
       </div>
+      <SlidingPane
+        isOpen={paneState.isPaneOpen}
+        shouldCloseOnEsc
+        title={`Episode. ${episode}`}
+        onRequestClose={() => {
+          setPaneState({ isPaneOpen: false })
+          setVideoSrc(null)
+        }}
+        overlayClassName=""
+        // className="bg-[#111113]"
+        className="bg-black"
+        width="100%"
+      >
+        {paneState.isPaneOpen && <AnimePahePlayerEmbedded videoSrc={videoSrc} />}
+      </SlidingPane>
       {active && (
         <div className="mx-3 my-3 flex flex-col gap-y-2">
           {isLoading && <Skeleton width={'50%'} className="mb-1" />}
-          {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
+          {error && <p className="font-space-mono text-red-500">Error fetching episodes</p>}
           {!isLoading && episodePlayData?.length === 0 && (
-            <p className="font-space-mono text-red-500">No torrents found</p>
+            <p className="font-space-mono text-red-500">No episodes found</p>
           )}
           {episodePlayData?.map((epdata) => (
             <div
               key={epdata.videoSrc}
               className="group flex animate-fade-down cursor-pointer flex-col gap-y-1 border-2 border-[#2c2d3c] bg-[#111113] px-2 py-2 transition-all duration-150 ease-in-out animate-duration-500 hover:border-[#c084fc90]" //0f1012
-              onClick={() => navigate(`/animepahe/player/${encodeURIComponent(epdata.videoSrc)}`)}
+              // onClick={() => navigate(`/animepahe/player/${encodeURIComponent(epdata.videoSrc)}`)}
+              onClick={() => {
+                setPaneState({ isPaneOpen: true })
+                setVideoSrc(epdata.videoSrc)
+              }}
             >
               <div className="flex gap-7">
                 <p className="min-w-28 cursor-pointer font-space-mono text-sm tracking-wide opacity-55 transition-all duration-150 ease-in-out group-hover:text-purple-400 group-hover:opacity-100">

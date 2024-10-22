@@ -88,3 +88,8 @@
   }
 }
 /* ------------------------------------------------------ */
+.plyr audio,.plyr iframe,.plyr video{
+  display:block;
+  height:100%;
+  width:100%
+}
