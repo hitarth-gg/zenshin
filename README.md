@@ -4,13 +4,13 @@
   <img src="https://github.com/user-attachments/assets/af797fd4-e7ca-428f-82fc-c50d13b9407c" width="120">
 </p>
 <p align="center">
-  <a href="https://github.com/hitarth-gg/zenshin/releases/tag/v2.0.0">
+  <a href="https://github.com/hitarth-gg/zenshin/releases/tag/v2.1.0">
     <img src="https://img.shields.io/github/downloads/hitarth-gg/zenshin/total?style=flat-square&color=blue" width="90">
   </a>
 </p>
 
 <p align="center" >
-    <img src="https://github.com/user-attachments/assets/0a30842e-d6ed-4a65-b57a-d478b0930941">
+    <img src="https://github.com/user-attachments/assets/c0dbeb01-36a8-432e-95c5-e643694901c7">
 </p>
 
 
@@ -29,7 +29,7 @@ A web and electron based anime torrent streamer which can stream torrents in the
 ![image](https://github.com/user-attachments/assets/f2190575-a983-40d8-9a32-41e34d0a1fc2)
 
 ## Demo : (Click the image)
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/NXB1stMmNbQ/0.jpg)](https://www.youtube.com/watch?v=NXB1stMmNbQ)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YNjHaVJ7kNc/0.jpg)](https://youtu.be/YNjHaVJ7kNc)
 
 
 ## Summary
