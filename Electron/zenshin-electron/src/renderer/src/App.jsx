@@ -1,4 +1,4 @@
-import { createBrowserRouter, createHashRouter, RouterProvider } from 'react-router-dom'
+import { createHashRouter, RouterProvider } from 'react-router-dom'
 import AppLayout from './ui/AppLayout'
 import Home from './pages/Home'
 import ErrorPage from './pages/ErrorPage'
@@ -10,7 +10,7 @@ import NewReleases from './pages/NewReleases'
 import AnilistAuthCallback from './components/AnilistAuthCallback'
 import Settings from './pages/Settings'
 import AnimePahe from './extensions/animepahe/pages/AnimePahe'
-import AnimePahePage from './extensions/animepahe/pages/AnimepahePage'
+import AnimePahePage from './extensions/animepahe/pages/AnimePahePage'
 import AnimePahePlayer from './extensions/animepahe/pages/AnimePahePlayer'
 
 // import { lazy } from "react";

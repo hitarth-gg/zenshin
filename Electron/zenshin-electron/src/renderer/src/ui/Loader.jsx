@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
-// import "ldrs/lineWobble";
-import animeGif from "../assets/anime.gif";
-import { BarLoader } from "react-spinners";
+import animeGif from '../assets/anime.gif'
+import { BarLoader } from 'react-spinners'
 export default function Loader() {
   return (
     <div className="flex h-fit w-fit flex-col items-center justify-center gap-y-1">
@@ -15,8 +13,8 @@ export default function Loader() {
           speed="1.75"
           color="#e5bc94"
         ></l-line-wobble> */}
-          <BarLoader color="#e5bc94" />
+        <BarLoader color="#e5bc94" />
       </div>
     </div>
-  );
+  )
 }

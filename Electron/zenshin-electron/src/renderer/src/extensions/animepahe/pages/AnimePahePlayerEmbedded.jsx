@@ -67,7 +67,8 @@ const MyComponent = ({ videoSrc }) => {
           ],
           autoplay: false,
           seekTime: 5,
-          ratio: '16:9'
+          ratio: '16:9',
+          keyboard: { focused: true, global: true }
         }}
         source={{}} // Pass an empty source since HLS will load it
         ref={ref}

@@ -1,7 +1,4 @@
-import { app } from 'electron'
 import express from 'express'
-import fs, { stat } from 'fs'
-import path from 'path'
 import cookieMiddleware from '../middlewares/cookies'
 
 const router = express.Router() // Use a router to define routes

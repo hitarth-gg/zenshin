@@ -1,18 +1,16 @@
 import { Link, useParams } from 'react-router-dom'
 import useGetAnimeAnimePahe from '../hooks/useGetAnimeAnimePahe'
 import CenteredLoader from '../../../ui/CenteredLoader'
-import { Button, DropdownMenu, Skeleton } from '@radix-ui/themes'
+import { Button, Skeleton } from '@radix-ui/themes'
 import useGetAnimeById from '../../../hooks/useGetAnimeById'
 import { useZenshinContext } from '../../../utils/ContextProvider'
 import { PersonIcon, StarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
-import useGetAniZipMappings from '../../../hooks/useGetAniZipMappings'
 import useGetAnimeByMalId from '../../../hooks/useGetAnimeByMalId'
 import parse from 'html-react-parser'
 import { autop } from '@wordpress/autop'
 import useGetAnimePaheEps from '../hooks/useGetAnimePaheEps'
 import { useState } from 'react'
-import AnimepaheEpisodeCard from '../components/AnimepaheEpisodeCard'
 import AnimePaheEpisode from '../components/AnimePaheEpisode'
 import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
 
@@ -149,7 +147,7 @@ function AnimePahePage() {
                 </Link>
               )}
               {data?.trailer?.site === 'youtube' && (
-                <Link target="_blank" to={`https://www.youtube.com/watch?v=${data?.trailer.id}`}>
+                <Link target="_blank" to={`https://www.youtube.com/watch?v=${data?.trailer?.id}`}>
                   <Button size={'1'} color="red" variant="">
                     YouTube
                   </Button>

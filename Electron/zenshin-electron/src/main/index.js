@@ -2,7 +2,6 @@ import { app, shell, BrowserWindow, ipcMain, dialog, session } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { fork } from 'child_process'
 import { Deeplink } from 'electron-deeplink'
 import { exec } from 'child_process'
 import express from 'express'
@@ -138,7 +137,7 @@ app.whenReady().then(() => {
       console.log('Cookies from webview:', cookies)
       // fs.writeFileSync('./cookies.json', JSON.stringify(cookies, null, 2))
 
-      // save cookies in download directory, write file asynchronusly
+      // save cookies in documents directory, write file asynchronusly
       fs.writeFile(
         path.join(zenshinPathDocuments, 'cookies.json'),
         JSON.stringify(cookies, null, 2),
@@ -150,8 +149,6 @@ app.whenReady().then(() => {
           console.log('Cookies saved successfully')
         }
       )
-
-      // webview.webContents.send('send-cookies-to-main', cookies)
     })
   })
 

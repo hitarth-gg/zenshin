@@ -29,8 +29,6 @@ export default function NewReleases() {
     error: errorAnilist
   } = useGetMultipleAnilistIds(anilistIds.length === totalCards ? anilistIds : [])
 
-  console.log(anilistIds)
-
   // useEffect(() => {
   //   async function insertReleases() {
   //     const chunkSize = 5
@@ -50,8 +48,6 @@ export default function NewReleases() {
   //     insertReleases()
   //   }
   // }, [newReleases])
-
-  console.log(anilistIds)
 
   if (isLoading) {
     return <CenteredLoader />
