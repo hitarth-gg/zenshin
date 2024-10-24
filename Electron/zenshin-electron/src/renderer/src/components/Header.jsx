@@ -4,6 +4,7 @@ import zenshinLogo from '../assets/zenshinLogo.png'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  BookmarkIcon,
   Cross1Icon,
   DashboardIcon,
   DividerVerticalIcon,
@@ -163,11 +164,20 @@ export default function Header({ theme }) {
           {/* <DashboardIcon /> */}
           <img src={Pikacon} alt="pikacon" className="h-4 w-4" />
         </Button>
+        <Button
+          className="nodrag"
+          size="1"
+          color="gray"
+          variant="soft"
+          onClick={() => navigate('/bookmarks')}
+        >
+          <BookmarkIcon />
+        </Button>
       </div>
 
-      <div className="nodrag w-2/6 mx-5">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
+      <div className="nodrag mx-5 w-2/6">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
       <div className="nodrag mr-36 flex items-center justify-center gap-x-8">
-        <div className='flex gap-3'>
+        <div className="flex gap-3">
           <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(-1)}>
             <ArrowLeftIcon className="my-1" width={16} height={16} />
           </Button>

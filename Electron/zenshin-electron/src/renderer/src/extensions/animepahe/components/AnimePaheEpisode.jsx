@@ -18,7 +18,9 @@ export default function AnimePaheEpisode({ data }) {
     snapshot,
     session,
     created_at,
-    anime_hash
+    anime_hash,
+    finalEpWatched,
+    ix
   } = data
 
   const navigate = useNavigate()
@@ -46,8 +48,10 @@ export default function AnimePaheEpisode({ data }) {
     setActive((prevActive) => !prevActive)
   }
 
+  console.log(ix + ' ' + finalEpWatched)
+
   // disable scrolling when dropdown is open
-  if (active) {
+  if (paneState.isPaneOpen) {
     document.body.style.overflow = 'hidden'
   } else {
     document.body.style.overflow = 'auto'
@@ -75,6 +79,9 @@ export default function AnimePaheEpisode({ data }) {
               {/* <p className="text-lg">{episodeNumber}. </p> */}
               <div>
                 <p className="flex items-center gap-2 font-space-mono text-lg font-medium opacity-100">
+                  {ix + 1 <= finalEpWatched && (
+                    <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                  )}
                   <p className="line-clamp-1">Episode. {episode}</p>
                 </p>
               </div>

@@ -1,10 +1,18 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import useGetAnimeAnimePahe from '../hooks/useGetAnimeAnimePahe'
 import CenteredLoader from '../../../ui/CenteredLoader'
 import { Button, Skeleton } from '@radix-ui/themes'
 import useGetAnimeById from '../../../hooks/useGetAnimeById'
 import { useZenshinContext } from '../../../utils/ContextProvider'
-import { PersonIcon, StarIcon } from '@radix-ui/react-icons'
+import {
+  BookmarkFilledIcon,
+  BookmarkIcon,
+  DividerVerticalIcon,
+  MinusIcon,
+  PersonIcon,
+  PlusIcon,
+  StarIcon
+} from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import useGetAnimeByMalId from '../../../hooks/useGetAnimeByMalId'
 import parse from 'html-react-parser'
@@ -45,15 +53,83 @@ function AnimePahePage() {
     status: statusEps
   } = useGetAnimePaheEps(animeId, 1)
 
-  const [dualAudio, setDualAudio] = useState(false)
-  const episodesWatched = animeData?.mediaListEntry?.progress || 0
-  const [quality, setQuality] = useState('All')
-  const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
   const data = animeData
 
   const startDate = data?.startDate
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
     : null
+
+  // const bookmarks = {
+  //   torrents: {
+  //     url: '',
+  //     title: '',
+  //     image: '',
+  //     episodesWatched: 9
+  //   },
+  //   animepahe: {
+  //     url: '',
+  //     title: '',
+  //     image: '',
+  //     episodesWatched: 9
+  //   }
+  // }
+
+  const url = useLocation().pathname
+  console.log('url', url)
+
+  const [bookmarkData, setBookmarkData] = useState(
+    JSON.parse(localStorage.getItem('bookmarks'))?.animepahe[url]
+  )
+  const isBookmarked = bookmarkData ? true : false
+  const finalEpWatched = bookmarkData?.episodesWatched || 0
+
+  function addBookmark() {
+    console.log('Adding', data)
+    const newBookmark = {
+      url: url,
+      title: data?.title.romaji || animepaheData.title,
+      image: data?.coverImage.extraLarge || parseAnimepaheImage(animepaheData.cover),
+      episodesWatched: 0
+    }
+    console.log('newBookmark', newBookmark)
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || {
+      torrents: {},
+      animepahe: {}
+    }
+    bookmarks.animepahe[url] = newBookmark
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
+    setBookmarkData(newBookmark)
+  }
+
+  function removeBookmark() {
+    console.log('Removing', data)
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || {
+      torrents: {},
+      animepahe: {}
+    }
+    delete bookmarks.animepahe[url]
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
+    setBookmarkData(null)
+  }
+
+  function epCountBookmark(query) {
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || {
+      torrents: {},
+      animepahe: {}
+    }
+    // if bookmark is not found, add it
+    if (!bookmarks.animepahe[url]) {
+      addBookmark()
+    }
+    if (query === 'increase') {
+      bookmarks.animepahe[url].episodesWatched += 1
+    } else {
+      if (bookmarks.animepahe[url].episodesWatched > 0)
+        bookmarks.animepahe[url].episodesWatched -= 1
+    }
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
+    setBookmarkData(bookmarks.animepahe[url])
+  }
 
   if (isLoading || (isLoadingAnilist && anilistId)) return <CenteredLoader />
 
@@ -153,6 +229,40 @@ function AnimePahePage() {
                   </Button>
                 </Link>
               )}
+              <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
+              <div className="flex items-center justify-center gap-x-5">
+                <Button
+                  size={'1'}
+                  color="gray"
+                  variant="soft"
+                  onClick={isBookmarked ? removeBookmark : addBookmark}
+                >
+                  {/* <BookmarkIcon width={'16px'} height={'16px'} /> */}
+                  {/* <BookmarkFilledIcon width={'16px'} height={'16px'} /> */}
+
+                  {isBookmarked ? (
+                    <BookmarkFilledIcon width={'16px'} height={'16px'} />
+                  ) : (
+                    <BookmarkIcon width={'16px'} height={'16px'} />
+                  )}
+                </Button>
+                <Button
+                  size={'1'}
+                  color="gray"
+                  variant="soft"
+                  onClick={() => epCountBookmark('decrease')}
+                >
+                  <MinusIcon width={'16px'} height={'16px'} />
+                </Button>
+                <Button
+                  size={'1'}
+                  color="gray"
+                  variant="soft"
+                  onClick={() => epCountBookmark('increase')}
+                >
+                  <PlusIcon width={'16px'} height={'16px'} />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -166,7 +276,10 @@ function AnimePahePage() {
                 {epsData?.data
                   ?.sort((a, b) => parseInt(a.episode) - parseInt(b.episode))
                   .map((episode, ix) => (
-                    <AnimePaheEpisode key={episode.id} data={{ ...episode, anime_hash: animeId }} />
+                    <AnimePaheEpisode
+                      key={episode.id}
+                      data={{ ...episode, anime_hash: animeId, finalEpWatched, ix }}
+                    />
                   ))}
               </div>
             )}

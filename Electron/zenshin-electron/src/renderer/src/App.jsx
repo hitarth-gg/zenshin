@@ -12,6 +12,7 @@ import Settings from './pages/Settings'
 import AnimePahe from './extensions/animepahe/pages/AnimePahe'
 import AnimePahePage from './extensions/animepahe/pages/AnimePahePage'
 import AnimePahePlayer from './extensions/animepahe/pages/AnimePahePlayer'
+import Bookmarks from './pages/Bookmarks'
 
 // import { lazy } from "react";
 
@@ -61,6 +62,11 @@ const router = createHashRouter([
       {
         path: '/animepahe/player/:videoSrc',
         element: <AnimePahePlayer />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/bookmarks',
+        element: <Bookmarks />,
         errorElement: <ErrorPage />
       },
       {

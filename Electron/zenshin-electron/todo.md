@@ -1,2 +1,2 @@
 # TODO
-- Fix home page cover
+- Add bookmarks feature
