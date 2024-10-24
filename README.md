@@ -29,7 +29,7 @@ A web and electron based anime torrent streamer which can stream torrents in the
 ![image](https://github.com/user-attachments/assets/f2190575-a983-40d8-9a32-41e34d0a1fc2)
 
 ## Demo : (Click the image)
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YNjHaVJ7kNc/0.jpg)](https://youtu.be/YNjHaVJ7kNc)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Mdh2HuqTFyQ/0.jpg)](https://youtu.be/Mdh2HuqTFyQ)
 
 
 ## Summary
@@ -66,7 +66,7 @@ If you are a content owner and believe that your rights are being violated, plea
 5. `Zenshin.exe` inside the `win-unpacked` folder (`dist\win-unpacked\Zenshin.exe`) can be used if you want to avoid installing the setup. 
 
 ### How to use / build (WebApp): (kind of outdated) 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Mdh2HuqTFyQ/0.jpg)](https://www.youtube.com/watch?v=Mdh2HuqTFyQ)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/DiVczJ92sAU/0.jpg)](https://www.youtube.com/watch?v=DiVczJ92sAU)
 
 [YouTube: How to use / build](https://youtu.be/DiVczJ92sAU?si=NvqnDvXE_LW7EHW8)
 
