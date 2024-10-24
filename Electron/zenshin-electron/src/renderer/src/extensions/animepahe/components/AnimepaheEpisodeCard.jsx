@@ -30,7 +30,7 @@ function AnimepaheEpisodeCard({ data }) {
   return (
     <div
       // onClick={() => handleClick()}
-      className="m-4 flex animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out hover:scale-110"
+      className="m-4 flex animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 font-space-mono transition-all ease-in-out hover:scale-110"
     >
       <div
         className="h-42 relative aspect-video w-full"
@@ -51,7 +51,7 @@ function AnimepaheEpisodeCard({ data }) {
         )}
       </div>
       <div
-        className="flex w-full flex-col gap-y-1 transition-all duration-150 ease-in-out hover:text-purple-400"
+        className="flex w-full flex-col gap-y-1 transition-all duration-150 ease-in-out"
         onClick={(e) => {
           e.stopPropagation()
           navigate(`/animepahe/anime/${anime_session}`)

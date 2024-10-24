@@ -105,7 +105,7 @@ export default function AnimePaheEpisode({ data }) {
         }}
         overlayClassName=""
         // className="bg-[#111113]"
-        className="bg-black"
+        className="bg-black font-space-mono"
         width="100%"
       >
         {paneState.isPaneOpen && <AnimePahePlayerEmbedded videoSrc={videoSrc} />}

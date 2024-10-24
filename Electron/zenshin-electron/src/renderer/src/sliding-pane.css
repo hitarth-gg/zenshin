@@ -89,7 +89,7 @@
   min-width: 0;
 }
 .slide-pane .slide-pane__title {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: normal;
   max-width: 80%;
   white-space: nowrap;
@@ -105,7 +105,7 @@
   cursor: pointer;
 }
 .slide-pane__close svg {
-  width: 12px;
+  width: 8px;
   padding: 0;
 }
 .slide-pane__content {

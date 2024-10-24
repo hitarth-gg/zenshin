@@ -127,7 +127,7 @@ export default function NewReleaseCard({
   return (
     <div
       onClick={() => handleClick()}
-      className="m-4 flex animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out hover:scale-110"
+      className="m-4 flex animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 font-space-mono transition-all ease-in-out hover:scale-110"
     >
       <div className="h-42 relative aspect-video w-full">
         {imageUrl || anilistCover ? (
