@@ -130,7 +130,7 @@ app.whenReady().then(() => {
         preload: join(__dirname, '../preload/webview.js')
       }
     })
-    webview.loadURL('https://animepahe.ru/')
+    webview.loadURL(encUrls.pahe)
 
     webview.webContents.on('did-finish-load', async () => {
       const cookies = await webview.webContents.session.cookies.get({})
@@ -588,6 +588,7 @@ app2.get('/details/:magnet', async (req, res) => {
 import { get } from 'http'
 import { fileURLToPath } from 'url'
 import { animepaheRouter } from './animepahe/routes/search'
+import encUrls from '../../common/utils'
 // Full path to VLC executable, change it as needed
 const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"' // Adjust this path as needed
 

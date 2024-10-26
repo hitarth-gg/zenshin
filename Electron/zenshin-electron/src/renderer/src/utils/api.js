@@ -1,9 +1,11 @@
+import encUrls from '../../../../common/utils'
 const BASE_URL_JIKAN = 'https://api.jikan.moe/v4'
-const BASE_URL_NYAA = 'https://nyaaapi.onrender.com/nyaa'
+const BASE_URL_NYAA = encUrls.nyaaApi
 export const BASE_URL_ANILIST = 'https://graphql.anilist.co'
 // const BASE_URL_ANIZIP = 'https://api.ani.zip'
-const BASE_URL_ANIZIP = 'https://zenshin-supabase-api.onrender.com' // https://zenshin-supabase-api.onrender.com/mappings?anilist_id=21
-const TOSHO = 'https://feed.animetosho.org'
+const BASE_URL_ANIZIP = encUrls.zenshinSupabase // https://zenshin-supabase-api.onrender.com/mappings?anilist_id=21
+// const TOSHO = 'https://feed.animetosho.org'
+const TOSHO = encUrls.tosho
 
 export function SEARCH_ANIME(query, limit = 10) {
   return `${BASE_URL_JIKAN}/anime?q=${query}&limit=${limit}`
@@ -53,7 +55,7 @@ export function GET_TOSHO_RSS(packer = '"[SubsPlease]"') {
 export function GET_TOSHO_RSS_BY_QUERY(quality = 'all', aids, eids) {
   if (eids === 0 || eids === null) {
     if (quality.toLowerCase() === 'all') return `${TOSHO}/json?qx=1&aids=${aids}`
-    return `https://feed.animetosho.org/json?qx=1&q=${quality}&aids=${aids}`
+    return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}`
   }
   if (quality.toLowerCase() === 'all') return `${TOSHO}/json?qx=1&aids=${aids}&eids=${eids}`
   return `${TOSHO}/json?qx=1&q=${quality}&aids=${aids}&eids=${eids}`

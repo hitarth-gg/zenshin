@@ -1,5 +1,6 @@
 import express from 'express'
 import cookieMiddleware from '../middlewares/cookies'
+import encUrls from '../../../../common/utils'
 
 const router = express.Router() // Use a router to define routes
 
@@ -250,7 +251,7 @@ router.get('/play', cookieMiddleware, async (req, res) => {
       try {
         const hid_res = await fetch(button.src, {
           headers: {
-            Referer: 'https://animepahe.com',
+            Referer: encUrls.pahe,
             'user-agent':
               'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.56'
           }
@@ -322,7 +323,7 @@ router.get('/image/snapshot/:id', cookieMiddleware, async (req, res) => {
     const { cookiesString } = req
 
     // Fetch the image from the external source
-    const response = await fetch(`https://i.animepahe.ru/snapshots/${id}`, {
+    const response = await fetch(`${encUrls.paheimages}/snapshots/${id}`, {
       headers: {
         Cookie: cookiesString
       }

@@ -1,10 +1,9 @@
 import { app } from 'electron'
-import express from 'express'
 import fs from 'fs'
 import path from 'path'
+import encUrls from '../../../../common/utils'
 
-// Define the base URL here or use an environment variable
-const baseUrl = 'https://animepahe.ru' // or use process.env.BASE_URL
+const baseUrl = encUrls.pahe
 
 // Middleware to read cookies from cookies.json and attach the base URL and cookies to the request object
 async function cookieMiddleware(req, res, next) {
