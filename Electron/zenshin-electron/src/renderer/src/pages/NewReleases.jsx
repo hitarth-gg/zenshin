@@ -10,7 +10,7 @@ export default function NewReleases() {
   const [newReleases, setNewReleases] = useState([])
   const [displayedReleases, setDisplayedReleases] = useState([])
   const [cardErrorShown, setCardErrorShown] = useState(false) // Track whether error toast was shown
-  const [totalCards, setTotalCards] = useState(20);
+  const [totalCards, setTotalCards] = useState(20)
 
   useEffect(() => {
     if (data) {

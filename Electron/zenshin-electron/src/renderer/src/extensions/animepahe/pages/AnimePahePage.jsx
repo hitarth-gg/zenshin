@@ -54,6 +54,7 @@ function AnimePahePage() {
   } = useGetAnimePaheEps(animeId, 1)
 
   const data = animeData
+  const genresString = data?.genres?.join(', ') || ''
 
   const startDate = data?.startDate
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
@@ -163,12 +164,14 @@ function AnimePahePage() {
             // className={`duration-400 relative h-96 w-72 animate-fade rounded-md object-cover transition-all ease-in-out`}
           />
           <div className="flex-1 justify-start gap-y-0">
-            <p className="font-space-mono text-xl font-medium opacity-90">
+            <p className="font-space-mono text-xl font-medium tracking-wider">
               {data?.title.romaji || animepaheData.title}
             </p>
-            <p className="text font-space-mono font-medium opacity-60">{data?.title.english}</p>
-            <div className="my-3 h-[1px] w-full bg-[#333]"></div> {/* Divider */}
-            <div className="flex w-fit gap-x-2 pr-4 text-xs opacity-60">
+            <p className="text mb-2 border-b border-[#545454] pb-2 font-space-mono font-medium tracking-wider opacity-80">
+              {data?.title.english}
+              {data?.title?.native ? ` • ${data?.title?.native}` : ''}
+            </p>
+            <div className="mb-2 flex w-fit items-center gap-x-2 border-b border-[#545454] pb-2 text-xs text-gray-300">
               <p className="">{data?.format}</p>
               <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
               <p>{`${data?.episodes ? data?.episodes : '?'} episodes`}</p>
@@ -194,7 +197,11 @@ function AnimePahePage() {
                 {data?.popularity.toLocaleString()}
               </div>
             </div>
-            <div className="my-3 h-[1px] w-1/2 bg-[#333]"></div> {/* Divider */}
+            {genresString && (
+              <div className="mb-2 flex w-fit gap-x-1 border-b border-[#545454] pb-2 font-space-mono text-xs tracking-wide opacity-90">
+                {genresString}
+              </div>
+            )}
             <div className="animate-fade animate-duration-1000">
               <div className="flex flex-col gap-y-2 font-space-mono text-sm opacity-55">
                 {parse(

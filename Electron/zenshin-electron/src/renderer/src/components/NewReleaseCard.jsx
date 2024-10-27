@@ -103,7 +103,7 @@ export default function NewReleaseCard({
       setImageUrl(img[0]?.image)
     } else {
       console.log('AnidbMap is null')
-      setTotalCards(totalCards - 1)
+      // setTotalCards(totalCards - 1)
     }
   }, [anidbMap])
   const [episodeNumber, setEpisodeNumber] = useState(0)
