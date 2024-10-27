@@ -111,7 +111,6 @@ export default function AnimePaheEpisode({ data }) {
           setVideoSrc(null)
         }}
         overlayClassName=""
-        // className="bg-[#111113]"
         className="bg-black font-space-mono"
         width="100%"
       >
@@ -134,7 +133,7 @@ export default function AnimePaheEpisode({ data }) {
                 setVideoSrc(epdata.videoSrc)
               }}
             >
-              <div className="flex gap-7">
+              <div className="flex items-center gap-7">
                 <p className="min-w-28 cursor-pointer font-space-mono text-sm tracking-wide opacity-55 transition-all duration-150 ease-in-out group-hover:text-purple-400 group-hover:opacity-100">
                   {epdata.fansub}
                 </p>
