@@ -398,8 +398,8 @@ router.get('/image/poster/:id', cookieMiddleware, async (req, res) => {
     // Alternatively, if you're using node-fetch v3 or above, use the following:
     const buffer = await response.arrayBuffer()
 
-    res.set('Content-Type', contentType) // Set the correct content type
-    res.send(Buffer.from(buffer)) // Send the image buffer to the client
+    res.set('Content-Type', contentType)
+    res.send(Buffer.from(buffer))
   } catch (error) {
     console.error(`Failed to fetch image: ${error.message}`)
     res.status(500).send({

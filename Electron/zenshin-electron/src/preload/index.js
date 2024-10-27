@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-// const { exec } = require('child_process')
 
 // Custom APIs for renderer
 const api = {
@@ -10,7 +9,7 @@ const api = {
   oauth: (url) => ipcRenderer.send('oauth-login', url),
   openVlc: (url) => ipcRenderer.send('open-vlc', url),
   openAnimePahe: (url) => ipcRenderer.send('open-animepahe', url),
-  windowReload: () => ipcRenderer.send('reload-window'),
+  windowReload: () => ipcRenderer.send('reload-window')
 }
 
 const deeplinks = {
@@ -19,7 +18,7 @@ const deeplinks = {
 }
 
 const combinedAPI = {
-  ...electronAPI, // Include the toolkit API if needed
+  ...electronAPI,
   ...deeplinks,
   ...api // Include your custom APIs
 }

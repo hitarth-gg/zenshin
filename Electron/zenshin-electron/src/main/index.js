@@ -159,7 +159,6 @@ app.whenReady().then(() => {
     }
   })
 
-
   createWindow()
 
   if (process.argv.length >= 2) {
