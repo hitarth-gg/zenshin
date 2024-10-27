@@ -54,6 +54,11 @@ This website is a personal project created for educational purposes only, intend
 
 We do not endorse or condone piracy or the unauthorized distribution of copyrighted content. Users are responsible for ensuring that their actions comply with local laws and regulations. By using this website, you acknowledge that this project is purely for educational exploration, and any use of the content provided is at your own discretion and risk.
 
+The core aim of this project is to co-relate automation and efficiency to extract what is provided to a user on the internet. All content available through the project is hosted by external non-affiliated sources.
+
+Any content served through this project is publicly accessible. If your site is listed in this project, the code is pretty much public. Take necessary measures to counter the exploits used to extract content in your site.
+Think of this project as a normal browser or a simple webscraper, but a bit more straight-forward and specific.
+
 If you are a content owner and believe that your rights are being violated, please contact the relevant third-party sources directly.
 
 ---
