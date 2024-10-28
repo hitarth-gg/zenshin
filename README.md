@@ -64,11 +64,19 @@ If you are a content owner and believe that your rights are being violated, plea
 ---
 
 ### Building the Electron App
+
+Commands required to build the app on Windows, Linux and macOS (untested) are `npm run build:win`, `npm run build:linux` and `npm run build:mac` respectively.
+| Windows             | Linux                 | MacOS               |
+|---------------------|-----------------------|---------------------|
+| `npm run build:win` | `npm run build:linux` | `npm run build:mac` |
+
+
 1. Navigate to `Electron\zenshin-electron`.
 2. Run `npm i` or `npm install`
 3. Run `npm run build:win`
 4. Check the `dist` folder (`Electron\zenshin-electron\dist`), `zenshin-electron-x.x.x-setup.exe` is the setup and the folder `win-unpacked` contains pre-installed / unpacked files.
-5. `Zenshin.exe` inside the `win-unpacked` folder (`dist\win-unpacked\Zenshin.exe`) can be used if you want to avoid installing the setup. 
+5. `Zenshin.exe` inside the `win-unpacked` folder (`dist\win-unpacked\Zenshin.exe`) can be used if you want to avoid installing the setup.
+6. Example : [Building on Ubuntu](https://youtu.be/l13ogKtMbt0). Same process can be followed for other Operating Systems with their respective build commands.
 
 ### How to use / build (WebApp): (outdated)
 - Web Version is no longer being worked on upon. Use electron.
