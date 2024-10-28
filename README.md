@@ -76,7 +76,11 @@ Commands required to build the app on Windows, Linux and macOS (untested) are `n
 3. Run `npm run build:win`
 4. Check the `dist` folder (`Electron\zenshin-electron\dist`), `zenshin-electron-x.x.x-setup.exe` is the setup and the folder `win-unpacked` contains pre-installed / unpacked files.
 5. `Zenshin.exe` inside the `win-unpacked` folder (`dist\win-unpacked\Zenshin.exe`) can be used if you want to avoid installing the setup.
-6. Example : [Building on Ubuntu](https://youtu.be/l13ogKtMbt0). Same process can be followed for other Operating Systems with their respective build commands.
+6. Example : [YouTube: Building on Ubuntu](https://youtu.be/l13ogKtMbt0). Same process can be followed for other Operating Systems with their respective build commands.
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/l13ogKtMbt0/0.jpg)](https://youtu.be/l13ogKtMbt0)
+
+
 
 ### How to use / build (WebApp): (outdated)
 - Web Version is no longer being worked on upon. Use electron.
