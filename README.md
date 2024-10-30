@@ -32,26 +32,12 @@ A web and electron based anime torrent streamer which can stream torrents and sc
 ## Demo : (Click the image)
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Mdh2HuqTFyQ/0.jpg)](https://youtu.be/Mdh2HuqTFyQ)
 
-
-## Summary
-Built it as a mini project to familiarize myself with video streaming using ExpressJS and handling of streams and APIs in a ReactJS based frontend webapp.
+---
+Note: The video player in the browser currently does not support subtitle rendering as extracting embedded subtitles from an mkv file is quite tricky and is way out of my league. To play the video with subtitles open it in VLC by clicking on the `Open VLC` button when playing an episode.
 
 ---
 
-Note: The video player in the browser currently does not support subtitle rendering as extracting embedded subtitles from an mkv file is quite tricky and is way out of my league. To play the video with subtitles open it in VLC by clicking on the `Open VLC` button when playing an episode.
-
-### Disclaimer
-
-This website is a personal project created for educational purposes only, intended as a tool to learn and explore web development technologies. We do not own, host, or store any of the content available through this platform, including any anime torrents. All torrents accessible through this site are sourced from third-party websites and are not under our control.
-
-We do not endorse or condone piracy or the unauthorized distribution of copyrighted content. Users are responsible for ensuring that their actions comply with local laws and regulations. By using this website, you acknowledge that this project is purely for educational exploration, and any use of the content provided is at your own discretion and risk.
-
-The core aim of this project is to co-relate automation and efficiency to extract what is provided to a user on the internet. All content available through the project is hosted by external non-affiliated sources.
-
-Any content served through this project is publicly accessible. If your site is listed in this project, the code is pretty much public. Take necessary measures to counter the exploits used to extract content in your site.
-Think of this project as a normal browser or a simple webscraper, but a bit more straight-forward and specific.
-
-If you are a content owner and believe that your rights are being violated, please contact the relevant third-party sources directly.
+### Disclaimer : [disclaimer.md](https://github.com/hitarth-gg/zenshin/blob/af8cd6485cc9fa8ea59434312d022fce223daa28/disclaimer.md)
 
 ---
 
