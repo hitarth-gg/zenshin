@@ -14,7 +14,8 @@
 </p>
 
 
-A web and electron based anime torrent streamer which can stream torrents and scraped anime episodes in the app and on an external media player as well.
+
+A web and electron based anime torrent streamer which can stream torrents and scraped anime episodes within the app or on an external media player.
 
 ## Electron Port (Beta) :
 ![image](https://github.com/user-attachments/assets/2b11e7a9-9667-43b4-a95d-38b1365467f7)
