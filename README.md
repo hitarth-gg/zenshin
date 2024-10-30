@@ -14,7 +14,7 @@
 </p>
 
 
-A web and electron based anime torrent streamer which can stream torrents in the browser and on the VLC media player as well.
+A web and electron based anime torrent streamer which can stream torrents and scraped anime episodes in the app and on an external media player as well.
 
 ## Electron Port (Beta) :
 ![image](https://github.com/user-attachments/assets/2b11e7a9-9667-43b4-a95d-38b1365467f7)
@@ -38,15 +38,6 @@ Built it as a mini project to familiarize myself with video streaming using Expr
 ---
 
 Note: The video player in the browser currently does not support subtitle rendering as extracting embedded subtitles from an mkv file is quite tricky and is way out of my league. To play the video with subtitles open it in VLC by clicking on the `Open VLC` button when playing an episode.
-
-### VLC Media Player Support
-Define the path to vlc.exe in BACKEND/server.js : 
-
-```js
-  const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"'; // Adjust this path as needed
-```
-
----
 
 ### Disclaimer
 
@@ -90,6 +81,12 @@ Commands required to build the app on Windows, Linux and macOS (untested) are `n
 [YouTube: How to use / build](https://youtu.be/DiVczJ92sAU?si=NvqnDvXE_LW7EHW8)
 
 ---
+#### VLC Media Player Support (in web version)
+Define the path to vlc.exe in BACKEND/server.js : 
+```js
+  const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"'; // Adjust this path as needed
+```
+---
 
 ### Tech Stack and dependencies used :
 - ReactJS
@@ -106,6 +103,7 @@ Commands required to build the app on Windows, Linux and macOS (untested) are `n
 - ExpressJS
 - React Lenis
 - Sonner
-- 
+- Plyr
+- Puppeteer
 
 Inspired by Miru :)
