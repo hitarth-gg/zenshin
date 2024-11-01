@@ -18,16 +18,14 @@
 A web and electron based anime torrent streamer which can stream torrents and scraped anime episodes within the app or on an external media player.
 
 ## Electron Port (Beta) :
-![image](https://github.com/user-attachments/assets/2b11e7a9-9667-43b4-a95d-38b1365467f7)
-![image](https://github.com/user-attachments/assets/e1114387-0432-4bf2-a692-c0e1c3f46df6)
-![image](https://github.com/user-attachments/assets/30d6e6b4-f63f-4ed5-97f1-96b898a2c1d0)
-![image](https://github.com/user-attachments/assets/d9906902-0756-4d16-ad20-77fcadcb5d82)
-![image](https://github.com/user-attachments/assets/0d5720ff-c06e-452d-b0cd-c2078ba3f115)
-![image](https://github.com/user-attachments/assets/01939941-c2d4-4d2d-8596-36cbdab82f86)
-![image](https://github.com/user-attachments/assets/8e0588c3-e44e-49a3-bea8-55dbe27f4f8f)
-![image](https://github.com/user-attachments/assets/a3662bff-c799-45ec-a77d-2b11ff313465)
-![image](https://github.com/user-attachments/assets/844af4d5-9dbb-41a3-b6de-7ee0d5016440)
-![image](https://github.com/user-attachments/assets/f2190575-a983-40d8-9a32-41e34d0a1fc2)
+![image](https://github.com/user-attachments/assets/02158f0e-e2dd-4269-8ab9-d7ec57d5af6f)
+![image](https://github.com/user-attachments/assets/18fffde2-676d-44e8-9137-0e5e04ed000e)
+![image](https://github.com/user-attachments/assets/92fdd304-a916-4bfd-a1fa-577800a3ed3e)
+![image](https://github.com/user-attachments/assets/47a662ad-0983-43a9-95bd-7bee26acce4d)
+![image](https://github.com/user-attachments/assets/783330e9-1a84-49e5-a2a7-befc674d571d)
+![image](https://github.com/user-attachments/assets/b8c61b0f-08b2-4005-a073-f0200a9c8842)
+![image](https://github.com/user-attachments/assets/6c17a60c-34ed-44c8-b8d4-7e886ea2c496)
+
 
 ## Demo : (Click the image)
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Mdh2HuqTFyQ/0.jpg)](https://youtu.be/Mdh2HuqTFyQ)
