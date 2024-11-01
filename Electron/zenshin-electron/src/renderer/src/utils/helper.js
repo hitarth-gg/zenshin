@@ -679,6 +679,8 @@ export async function setWatchedEpisodes(animeId, episodesWatched) {
     }
 
     const data = await response.json()
+    console.log(data)
+
     return data.data.SaveMediaListEntry
   } catch (error) {
     throw new Error(error.message)
@@ -697,5 +699,57 @@ export async function getToshoEpisodes(quality, aids, eids) {
     return data
   } catch (error) {
     throw new Error(error)
+  }
+}
+
+export async function setAnimeStatus(animeId, status) {
+  if (!token) {
+    throw new Error('User is not authenticated. Please log in to update anime status on AniList.')
+  }
+
+  const mutation = `
+    mutation ($id: Int, $status: MediaListStatus) {
+      SaveMediaListEntry(
+        mediaId: $id
+        status: $status
+      ) {
+        id
+        status
+      }
+    }
+  `
+
+  try {
+    const response = await fetch(BASE_URL_ANILIST, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: {
+          id: animeId,
+          status: status
+        }
+      })
+    })
+
+    if (response.status === 429) {
+      return {
+        status:
+          'Too many requests to the API. You are being rate-limited. Please wait a minute and try again.'
+      }
+    } else if (!response.ok) {
+      const errorData = await response.json()
+      // throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
+      return errorData
+    }
+
+    const data = await response.json()
+    return data.data.SaveMediaListEntry
+  } catch (error) {
+    throw new Error(error.message)
   }
 }

@@ -164,7 +164,7 @@ export default function Header({ theme }) {
           {/* <DashboardIcon /> */}
           <img src={Pikacon} alt="pikacon" className="h-4 w-4" />
         </Button>
-        <Button
+        {/* <Button
           className="nodrag"
           size="1"
           color="gray"
@@ -172,7 +172,7 @@ export default function Header({ theme }) {
           onClick={() => navigate('/bookmarks')}
         >
           <BookmarkIcon />
-        </Button>
+        </Button> */}
       </div>
 
       <div className="nodrag mx-5 w-2/6">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>

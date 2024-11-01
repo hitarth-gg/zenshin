@@ -18,9 +18,13 @@ import useGetAnimeByMalId from '../../../hooks/useGetAnimeByMalId'
 import parse from 'html-react-parser'
 import { autop } from '@wordpress/autop'
 import useGetAnimePaheEps from '../hooks/useGetAnimePaheEps'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AnimePaheEpisode from '../components/AnimePaheEpisode'
 import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
+import AniListLogo from '../../../assets/symbols/AniListLogo'
+import MyAnimeListLogo from '../../../assets/symbols/MyAnimeListLogo'
+import YouTubeLogo from '../../../assets/symbols/YouTubeLogo'
+import AnilistEditorModal from '../../../components/AnilistEditorModal'
 
 function AnimePahePage() {
   const zenshinContext = useZenshinContext()
@@ -53,8 +57,17 @@ function AnimePahePage() {
     status: statusEps
   } = useGetAnimePaheEps(animeId, 1)
 
+  const [episodesWatched, setEpisodesWatched] = useState(animeData?.mediaListEntry?.progress || 0)
+
+  useEffect(() => {
+    setEpisodesWatched(animeData?.mediaListEntry?.progress || 0)
+  }, [animeData?.mediaListEntry?.progress])
+
+  console.log(episodesWatched)
+
   const data = animeData
   const genresString = data?.genres?.join(', ') || ''
+  const [showFullDescription, setShowFullDescription] = useState(false)
 
   const startDate = data?.startDate
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
@@ -135,7 +148,7 @@ function AnimePahePage() {
   if (isLoading || (isLoadingAnilist && anilistId)) return <CenteredLoader />
 
   return (
-    <div>
+    <div className="select-none">
       {data?.bannerImage && (
         <div className="relative">
           {glow && (
@@ -202,74 +215,54 @@ function AnimePahePage() {
                 {genresString}
               </div>
             )}
-            <div className="animate-fade animate-duration-1000">
-              <div className="flex flex-col gap-y-2 font-space-mono text-sm opacity-55">
-                {parse(
-                  autop(
-                    malIdData?.data?.synopsis ||
-                      data?.description ||
-                      animepaheData.desc ||
-                      'No description'
-                  )
-                )}
-              </div>
+            <div
+              className={`relative flex ${showFullDescription ? '' : 'max-h-[9.55rem]'} flex-col gap-y-2 overflow-hidden pb-6 font-space-mono text-sm opacity-55 transition-all`}
+              onClick={() => setShowFullDescription(!showFullDescription)}
+            >
+              {parse(
+                autop(
+                  malIdData?.data?.synopsis ||
+                    data?.description ||
+                    animepaheData.desc ||
+                    'No description'
+                )
+              )}
+              {!showFullDescription && (
+                <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#111113] to-transparent" />
+              )}
             </div>
-            <div className="mt-6 flex gap-x-5">
+            <div className="mt-6 flex items-center gap-x-5">
               {anilistId && (
                 <Link target="_blank" to={data?.siteUrl}>
-                  <Button size={'1'} variant="">
-                    AniList
+                  <Button size={'1'} variant="ghost" color="gray">
+                    <AniListLogo />
                   </Button>
                 </Link>
               )}
               {malIdData?.data?.url && (
                 <Link target="_blank" to={malIdData?.data?.url}>
-                  <Button size={'1'} variant="">
-                    MyAnimeList
+                  <Button size={'1'} variant="ghost" color="gray">
+                    <MyAnimeListLogo />
                   </Button>
                 </Link>
               )}
               {data?.trailer?.site === 'youtube' && (
-                <Link target="_blank" to={`https://www.youtube.com/watch?v=${data?.trailer?.id}`}>
-                  <Button size={'1'} color="red" variant="">
-                    YouTube
+                <Link target="_blank" to={`https://www.youtube.com/watch?v=${data?.trailer.id}`}>
+                  <Button size={'1'} variant="ghost" color="gray">
+                    <YouTubeLogo />
                   </Button>
                 </Link>
               )}
-              <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
-              <div className="flex items-center justify-center gap-x-5">
-                <Button
-                  size={'1'}
-                  color="gray"
-                  variant="soft"
-                  onClick={isBookmarked ? removeBookmark : addBookmark}
-                >
-                  {/* <BookmarkIcon width={'16px'} height={'16px'} /> */}
-                  {/* <BookmarkFilledIcon width={'16px'} height={'16px'} /> */}
-
-                  {isBookmarked ? (
-                    <BookmarkFilledIcon width={'16px'} height={'16px'} />
-                  ) : (
-                    <BookmarkIcon width={'16px'} height={'16px'} />
-                  )}
-                </Button>
-                <Button
-                  size={'1'}
-                  color="gray"
-                  variant="soft"
-                  onClick={() => epCountBookmark('decrease')}
-                >
-                  <MinusIcon width={'16px'} height={'16px'} />
-                </Button>
-                <Button
-                  size={'1'}
-                  color="gray"
-                  variant="soft"
-                  onClick={() => epCountBookmark('increase')}
-                >
-                  <PlusIcon width={'16px'} height={'16px'} />
-                </Button>
-              </div>
+              {/* ANILIST Episode Manager */}
+              {anilistId && (
+                <>
+                  <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
+                  <AnilistEditorModal
+                    anilist_data={data}
+                    setEpisodesWatchedMainPage={setEpisodesWatched}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -285,7 +278,13 @@ function AnimePahePage() {
                   .map((episode, ix) => (
                     <AnimePaheEpisode
                       key={episode.id}
-                      data={{ ...episode, anime_hash: animeId, finalEpWatched, ix }}
+                      data={{
+                        ...episode,
+                        anime_hash: animeId,
+                        finalEpWatched,
+                        ix,
+                        progress: episodesWatched
+                      }}
                     />
                   ))}
               </div>

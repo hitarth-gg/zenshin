@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import useGetAnimeById from '../hooks/useGetAnimeById'
 import { format } from 'date-fns'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CenteredLoader from '../ui/CenteredLoader'
 import Episode from '../components/Episode'
 import { Button, DropdownMenu, Skeleton } from '@radix-ui/themes'
@@ -12,6 +12,10 @@ import useGetAnimeByMalId from '../hooks/useGetAnimeByMalId'
 import { autop } from '@wordpress/autop'
 import parse from 'html-react-parser'
 import { useZenshinContext } from '../utils/ContextProvider'
+import AniListLogo from '../assets/symbols/AniListLogo'
+import MyAnimeListLogo from '../assets/symbols/MyAnimeListLogo'
+import YouTubeLogo from '../assets/symbols/YouTubeLogo'
+import AnilistEditorModal from '../components/AnilistEditorModal'
 
 export default function AnimePage() {
   const zenshinContext = useZenshinContext()
@@ -20,7 +24,13 @@ export default function AnimePage() {
   const animeId = useParams().animeId
   const { isLoading, animeData, error, status } = useGetAnimeById(animeId)
   const malId = animeData?.idMal
-  const episodesWatched = animeData?.mediaListEntry?.progress || 0
+  // const episodesWatched = animeData?.mediaListEntry?.progress || 0
+  const [episodesWatched, setEpisodesWatched] = useState(animeData?.mediaListEntry?.progress || 0)
+
+  useEffect(() => {
+    setEpisodesWatched(animeData?.mediaListEntry?.progress || 0)
+  }, [animeData?.mediaListEntry?.progress])
+
   const [quality, setQuality] = useState('All')
   const {
     isLoading: isLoadingMappings,
@@ -74,6 +84,7 @@ export default function AnimePage() {
 
   const [dualAudio, setDualAudio] = useState(false)
   const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
+  const [showFullDescription, setShowFullDescription] = useState(false)
 
   if (isLoading) return <CenteredLoader />
 
@@ -119,7 +130,7 @@ export default function AnimePage() {
   const genresString = data?.genres?.join(', ') || ''
 
   return (
-    <div>
+    <div className="select-none relative">
       {/* {false && ( */}
       {data?.bannerImage && (
         // <div className="p-4 px-8">
@@ -182,41 +193,45 @@ export default function AnimePage() {
                 <PersonIcon />
                 {data.popularity.toLocaleString()}
               </div>
-              {/* <div className="h-5 w-[1px] bg-[#333]"></div> Divider */}
-              {/* <div className="flex gap-x-1 tracking-wide opacity-90">{genresString}</div> */}
             </div>
-            {/* <div className="my-3 h-[1px] w-1/2 bg-[#333]"></div> Divider */}
             {genresString && (
               <div className="mb-2 flex w-fit gap-x-1 border-b border-[#545454] pb-2 font-space-mono text-xs tracking-wide opacity-90">
                 {genresString}
               </div>
             )}
 
-            <div className="animate-fade animate-duration-1000">
-              <div className="flex flex-col gap-y-2 font-space-mono text-sm opacity-55">
-                {parse(autop(malIdData?.data?.synopsis || data?.description || 'No description'))}
-              </div>
+            <div
+              className={`relative flex ${showFullDescription ? '' : 'max-h-[9.55rem]'} pb-6 flex-col gap-y-2 overflow-hidden font-space-mono text-sm opacity-55 transition-all`}
+              onClick={() => setShowFullDescription(!showFullDescription)}
+            >
+              {parse(autop(malIdData?.data?.synopsis || data?.description || 'No description'))}
+              {!showFullDescription && (
+                <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#111113] to-transparent" />
+              )}
             </div>
-            <div className="mt-6 flex gap-x-5">
+            <div className="mt-6 flex gap-x-5 flex items-center">
               <Link target="_blank" to={data?.siteUrl}>
-                <Button size={'1'} variant="">
-                  AniList
+                <Button size={'1'} variant="ghost" color="gray">
+                  <AniListLogo />
                 </Button>
               </Link>
               {malIdData?.data?.url && (
                 <Link target="_blank" to={malIdData?.data?.url}>
-                  <Button size={'1'} variant="">
-                    MyAnimeList
+                  <Button size={'1'} variant="ghost" color="gray">
+                    <MyAnimeListLogo />
                   </Button>
                 </Link>
               )}
               {data?.trailer?.site === 'youtube' && (
                 <Link target="_blank" to={`https://www.youtube.com/watch?v=${data?.trailer.id}`}>
-                  <Button size={'1'} color="red" variant="">
-                    YouTube
+                  <Button size={'1'} variant="ghost" color="gray">
+                    <YouTubeLogo />
                   </Button>
                 </Link>
               )}
+              <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
+              {/* ANILIST Episode Manager */}
+              <AnilistEditorModal anilist_data={data} setEpisodesWatchedMainPage={setEpisodesWatched} />
             </div>
           </div>
         </div>

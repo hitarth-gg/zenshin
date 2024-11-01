@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
 import { format } from 'date-fns'
-import { Code, Skeleton } from '@radix-ui/themes'
+import { Code, Skeleton, Tooltip } from '@radix-ui/themes'
 import useGetAnimePaheEps from '../hooks/useGetAnimePahePlayData'
 import SlidingPane from 'react-sliding-pane'
 import '../../../sliding-pane.css'
@@ -20,12 +20,13 @@ export default function AnimePaheEpisode({ data }) {
     created_at,
     anime_hash,
     finalEpWatched,
-    ix
+    ix,
+    progress
   } = data
 
   const navigate = useNavigate()
   const [active, setActive] = useState(false)
-  const progress = data?.progress || 0
+  // const progress = data?.progress || 0
 
   // on pressing escape, close the dropdown
   const [paneState, setPaneState] = useState({
@@ -79,8 +80,13 @@ export default function AnimePaheEpisode({ data }) {
               {/* <p className="text-lg">{episodeNumber}. </p> */}
               <div>
                 <p className="flex items-center gap-2 font-space-mono text-lg font-medium opacity-100">
-                  {ix + 1 <= finalEpWatched && (
+                  {/* {ix + 1 <= finalEpWatched && (
                     <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                  )} */}
+                  {parseInt(episode) <= parseInt(progress) && (
+                    <Tooltip content="Watched">
+                      <p className="h-2 min-h-2 w-2 min-w-2 rounded-full bg-green-500"></p>
+                    </Tooltip>
                   )}
                   <p className="line-clamp-1">Episode. {episode}</p>
                 </p>
