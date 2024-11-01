@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
 import { format } from 'date-fns'
-import { Code, Skeleton, Tooltip } from '@radix-ui/themes'
+import { Button, Code, Skeleton, Tooltip } from '@radix-ui/themes'
 import useGetAnimePaheEps from '../hooks/useGetAnimePahePlayData'
 import SlidingPane from 'react-sliding-pane'
 import '../../../sliding-pane.css'
 import AnimePahePlayerEmbedded from '../pages/AnimePahePlayerEmbedded'
+import { useZenshinContext } from '../../../utils/ContextProvider'
 
 export default function AnimePaheEpisode({ data }) {
   const {
@@ -48,6 +49,8 @@ export default function AnimePaheEpisode({ data }) {
     }
     setActive((prevActive) => !prevActive)
   }
+
+  const { vlcPath } = useZenshinContext()
 
   console.log(ix + ' ' + finalEpWatched)
 
@@ -162,6 +165,21 @@ export default function AnimePaheEpisode({ data }) {
                 >
                   {epdata.audio.toUpperCase()}
                 </Code>
+                <Button variant="soft" size="1" color="violet" className="text-xs">
+                  Stream on App
+                </Button>
+                <Button
+                  variant="soft"
+                  size="1"
+                  color="mint"
+                  className="text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    window.api.openVlc(`${vlcPath} ${epdata.videoSrc}"`)
+                  }}
+                >
+                  Stream on External Player
+                </Button>
               </div>
             </div>
           ))}

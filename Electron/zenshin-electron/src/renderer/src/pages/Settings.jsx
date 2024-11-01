@@ -71,8 +71,8 @@ export default function Settings() {
 
         <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
           <div className="text_input_card">
-            <p className="font-bold">VLC Media Player Path</p>
-            <p className="text-xs">Set the VLC.exe path to open episodes in VLC Media Player.</p>
+            <p className="font-bold">External Media Player Path</p>
+            <p className="text-xs">Set the path to the executable file of external media player.</p>
             <p className="text-xs">Current Path: {vlcPath}</p>
           </div>
           <TextField.Root

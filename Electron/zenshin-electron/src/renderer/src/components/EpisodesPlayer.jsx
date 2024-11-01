@@ -31,15 +31,15 @@ export default function EpisodesPlayer({
                     handleStreamBrowser(file.name)
                   }}
                   size="1"
-                  color="blue"
+                  color="violet"
                   variant="soft"
                   type="submit"
                 >
-                  Stream on Browser
+                  Stream on App
                 </Button>
                 <Button
                   size="1"
-                  color="orange"
+                  color="mint"
                   variant="soft"
                   onClick={(e) => {
                     e.stopPropagation()
@@ -47,7 +47,7 @@ export default function EpisodesPlayer({
                     handleStreamVlc(file.name)
                   }}
                 >
-                  Open in VLC
+                  Open in External Player
                 </Button>
                 <Button
                   size="1"
