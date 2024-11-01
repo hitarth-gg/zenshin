@@ -159,7 +159,8 @@ function AnilistEditorModal({ anilist_data, setEpisodesWatchedMainPage }) {
                 style={{
                   backgroundColor: 'transparent',
                   textAlign: 'right',
-                  boxShadow: 'none'
+                  boxShadow: 'none',
+                  fontFamily: 'Space Mono'
                 }}
                 onBlur={() => {
                   // setEpisodesWatched(parseInt(episodesWatched))

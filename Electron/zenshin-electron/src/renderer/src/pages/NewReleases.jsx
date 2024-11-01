@@ -10,7 +10,8 @@ export default function NewReleases() {
   const [newReleases, setNewReleases] = useState([])
   const [displayedReleases, setDisplayedReleases] = useState([])
   const [cardErrorShown, setCardErrorShown] = useState(false) // Track whether error toast was shown
-  const [totalCards, setTotalCards] = useState(20)
+  const [totalCards, setTotalCards] = useState(25)
+  const [totalCards2, setTotalCards2] = useState(17)
 
   useEffect(() => {
     if (data) {
@@ -23,11 +24,17 @@ export default function NewReleases() {
 
   const [anilistIds, setAnilistIds] = useState([])
 
+  console.log('anilistIds')
+  console.log(totalCards2)
+
+  console.log(anilistIds)
+
   const {
     isLoading: isLoadingAnilist,
     data: dataAnilist,
     error: errorAnilist
-  } = useGetMultipleAnilistIds(anilistIds.length === totalCards ? anilistIds : [])
+  } = useGetMultipleAnilistIds(anilistIds.length >= totalCards2 ? anilistIds : [])
+  // } = useGetMultipleAnilistIds(anilistIds)
 
   // useEffect(() => {
   //   async function insertReleases() {
@@ -72,8 +79,6 @@ export default function NewReleases() {
             anilistIds={anilistIds}
             setAnilistIds={setAnilistIds}
             dataAnilist={dataAnilist}
-            totalCards={totalCards}
-            setTotalCards={setTotalCards}
           />
         ))}
       </div>

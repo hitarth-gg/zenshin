@@ -52,9 +52,7 @@ export default function NewReleaseCard({
   setCardErrorShown,
   anilistIds,
   setAnilistIds,
-  dataAnilist,
-  totalCards,
-  setTotalCards
+  dataAnilist
 }) {
   const navigate = useNavigate()
   // const magnet = magnetRegex(data?.description[0]) || ''
@@ -103,7 +101,6 @@ export default function NewReleaseCard({
       setImageUrl(img[0]?.image)
     } else {
       console.log('AnidbMap is null')
-      // setTotalCards(totalCards - 1)
     }
   }, [anidbMap])
   const [episodeNumber, setEpisodeNumber] = useState(0)
@@ -123,6 +120,10 @@ export default function NewReleaseCard({
   console.log(anilistCover)
 
   const [imgIsLoading, setImageIsLoading] = useState(true)
+
+  if (!(anilistId && !isLoading)) {
+    return null
+  }
 
   return (
     <div
