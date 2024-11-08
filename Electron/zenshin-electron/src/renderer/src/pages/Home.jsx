@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { getTopAnime } from '../utils/helper'
 import { useEffect, useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { Spinner } from '@radix-ui/themes'
+import { Spinner, Tooltip } from '@radix-ui/themes'
 import { toast } from 'sonner'
 import { ExclamationTriangleIcon, PersonIcon, StarIcon, VideoIcon } from '@radix-ui/react-icons'
 // import loundraw from "../assets/loundraw.jpg";
@@ -19,9 +19,13 @@ import HTMLReactParser from 'html-react-parser/lib/index'
 import { useNavigate } from 'react-router-dom'
 import useGetRecentGlobalActivity from '../hooks/useGetRecentGlobalActivity'
 import RecentActivity from '../components/RecentActivity'
+import { useZenshinContext } from '../utils/ContextProvider'
+import useGetAnimepaheReleases from '../hooks/useGetAnimepaheReleases'
+import AnimepaheEpisodeCard from '../extensions/animepahe/components/AnimepaheEpisodeCard'
 
 export default function Home() {
-  // GET RECENT GLOBAL ACTIVITY : UI NOT IMPLEMENTED
+  const { scrollOpacity, hideHero } = useZenshinContext()
+
   const {
     isLoading: isLoadingRecentActivity,
     data: recentActivity,
@@ -29,14 +33,18 @@ export default function Home() {
     status: statusRecentActivity
   } = useGetRecentGlobalActivity()
 
+  const {
+    isLoading: isLoadingAnimepaheReleases,
+    data: animepaheReleases,
+    error: errorAnimepaheReleases,
+    status: statusAnimepaheReleases
+  } = useGetAnimepaheReleases(1)
+
   // State to store background opacity
   const [bgOpacity, setBgOpacity] = useState(1)
 
-  // Update opacity on scroll
-
-  // const [scrollY, setScrollY] = useState(0)
-
   useEffect(() => {
+    if (scrollOpacity === false) return
     const handleScroll = () => {
       const scrollY = window.scrollY
       // setScrollY(scrollY)
@@ -50,7 +58,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [scrollOpacity])
 
   const { isLoading, topAiringAnime, error, status } = useTopAiringAnime()
 
@@ -123,63 +131,70 @@ export default function Home() {
 
   return (
     <div className="select-none font-space-mono tracking-tight">
-      <div
-        className="relative flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
-        style={
-          {
-            // backgroundImage: `url(${gradient1})`,
-            // backgroundSize: 'cover',
-            // background: `linear-gradient(rgba(17,17,19,${1 - bgOpacity}), rgba(17,17,19,${1 - bgOpacity})), url(${gradient1})`
+      {!hideHero && (
+        <div
+          className="relative flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
+          style={
+            {
+              // backgroundImage: `url(${gradient1})`,
+              // backgroundSize: 'cover',
+              // background: `linear-gradient(rgba(17,17,19,${1 - bgOpacity}), rgba(17,17,19,${1 - bgOpacity})), url(${gradient1})`
+            }
           }
-        }
-      >
-        <div
-          className="stroke-text absolute top-[-200px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
-          style={{
-            opacity: bgOpacity
-          }}
         >
-          全身全身全身
-        </div>
-        <div
-          className="stroke-text absolute w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
-          style={{
-            opacity: bgOpacity
-          }}
-        >
-          ZENSHIN ZENSHIN ZENSHIN
-        </div>
-        <div
-          className="stroke-text absolute bottom-[-200px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
-          style={{
-            opacity: bgOpacity
-          }}
-        >
-          七転び八起き
-        </div>
+          <div
+            className="stroke-text absolute top-[-200px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
+            style={{
+              opacity: bgOpacity
+              // if scrollOpacity is false, then do not change opacity on scroll
+              // opacity: scrollOpacity ? bgOpacity : 1
+            }}
+          >
+            全身全身全身
+          </div>
+          <div
+            className="stroke-text absolute w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
+            style={{
+              // opacity: scrollOpacity ? bgOpacity : 1
+              opacity: bgOpacity
+            }}
+          >
+            ZENSHIN ZENSHIN ZENSHIN
+          </div>
+          <div
+            className="stroke-text absolute bottom-[-200px] w-full overflow-hidden text-nowrap text-[22rem] text-[#ffffff20]"
+            style={{
+              // opacity: scrollOpacity ? bgOpacity : 1
+              opacity: bgOpacity
+            }}
+          >
+            七転び八起き
+          </div>
 
-        <div className="my-12 flex h-full w-8/12 flex-col items-center justify-start gap-y-1 p-3 lg:w-2/5">
-          <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[6rem] object-scale-down" />
-          <p className="font-space-mono">
-            Stream your favourite torrents instantly with our service, no waiting for downloads,
-            reliable and seamless streaming directly to your browser / VLC Media Player.
-          </p>
-        </div>
+          <div className="my-12 flex h-full w-8/12 flex-col items-center justify-start gap-y-1 p-3 lg:w-2/5">
+            <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[6rem] object-scale-down" />
+            <p className="font-space-mono">
+              Stream your favourite torrents instantly with our service, no waiting for downloads,
+              reliable and seamless streaming directly to your browser / VLC Media Player.
+            </p>
+          </div>
 
-        {/* <img
+          {/* <img
           src={zenshin1}
           alt="zenshin"
           className="drop-shadow-lg h-48 object-scale-down sm:h-64 md:h-80 lg:h-96"
         /> */}
 
-        {recentActivity && <RecentActivity data={Object.values(recentActivity).slice(0, 9)} />}
-      </div>
+          {recentActivity && <RecentActivity data={Object.values(recentActivity).slice(0, 9)} />}
+        </div>
+      )}
 
       {topAiringAnime?.length > 0 && (
         <div
           className={`w-full`}
           style={{
-            opacity: 1 - bgOpacity
+            // opacity: 1 - bgOpacity
+            opacity: scrollOpacity ? 1 - bgOpacity : 1
           }}
         >
           <div className="animate-fade">
@@ -245,6 +260,26 @@ export default function Home() {
                 ))}
             </Carousel>
           </div>
+
+          {animepaheReleases?.data && (
+            <div className="mx-3 mt-4">
+              <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+                <Tooltip content="View all releases">
+                  <p
+                    className="w-fit cursor-pointer transition-all duration-200 ease-in-out"
+                    onClick={() => navigate('/animepahe')}
+                  >
+                    New AnimePahe Releases
+                  </p>
+                </Tooltip>
+              </div>
+              <div className="grid animate-fade grid-cols-4">
+                {animepaheReleases?.data?.slice(0, 8)?.map((ep) => (
+                  <AnimepaheEpisodeCard key={ep.id + 'animepaheReleases'} data={ep} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

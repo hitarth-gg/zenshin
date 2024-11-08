@@ -37,7 +37,10 @@ function AnimepaheEpisodeCard({ data }) {
         onClick={() => navigate(`/animepahe/anime/${anime_session}`)}
       >
         {snapshot ? (
-          <div>
+          <div className="relative">
+            {imageIsLoading && (
+              <Skeleton className="duration-400 absolute aspect-video h-full flex-grow rounded-sm transition-all ease-in-out" />
+            )}
             <img
               src={parseAnimepaheImage(snapshot)}
               alt={`${anime_title}`}
@@ -57,7 +60,7 @@ function AnimepaheEpisodeCard({ data }) {
           navigate(`/animepahe/anime/${anime_session}`)
         }}
       >
-        <div className="w-full truncate text-sm font-medium opacity-90">{anime_title}</div>
+        <div title={anime_title} className="w-full truncate text-sm font-medium opacity-90">{anime_title}</div>
 
         <div className="flex justify-between text-xs opacity-60">
           <p className="text-nowrap">{timeAgo(created_at)}</p>

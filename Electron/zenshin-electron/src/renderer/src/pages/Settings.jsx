@@ -8,7 +8,11 @@ export default function Settings() {
     vlcPath,
     setVlcPath,
     autoUpdateAnilistEpisode,
-    setAutoUpdateAnilistEpisode
+    setAutoUpdateAnilistEpisode,
+    scrollOpacity,
+    setScrollOpacity,
+    hideHero,
+    setHideHero
   } = useZenshinContext()
 
   function toggleGlow() {
@@ -32,8 +36,24 @@ export default function Settings() {
     )
   }
 
+  function toggleScrollOpacity() {
+    const newScrollOpacityState = !scrollOpacity
+    setScrollOpacity(newScrollOpacityState)
+    localStorage.setItem('scrollOpacity', newScrollOpacityState ? 'true' : 'false')
+  }
+
+  function toggleHideHero() {
+    const newHideHeroState = !hideHero
+    setHideHero(newHideHeroState)
+    localStorage.setItem('hideHero', newHideHeroState ? 'true' : 'false')
+    if (newHideHeroState === true) {
+      localStorage.setItem('scrollOpacity', 'false')
+      setScrollOpacity(false)
+    }
+  }
+
   return (
-    <div className="w-screen select-none px-16 py-10 font-space-mono">
+    <div className="w-full select-none px-16 py-10 font-space-mono">
       <div className="mb-8 border-b border-gray-700 pb-2 font-semibold tracking-wider text-[#b5b5b5ff]">
         Settings
       </div>
@@ -66,6 +86,36 @@ export default function Settings() {
             checked={autoUpdateAnilistEpisode}
             style={{ marginLeft: '1.5rem', cursor: 'pointer' }}
             onCheckedChange={toggleAutoUpdateAnilistEpisode}
+          />
+        </div>
+
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="switch_card">
+            <p className="font-bold">Scroll Opacity</p>
+            <p className="text-xs">
+              Turn on scroll opacity effect on the home page. Turning it <b>off</b> will slightly{' '}
+              <b>improve performance</b>.
+            </p>
+          </div>
+          <Switch
+            checked={scrollOpacity}
+            style={{ marginLeft: '1.5rem', cursor: 'pointer' }}
+            onCheckedChange={toggleScrollOpacity}
+          />
+        </div>
+
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="switch_card">
+            <p className="font-bold">Hide Hero on Home Page</p>
+            <p className="text-xs">
+              Hide the hero section on the home page. Turning it on will disable the scroll opacity
+              effect.
+            </p>
+          </div>
+          <Switch
+            checked={hideHero}
+            style={{ marginLeft: '1.5rem', cursor: 'pointer' }}
+            onCheckedChange={toggleHideHero}
           />
         </div>
 

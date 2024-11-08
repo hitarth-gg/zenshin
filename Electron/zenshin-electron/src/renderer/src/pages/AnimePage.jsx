@@ -130,7 +130,7 @@ export default function AnimePage() {
   const genresString = data?.genres?.join(', ') || ''
 
   return (
-    <div className="select-none relative">
+    <div className="relative select-none">
       {/* {false && ( */}
       {data?.bannerImage && (
         // <div className="p-4 px-8">
@@ -201,7 +201,7 @@ export default function AnimePage() {
             )}
 
             <div
-              className={`relative flex ${showFullDescription ? '' : 'max-h-[9.55rem]'} pb-6 flex-col gap-y-2 overflow-hidden font-space-mono text-sm opacity-55 transition-all`}
+              className={`relative flex ${showFullDescription ? '' : 'max-h-[9.55rem]'} flex-col gap-y-2 overflow-hidden pb-6 font-space-mono text-sm opacity-55 transition-all`}
               onClick={() => setShowFullDescription(!showFullDescription)}
             >
               {parse(autop(malIdData?.data?.synopsis || data?.description || 'No description'))}
@@ -209,7 +209,7 @@ export default function AnimePage() {
                 <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#111113] to-transparent" />
               )}
             </div>
-            <div className="mt-6 flex gap-x-5 flex items-center">
+            <div className="mt-6 flex items-center gap-x-5">
               <Link target="_blank" to={data?.siteUrl}>
                 <Button size={'1'} variant="ghost" color="gray">
                   <AniListLogo />
@@ -231,7 +231,10 @@ export default function AnimePage() {
               )}
               <div className="h-5 w-[1px] bg-[#333]"></div> {/* Divider */}
               {/* ANILIST Episode Manager */}
-              <AnilistEditorModal anilist_data={data} setEpisodesWatchedMainPage={setEpisodesWatched} />
+              <AnilistEditorModal
+                anilist_data={data}
+                setEpisodesWatchedMainPage={setEpisodesWatched}
+              />
             </div>
           </div>
         </div>

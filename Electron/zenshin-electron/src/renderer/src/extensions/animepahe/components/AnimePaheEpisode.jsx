@@ -22,7 +22,8 @@ export default function AnimePaheEpisode({ data }) {
     anime_hash,
     finalEpWatched,
     ix,
-    progress
+    progress,
+    hideWatchedEpisodes
   } = data
 
   const navigate = useNavigate()
@@ -62,6 +63,7 @@ export default function AnimePaheEpisode({ data }) {
   }
 
   const [videoSrc, setVideoSrc] = useState(null)
+  if (parseInt(episode) <= parseInt(progress) && hideWatchedEpisodes) return null
 
   return (
     <div className="flex w-full cursor-default flex-col border border-gray-700 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100">

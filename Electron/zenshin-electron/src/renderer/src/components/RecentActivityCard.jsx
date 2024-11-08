@@ -20,7 +20,7 @@ export default function RecentActivityCard({ data }) {
       className="skew3d group relative mt-6 flex w-56 cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out hover:scale-110"
     >
       <div className="absolute top-0 h-72 w-48">
-        <div className="absolute bottom-0 left-0 z-10 line-clamp-1 flex h-6 w-48 rounded-b-sm bg-[#00000090] px-1 text-sm font-semibold tracking-wide backdrop-blur-sm">
+        <div className="absolute bottom-0 left-0 z-10 line-clamp-1 flex h-6 w-48 rounded-b-sm bg-[#00000090] px-1 text-sm drop-shadow-3xl  tracking-wide backdrop-blur-sm">
           {data?.media?.title?.romaji}
         </div>
       </div>

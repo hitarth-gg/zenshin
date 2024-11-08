@@ -14,6 +14,7 @@ import {
   LayersIcon,
   LightningBoltIcon,
   MinusIcon,
+  OpenInNewWindowIcon,
   PersonIcon,
   ShadowIcon,
   ShadowNoneIcon,
@@ -129,12 +130,22 @@ export default function Header({ theme }) {
         >
           <img src={zenshinLogo} alt="" className="w-16" />
         </Link>
-        <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
-        <a className="nodrag" href="https://github.com/hitarth-gg" target="_blank" rel="noreferrer">
+        {/* <DividerVerticalIcon width={20} height={20} color="#ffffff40" /> */}
+        {/* <a className="nodrag" href="https://github.com/hitarth-gg" target="_blank" rel="noreferrer">
           <Button color="gray" variant="ghost" size={'1'}>
             <GitHubLogoIcon className="my-1" width={17} height={17} />
           </Button>
-        </a>
+        </a> */}
+
+        <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
+        <div className="flex gap-6">
+          <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(-1)}>
+            <ArrowLeftIcon className="my-1" width={16} height={16} />
+          </Button>
+          <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(1)}>
+            <ArrowRightIcon className="my-1" width={16} height={16} />
+          </Button>
+        </div>
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
         <Button className="nodrag" color="gray" variant="ghost" size={'1'}>
           <Link to="/newreleases">
@@ -143,7 +154,7 @@ export default function Header({ theme }) {
           </Link>
         </Button>
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
-        <Tooltip content="Ping Backend">
+        {/* <Tooltip content="Ping Backend">
           <Button
             className="nodrag"
             size="1"
@@ -153,7 +164,7 @@ export default function Header({ theme }) {
           >
             <LayersIcon />
           </Button>
-        </Tooltip>
+        </Tooltip> */}
         <Button
           className="nodrag"
           size="1"
@@ -177,14 +188,7 @@ export default function Header({ theme }) {
 
       <div className="nodrag mx-5 w-2/6">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
       <div className="nodrag mr-36 flex items-center justify-center gap-x-8">
-        <div className="flex gap-3">
-          <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(-1)}>
-            <ArrowLeftIcon className="my-1" width={16} height={16} />
-          </Button>
-          <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(1)}>
-            <ArrowRightIcon className="my-1" width={16} height={16} />
-          </Button>
-        </div>
+
         {!anilistToken && (
           <Tooltip content="Login With Anilist">
             <Button color="gray" variant="ghost" size={'1'} onClick={handleLogin}>
@@ -209,8 +213,24 @@ export default function Header({ theme }) {
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content>
-              <DropdownMenu.Item shortcut="⌘ N">Archive</DropdownMenu.Item>
-              <DropdownMenu.Sub>
+              <DropdownMenu.Item
+                onClick={
+                  // https://github.com/hitarth-gg
+                  () => window.open('https://github.com/hitarth-gg', '_blank')
+                }
+                // shortcut={<GitHubLogoIcon />}
+                shortcut={<OpenInNewWindowIcon />}
+              >
+                GitHub <GitHubLogoIcon />
+              </DropdownMenu.Item>
+              <DropdownMenu.Item
+                color="green"
+                onClick={checkBackendRunning}
+                shortcut={<LayersIcon />}
+              >
+                Ping Backend
+              </DropdownMenu.Item>
+              {/* <DropdownMenu.Sub>
                 <DropdownMenu.SubTrigger>More</DropdownMenu.SubTrigger>
                 <DropdownMenu.SubContent>
                   <DropdownMenu.Item>Move to project…</DropdownMenu.Item>
@@ -219,7 +239,8 @@ export default function Header({ theme }) {
                   <DropdownMenu.Separator />
                   <DropdownMenu.Item>Advanced options…</DropdownMenu.Item>
                 </DropdownMenu.SubContent>
-              </DropdownMenu.Sub>
+              </DropdownMenu.Sub> */}
+              <DropdownMenu.Separator />
               <DropdownMenu.Item color="red" onClick={handleLogout}>
                 Logout
               </DropdownMenu.Item>
@@ -240,14 +261,8 @@ export default function Header({ theme }) {
           // onClick={() => toggleGlow()}
           onClick={() => navigate('/settings')}
         >
-          {/* {zenshinContext.glow ? (
-            <ShadowIcon className="my-1" width={16} height={16} />
-          ) : (
-            <ShadowNoneIcon className="my-1" width={16} height={16} />
-          )} */}
           <GearIcon className="my-1 cursor-pointer" width={16} height={16} />
         </Button>
-        {/* <div className="w-32"></div> */}
       </div>
     </div>
   )

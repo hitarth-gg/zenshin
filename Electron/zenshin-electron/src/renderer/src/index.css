@@ -12,6 +12,7 @@
 /* Scrollbar track */
 ::-webkit-scrollbar-track {
   background: transparent;
+  margin-top: 2.8rem;
 }
 
 /* Scrollbar thumb */

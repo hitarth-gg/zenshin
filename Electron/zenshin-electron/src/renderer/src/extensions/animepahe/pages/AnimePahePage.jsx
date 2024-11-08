@@ -5,12 +5,7 @@ import { Button, Skeleton } from '@radix-ui/themes'
 import useGetAnimeById from '../../../hooks/useGetAnimeById'
 import { useZenshinContext } from '../../../utils/ContextProvider'
 import {
-  BookmarkFilledIcon,
-  BookmarkIcon,
-  DividerVerticalIcon,
-  MinusIcon,
   PersonIcon,
-  PlusIcon,
   StarIcon
 } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
@@ -33,6 +28,7 @@ function AnimePahePage() {
   const { animeId } = useParams()
   const { isLoading, data: animepaheData, error, status } = useGetAnimeAnimePahe(animeId)
   const anilistId = animepaheData?.anilist_id
+  const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
 
   const {
     isLoading: isLoadingAnilist,
@@ -247,7 +243,7 @@ function AnimePahePage() {
                 </Link>
               )}
               {data?.trailer?.site === 'youtube' && (
-                <Link target="_blank" to={`https://www.youtube.com/watch?v=${data?.trailer.id}`}>
+                <Link target="_blank" to={`https://www.youtube.com/watch?v=${data?.trailer?.id}`}>
                   <Button size={'1'} variant="ghost" color="gray">
                     <YouTubeLogo />
                   </Button>
@@ -266,10 +262,18 @@ function AnimePahePage() {
             </div>
           </div>
         </div>
-        {true && (
+        {true && epsData?.data[0] !== null && (
           <div className="mb-64 mt-12">
             <div className="flex items-center gap-x-3">
               <p className="font-space-mono text-lg font-medium opacity-90">Episodes</p>
+              <Button
+                variant="soft"
+                size={'1'}
+                onClick={() => setHideWatchedEpisodes(!hideWatchedEpisodes)}
+                color={hideWatchedEpisodes ? 'blue' : 'gray'}
+              >
+                Hide Watched Episodes
+              </Button>
             </div>
             {!isLoadingEps && (
               <div className="mt-3 grid grid-cols-1 gap-y-3">
@@ -283,6 +287,7 @@ function AnimePahePage() {
                         anime_hash: animeId,
                         finalEpWatched,
                         ix,
+                        hideWatchedEpisodes,
                         progress: episodesWatched
                       }}
                     />

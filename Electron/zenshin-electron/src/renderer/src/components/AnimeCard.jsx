@@ -29,11 +29,11 @@ export default function AnimeCard({ data }) {
       <img
         src={data?.coverImage?.extraLarge}
         alt=""
-        className="duration-400 z-10 h-60 w-40 animate-fade rounded-sm object-cover transition-all ease-in-out"
+        className="duration-400 z-10 h-60 w-[10.6rem] animate-fade rounded-sm object-cover transition-all ease-in-out"
       />
 
       <div className="flex w-[85%] flex-col gap-y-1">
-        <div className="z-10 line-clamp-2 h-11 w-full text-sm font-medium opacity-90">
+        <div title={data?.title?.romaji} className="z-10 line-clamp-2 h-11 w-full text-sm font-medium opacity-90">
           {data?.title?.romaji}
         </div>
 

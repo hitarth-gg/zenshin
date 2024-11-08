@@ -14,6 +14,8 @@ export default function ZenshinProvider({ children }) {
   const [glow, setGlow] = useState(true)
   const [vlcPath, setVlcPath] = useState('"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"')
   const [autoUpdateAnilistEpisode, setAutoUpdateAnilistEpisode] = useState(true)
+  const [scrollOpacity, setScrollOpacity] = useState(false)
+  const [hideHero, setHideHero] = useState(false)
 
   useEffect(() => {
     const glow = localStorage.getItem('glow')
@@ -30,6 +32,16 @@ export default function ZenshinProvider({ children }) {
     if (autoUpdateAnilistEpisode) {
       setAutoUpdateAnilistEpisode(autoUpdateAnilistEpisode === 'true')
     }
+
+    const scrollOpacity = localStorage.getItem('scrollOpacity')
+    if (scrollOpacity) {
+      setScrollOpacity(scrollOpacity === 'true')
+    }
+
+    const hideHero = localStorage.getItem('hideHero')
+    if (hideHero) {
+      setHideHero(hideHero === 'true')
+    }
   }, [])
 
   return (
@@ -40,7 +52,11 @@ export default function ZenshinProvider({ children }) {
         vlcPath,
         setVlcPath,
         autoUpdateAnilistEpisode,
-        setAutoUpdateAnilistEpisode
+        setAutoUpdateAnilistEpisode,
+        scrollOpacity,
+        setScrollOpacity,
+        hideHero,
+        setHideHero
       }}
     >
       {children}
