@@ -62,7 +62,12 @@ export default function AppLayout({ props }) {
             }
           }}
         />
-        <div className="layout flex flex-col font-inter">
+        <div
+          className="layout flex flex-col font-inter"
+          style={{
+            direction: 'ltr'
+          }}
+        >
           {isLoading && <Loader />}
           <Header />
           <main className="">{props || <Outlet />}</main>
