@@ -2,7 +2,8 @@ import { format } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import '../index.css'
 import { useZenshinContext } from '../utils/ContextProvider'
-import { Tooltip } from '@radix-ui/themes'
+import { Skeleton, Tooltip } from '@radix-ui/themes'
+import { useState } from 'react'
 
 export default function AnimeCard({ data }) {
   // console.log(data);
@@ -12,10 +13,12 @@ export default function AnimeCard({ data }) {
     navigate(`/anime/${data.id}`, { state: { data } })
   }
 
+  const [imageLoading, setImageLoading] = useState(true)
+
   const zenshinContext = useZenshinContext()
   const { glow } = zenshinContext
 
-  const date = data?.startDate
+  const date = data?.startDate?.year
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
     : null
 
@@ -24,16 +27,26 @@ export default function AnimeCard({ data }) {
   return (
     <div
       onClick={() => handleClick()}
-      className="group relative mt-6 flex w-48 cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out hover:scale-110"
+      className="group relative mt-6 flex w-48 animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out hover:scale-110"
     >
-      <img
-        src={data?.coverImage?.extraLarge}
-        alt=""
-        className="duration-400 z-10 h-60 w-[10.6rem] animate-fade rounded-sm object-cover transition-all ease-in-out"
-      />
+      <div className="relative z-10">
+        {imageLoading && (
+          <Skeleton className="duration-400 absolute top-0 z-10 h-60 w-[10.6rem] animate-fade rounded-sm object-cover transition-all ease-in-out"></Skeleton>
+        )}
 
-      <div className="flex w-[85%] flex-col gap-y-1">
-        <div title={data?.title?.romaji} className="z-10 line-clamp-2 h-11 w-full text-sm font-medium opacity-90">
+        <img
+          src={data?.coverImage?.extraLarge}
+          alt=""
+          className={`duration-400 z-10 h-60 w-[10.6rem] animate-fade rounded-sm object-cover transition-all ease-in-out ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+          onLoad={() => setImageLoading(false)}
+        />
+      </div>
+
+      <div className="z-20 flex w-[85%] flex-col gap-y-1">
+        <div
+          title={data?.title?.romaji}
+          className=" line-clamp-2 h-11 w-full text-sm font-medium opacity-90"
+        >
           {data?.title?.romaji}
         </div>
 
@@ -67,7 +80,7 @@ export default function AnimeCard({ data }) {
               </Tooltip>
             )}
           </div>
-          <p className="opacity-60">{data.format.slice(0, 3)}</p>
+          <p className="opacity-60">{data?.format?.slice(0, 3)}</p>
         </div>
         <div></div>
       </div>
@@ -77,7 +90,7 @@ export default function AnimeCard({ data }) {
         <img
           src={data?.coverImage?.extraLarge}
           alt=""
-          className="duration-500 absolute top-0 z-0 h-60 w-40 rounded-md object-cover opacity-0 blur-2xl contrast-200 saturate-200 transition-all ease-in-out group-hover:opacity-70"
+          className="absolute top-0 z-0 h-60 w-40 rounded-md object-cover opacity-0 blur-2xl contrast-200 saturate-200 transition-all duration-500 ease-in-out group-hover:opacity-70"
         />
       )}
     </div>

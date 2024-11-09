@@ -1,3 +1,4 @@
+import { anilistQueryObject, getParsedAnilistQuery } from './anilistQueryObject'
 import {
   BASE_URL_ANILIST,
   GET_ANIME_DETAILS_BY_ID,
@@ -11,7 +12,6 @@ import {
   TOP_ANIME
 } from './api'
 import { parseStringPromise } from 'xml2js'
-
 // export async function searchAnime(text, limit = 10) {
 //   try {
 //     if (text === "asd") throw new Error("Invalid search query");
@@ -89,6 +89,7 @@ export async function searchAnime(text, limit = 10) {
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
+// NOT USED
 export async function searchAiringAnime(text, limit = 2) {
   console.log('Searching for airing anime with text:', text)
   await delay(1300) // Adjust the delay as needed
@@ -164,39 +165,7 @@ export async function getTopAiringAnime() {
     query {
       Page(perPage: 49, page: 1) {
         media(type: ANIME, sort: TRENDING_DESC, status_in: [RELEASING], isAdult: false) {
-          id
-          idMal
-          bannerImage
-          title {
-            romaji
-            english
-            native
-          }
-          season
-          seasonYear
-          coverImage {
-            extraLarge
-          }
-          description
-          episodes
-          averageScore
-          popularity
-          startDate {
-            year
-            month
-            day
-          }
-          format
-          ${
-            token
-              ? `mediaListEntry {
-            id
-            status
-            score
-            progress
-          }`
-              : ''
-          }
+          ${anilistQueryObject}
         }
       }
     }
@@ -224,7 +193,8 @@ export async function getTopAiringAnime() {
         'Too many requests to the API. You are being rate-limited. Please come back after a minute.'
       )
     } else if (!response.ok) {
-      const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
       throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
     }
 
@@ -247,37 +217,7 @@ export async function getTopAnime(page = 1) {
     query ($page: Int) {
       Page(page: $page, perPage: 25) {
         media(type: ANIME, sort: SCORE_DESC, isAdult: false) {
-          id
-          idMal
-          bannerImage
-          title {
-            romaji
-            english
-            native
-          }
-          coverImage {
-            extraLarge
-          }
-          description
-          episodes
-          averageScore
-          popularity
-          startDate {
-            year
-            month
-            day
-          }
-          format
-          ${
-            token
-              ? `mediaListEntry {
-            id
-            status
-            score
-            progress
-          }`
-              : ''
-          }
+          ${anilistQueryObject}
         }
       }
     }
@@ -311,7 +251,10 @@ export async function getTopAnime(page = 1) {
         'Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.'
       )
     } else if (!response.ok) {
-      const errorData = await response.json()
+      // const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
     }
 
@@ -328,67 +271,7 @@ export async function getAnimeById(id) {
   const query = `
     query ($id: Int) {
       Media(id: $id, type: ANIME) {
-        id
-        title {
-          romaji
-          english
-          native
-        }
-        bannerImage
-        coverImage {
-          extraLarge
-        }
-        description
-        episodes
-        averageScore
-        popularity
-        idMal
-        startDate {
-          year
-          month
-          day
-        }
-        endDate {
-          year
-          month
-          day
-        }
-        siteUrl
-        format
-        status
-        genres
-        season
-        streamingEpisodes {
-          title
-          thumbnail
-          url
-          site
-        }
-        trailer {
-          id
-          site
-          thumbnail
-        }
-        characters {
-          edges {
-            node {
-              id
-              name {
-                full
-              }
-            }
-          }
-        }
-        ${
-          token
-            ? `mediaListEntry {
-          id
-          status
-          score
-          progress
-        }`
-            : ''
-        }
+        ${anilistQueryObject}
       }
     }
   `
@@ -418,7 +301,10 @@ export async function getAnimeById(id) {
         'Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.'
       )
     } else if (!response.ok) {
-      const errorData = await response.json()
+      // const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
     }
 
@@ -442,7 +328,10 @@ export async function getAnimeByMalId(id) {
         'Too many requests to the API. You are being rate-limited. Please wait a min and refresh the page.'
       )
     } else if (!response.ok) {
-      const errorData = await response.json()
+      // const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
     }
 
@@ -501,7 +390,10 @@ export async function getAnimeEpisodesById(id) {
         'Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.'
       )
     } else if (!response.ok) {
-      const errorData = await response.json()
+      // const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
     }
 
@@ -520,12 +412,21 @@ export async function getAniZipMappings(anilist_id, anidb = false) {
       throw new Error('No mappings found for this anime.')
     }
 
+    if (response.status === 500) {
+      throw new Error(
+        'Internal server error. Zenshin DB is likely being updated, might take a couple of minutes.'
+      )
+    }
+
     if (response.status === 429) {
       throw new Error(
         'Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.'
       )
     } else if (!response.ok) {
-      const errorData = await response.json()
+      // const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
     }
 
@@ -602,7 +503,10 @@ export async function getRecentActivity() {
         'Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.'
       )
     } else if (!response.ok) {
-      const errorData = await response.json()
+      // const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
     }
 
@@ -674,7 +578,10 @@ export async function setWatchedEpisodes(animeId, episodesWatched) {
         'Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.'
       )
     } else if (!response.ok) {
-      const errorData = await response.json()
+      // const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
     }
 
@@ -742,13 +649,106 @@ export async function setAnimeStatus(animeId, status) {
           'Too many requests to the API. You are being rate-limited. Please wait a minute and try again.'
       }
     } else if (!response.ok) {
-      const errorData = await response.json()
+      // const errorData = await response.json()
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       // throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
       return errorData
     }
 
     const data = await response.json()
     return data.data.SaveMediaListEntry
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
+export async function searchAnilist(searchObject, page = 1, perPage = 30) {
+  let userList = false
+  const statusMap = ['PLANNING', 'CURRENT', 'COMPLETED', 'DROPPED', 'PAUSED']
+  let query = `
+    query {
+      Page(perPage: ${perPage}, page: ${page}) {
+        media(${getParsedAnilistQuery(searchObject)}) {
+          ${anilistQueryObject}
+        }
+      }
+    }
+  `
+  if (searchObject?.watchStatus && statusMap.includes(searchObject.watchStatus)) {
+    if (page > 1) return []
+    userList = true
+    query = `
+      query {
+        MediaListCollection(userId: ${searchObject.userId}, type: ANIME, sort: UPDATED_TIME_DESC, status: ${searchObject.watchStatus}, forceSingleCompletedList: true) {
+          lists {
+            status,
+            entries {
+              media {
+                ${anilistQueryObject}
+              }
+            }
+          }
+        }
+      }`
+  }
+  console.log(query)
+  console.log(searchObject)
+
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
+
+    // If token is present, add Authorization header
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
+    }
+
+    const response = await fetch(BASE_URL_ANILIST, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ query })
+    })
+
+    if (response.status === 429) {
+      throw new Error(
+        'Too many requests to the API. You are being rate-limited. Please come back after a minute.'
+      )
+    } else if (!response.ok) {
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+      throw new Error(`Error ${response.status}: ${response.statusText} - ${errorData.message}`)
+    }
+
+    let { data } = await response.json()
+    // flatten the lists
+    if (userList) {
+      data = data.MediaListCollection.lists[0].entries.flat().map((entry) => entry.media)
+      // apply all the filters, really garbage way to do this
+      if (searchObject?.format) data = data.filter((entry) => entry.format === searchObject.format)
+      if (searchObject?.status) data = data.filter((entry) => entry.status === searchObject.status)
+      if (searchObject?.season) data = data.filter((entry) => entry.season === searchObject.season)
+      if (searchObject?.seasonYear)
+        data = data.filter((entry) => entry.seasonYear === searchObject.seasonYear)
+      if (searchObject?.genre)
+        data = data.filter((entry) => entry.genres.includes(searchObject.genre))
+      if (searchObject?.format_not)
+        data = data.filter((entry) => entry.format !== searchObject.format_not)
+      if (searchObject?.status_not)
+        data = data.filter((entry) => entry.status !== searchObject.status_not)
+      if (searchObject?.search)
+        data = data.filter((entry) =>
+          entry.title.romaji
+            .toLowerCase()
+            .includes(searchObject.search.replace(/"/g, '').toLowerCase())
+        )
+    } else data = data?.Page?.media
+    console.log(data)
+    return data
+    // return data?.Page?.media || data.MediaListCollection.lists[0].entries
   } catch (error) {
     throw new Error(error.message)
   }

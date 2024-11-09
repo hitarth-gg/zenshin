@@ -4,21 +4,14 @@ import zenshinLogo from '../assets/zenshinLogo.png'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  BookmarkIcon,
-  Cross1Icon,
-  DashboardIcon,
   DividerVerticalIcon,
   ExclamationTriangleIcon,
   GearIcon,
   GitHubLogoIcon,
   LayersIcon,
   LightningBoltIcon,
-  MinusIcon,
   OpenInNewWindowIcon,
-  PersonIcon,
-  ShadowIcon,
-  ShadowNoneIcon,
-  SquareIcon
+  PersonIcon
 } from '@radix-ui/react-icons'
 import Pikacon from '../assets/pikacon.ico'
 import { Button, DropdownMenu, Tooltip } from '@radix-ui/themes'
@@ -30,6 +23,8 @@ import useGetAnilistProfile from '../hooks/useGetAnilistProfile'
 import { toast } from 'sonner'
 import axios from 'axios'
 import AnimePaheSearchBar from '../extensions/animepahe/components/AnimePaheSearchBar'
+import AniListLogo from '../assets/symbols/AniListLogo'
+import { useZenshinContext } from '../utils/ContextProvider'
 
 export default function Header({ theme }) {
   const navigate = useNavigate()
@@ -90,6 +85,14 @@ export default function Header({ theme }) {
     status
   } = useGetAnilistProfile(anilistToken)
 
+  const { setUserId } = useZenshinContext()
+
+  useEffect(() => {
+    if (userProfile) {
+      setUserId(userProfile.id)
+    }
+  }, [userProfile])
+
   console.log('anilistToken: ', anilistToken)
 
   const handleLogin = () => {
@@ -103,13 +106,14 @@ export default function Header({ theme }) {
     localStorage.removeItem('anilist_id')
     localStorage.removeItem('anilist_name')
     setAnilistToken('')
+    setUserId('')
 
     // refresh the page
     window.location.reload()
   }
 
   if (userProfileError) {
-    toast.error('Error fetching Anilist Profile', {
+    toast.error('Error fetching AniList Profile', {
       description: userProfileError?.message,
       classNames: {
         title: 'text-rose-500'
@@ -175,6 +179,22 @@ export default function Header({ theme }) {
           {/* <DashboardIcon /> */}
           <img src={Pikacon} alt="pikacon" className="h-4 w-4" />
         </Button>
+
+        <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
+
+        <Button
+          className="nodrag"
+          size="1"
+          color="gray"
+          variant="soft"
+          onClick={() => navigate('/anilist')}
+          style={{
+            padding: '0 .4rem'
+          }}
+        >
+          {/* <DashboardIcon /> */}
+          <AniListLogo style="h-5 w-5" />
+        </Button>
         {/* <Button
           className="nodrag"
           size="1"
@@ -188,7 +208,6 @@ export default function Header({ theme }) {
 
       <div className="nodrag mx-5 w-2/6">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
       <div className="nodrag mr-36 flex items-center justify-center gap-x-8">
-
         {!anilistToken && (
           <Tooltip content="Login With Anilist">
             <Button color="gray" variant="ghost" size={'1'} onClick={handleLogin}>
@@ -260,6 +279,9 @@ export default function Header({ theme }) {
           size={'1'}
           // onClick={() => toggleGlow()}
           onClick={() => navigate('/settings')}
+          style={{
+            padding: '0 1rem'
+          }}
         >
           <GearIcon className="my-1 cursor-pointer" width={16} height={16} />
         </Button>

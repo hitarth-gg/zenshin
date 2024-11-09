@@ -3,7 +3,7 @@ import useTopAiringAnime from '../hooks/useTopAiringAnime'
 // import zenshin1 from '../assets/zenshin2.png'
 import zenshinLogo from '../assets/zenshinLogo.png'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { getTopAnime } from '../utils/helper'
+import { getTopAnime, searchAnilist } from '../utils/helper'
 import { useEffect, useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { Spinner, Tooltip } from '@radix-ui/themes'
@@ -22,6 +22,7 @@ import RecentActivity from '../components/RecentActivity'
 import { useZenshinContext } from '../utils/ContextProvider'
 import useGetAnimepaheReleases from '../hooks/useGetAnimepaheReleases'
 import AnimepaheEpisodeCard from '../extensions/animepahe/components/AnimepaheEpisodeCard'
+import useGetAnilistSearch from '../hooks/useGetAnilistSearch'
 
 export default function Home() {
   const { scrollOpacity, hideHero } = useZenshinContext()
@@ -60,7 +61,24 @@ export default function Home() {
     }
   }, [scrollOpacity])
 
-  const { isLoading, topAiringAnime, error, status } = useTopAiringAnime()
+  // const { isLoading, topAiringAnime, error, status } = useTopAiringAnime()
+  // media(type: ANIME, sort: TRENDING_DESC, status_in: [RELEASING], isAdult: false)
+  const {
+    isLoading,
+    data: topAiringAnime,
+    error,
+    status
+  } = useGetAnilistSearch(
+    {
+      sort: 'POPULARITY_DESC',
+      status_in: '[RELEASING]',
+      isAdult: 'false',
+      format_not: 'MUSIC',
+      season: getCurrentSeason()
+    },
+    1,
+    49
+  )
 
   // get current year and season
   const currentYear = new Date().getFullYear()
@@ -75,7 +93,8 @@ export default function Home() {
     error: infiniteQueryError
   } = useInfiniteQuery({
     queryKey: ['top_animes'],
-    queryFn: ({ pageParam = 1 }) => getTopAnime(pageParam),
+    queryFn: ({ pageParam = 1 }) =>
+      searchAnilist({ sort: 'POPULARITY_DESC', isAdult: false }, pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       return allPages.length + 1

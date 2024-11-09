@@ -139,19 +139,19 @@ export default function AnimePage() {
             <div className="animate-fade-down">
               <img
                 src={data?.bannerImage}
-                className="absolute top-0 z-0 h-72 w-full object-cover opacity-70 blur-3xl brightness-75 saturate-150"
+                className="absolute top-7 z-0 h-72 w-full object-cover opacity-70 blur-3xl brightness-75 saturate-150"
                 alt=""
               />
             </div>
           )}
           <img
             src={data?.bannerImage}
-            className="z-10 h-72 w-full animate-fade-down object-cover brightness-75"
+            className="z-10 h-72 w-full animate-fade-down object-cover brightness-90 transition-all ease-in-out "
             alt=""
           />
         </div>
       )}
-      <div className="z-10 mx-auto animate-fade px-6 py-4 lg:container">
+      <div className="z-30 mx-auto animate-fade px-6 py-4 lg:container">
         <div className="flex justify-between gap-x-7">
           <img
             src={data?.coverImage.extraLarge}

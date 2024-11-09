@@ -14,7 +14,7 @@ export const anilistAuthUrl = `https://anilist.co/api/v2/oauth/authorize?client_
 export async function getAnilistProfile(anilistToken) {
   try {
     if (!localStorage.getItem("anilist_token")) return null;
-
+    
     // Fetch user data from AniList API
     const response = await fetch("https://graphql.anilist.co", {
       method: "POST",
@@ -44,7 +44,10 @@ export async function getAnilistProfile(anilistToken) {
         "Too many requests to the API. You are being rate-limited. Please wait a minute and refresh the page.",
       );
     } else if (!response.ok) {
-      const errorData = await response.json();
+      // const errorData = await response.json();
+      let { errors: errorData } = await response.json()
+      errorData = errorData[0]
+
       throw new Error(
         `Error ${response.status}: ${response.statusText} - ${errorData.message}`,
       );

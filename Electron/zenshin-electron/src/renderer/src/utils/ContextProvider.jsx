@@ -16,6 +16,7 @@ export default function ZenshinProvider({ children }) {
   const [autoUpdateAnilistEpisode, setAutoUpdateAnilistEpisode] = useState(true)
   const [scrollOpacity, setScrollOpacity] = useState(false)
   const [hideHero, setHideHero] = useState(false)
+  const [userId, setUserId] = useState('')
 
   useEffect(() => {
     const glow = localStorage.getItem('glow')
@@ -56,7 +57,9 @@ export default function ZenshinProvider({ children }) {
         scrollOpacity,
         setScrollOpacity,
         hideHero,
-        setHideHero
+        setHideHero,
+        userId,
+        setUserId
       }}
     >
       {children}

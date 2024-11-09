@@ -8,7 +8,6 @@ import {
   formatDistanceToNow
 } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { searchAiringAnime } from '../utils/helper'
 import useGetAniZipMappings from '../hooks/useGetAniZipMappings'
 import { Skeleton } from '@radix-ui/themes'
 import { toast } from 'sonner'
