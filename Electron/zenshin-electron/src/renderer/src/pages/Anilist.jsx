@@ -105,12 +105,12 @@ function Anilist() {
   })
 
   useEffect(() => {
-    console.log('searchTerm: ', searchTerm);
-    console.log('title: ', title);
+    console.log('searchTerm: ', searchTerm)
+    console.log('title: ', title)
 
     if (searchTerm === title || searchTerm === '""') {
-
-      setAnime([])}
+      setAnime([])
+    }
     // store all the search params in session storage
     sessionStorage.setItem('search_term_stored', searchTerm)
     const obj = {
@@ -467,6 +467,16 @@ function Anilist() {
                 <DropdownMenu.Item onSelect={() => setSort('SCORE_DESC')}>Score</DropdownMenu.Item>
                 <DropdownMenu.Item onSelect={() => setSort('TRENDING_DESC')}>
                   Trending
+                </DropdownMenu.Item>
+
+                <DropdownMenu.Separator />
+
+                <DropdownMenu.Item
+                  color="red"
+                  shortcut={<TrashIcon />}
+                  onSelect={() => setSort('')}
+                >
+                  Any
                 </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu.Root>
