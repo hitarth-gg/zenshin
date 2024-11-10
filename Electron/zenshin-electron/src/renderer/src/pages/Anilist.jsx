@@ -192,8 +192,8 @@ function Anilist() {
     <div className="w-full select-none p-10 px-5 font-space-mono tracking-tight">
       <div className="flex w-full items-center justify-between gap-x-5">
         {/* <div className="flex w-fit items-center gap-x-5"> */}
-        <div className="grid grid-cols-4 items-center gap-5 lg:flex lg:grid-cols-8">
-          <div className="search_bar flex items-center lg:w-72">
+        <div className="grid md:grid-cols-4 lg2:grid-cols-5 items-center gap-5 xl:flex">
+          <div className="search_bar flex items-center xl:w-72">
             <TextField.Root
               size={'2'}
               variant="soft"
