@@ -733,18 +733,30 @@ export async function searchAnilist(searchObject, page = 1, perPage = 30) {
       if (searchObject?.season) data = data.filter((entry) => entry.season === searchObject.season)
       if (searchObject?.seasonYear)
         data = data.filter((entry) => entry.seasonYear === searchObject.seasonYear)
+
       if (searchObject?.genre)
-        data = data.filter((entry) => entry.genres.includes(searchObject.genre))
-      if (searchObject?.format_not)
-        data = data.filter((entry) => entry.format !== searchObject.format_not)
-      if (searchObject?.status_not)
-        data = data.filter((entry) => entry.status !== searchObject.status_not)
+        data = data.filter((entry) =>
+          entry.genres
+            .map((el) => el.toLowerCase())
+            .includes(searchObject.genre.toLowerCase().replace(/"/g, ''))
+        )
+
       if (searchObject?.search)
         data = data.filter((entry) =>
           entry.title.romaji
             .toLowerCase()
             .includes(searchObject.search.replace(/"/g, '').toLowerCase())
         )
+
+      if (searchObject?.sort) {
+        if (searchObject.sort == 'POPULARITY_DESC') {
+          data = data.sort((a, b) => b.popularity - a.popularity)
+        } else if (searchObject.sort === 'SCORE_DESC') {
+          data = data.sort((a, b) => b.averageScore - a.averageScore)
+        } else if (searchObject.sort === 'TRENDING_DESC') {
+          data = data.sort((a, b) => b.trending - a.trending)
+        }
+      }
     } else data = data?.Page?.media
     console.log(data)
     return data

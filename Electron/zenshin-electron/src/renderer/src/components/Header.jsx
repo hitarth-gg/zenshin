@@ -249,6 +249,13 @@ export default function Header({ theme }) {
               >
                 Ping Backend
               </DropdownMenu.Item>
+              <DropdownMenu.Item
+                color="gray"
+                onClick={() => navigate('/settings')}
+                shortcut={<GearIcon />}
+              >
+                Settings
+              </DropdownMenu.Item>
               {/* <DropdownMenu.Sub>
                 <DropdownMenu.SubTrigger>More</DropdownMenu.SubTrigger>
                 <DropdownMenu.SubContent>
@@ -272,7 +279,7 @@ export default function Header({ theme }) {
         {/* <div className="p-1 text-[.8rem]">How to use</div> */}
         {/* </Button> */}
         {/* </Link> */}
-        <Button
+        {/* <Button
           className="nodrag"
           color="gray"
           variant="ghost"
@@ -284,7 +291,7 @@ export default function Header({ theme }) {
           }}
         >
           <GearIcon className="my-1 cursor-pointer" width={16} height={16} />
-        </Button>
+        </Button> */}
       </div>
     </div>
   )

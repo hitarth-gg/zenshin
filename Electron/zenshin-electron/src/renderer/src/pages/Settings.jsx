@@ -53,7 +53,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="w-full select-none px-16 py-10 font-space-mono">
+    <div className="w-full animate-fade animate-duration-500 select-none px-16 py-10 font-space-mono">
       <div className="mb-8 border-b border-gray-700 pb-2 font-semibold tracking-wider text-[#b5b5b5ff]">
         Settings
       </div>
