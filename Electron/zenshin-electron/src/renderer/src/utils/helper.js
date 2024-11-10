@@ -160,6 +160,7 @@ export async function searchAiringAnime(text, limit = 2) {
 }
 
 /* ------------------------------------------------------ */
+// NOT NEEDED
 export async function getTopAiringAnime() {
   const query = `
     query {
@@ -206,7 +207,7 @@ export async function getTopAiringAnime() {
 }
 
 /* ------------------------------------------------------ */
-
+// NOT NEEDED
 export async function getTopAnime(page = 1) {
   console.log('Fetching top anime with page:', page)
 

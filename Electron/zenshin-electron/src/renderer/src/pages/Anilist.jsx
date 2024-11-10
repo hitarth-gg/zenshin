@@ -18,6 +18,12 @@ import { searchAnilist } from '../utils/helper'
 import ErrorElement from '../ui/ErrorElement'
 import useGetAnilistProfile from '../hooks/useGetAnilistProfile'
 import { useZenshinContext } from '../utils/ContextProvider'
+import LeafLogo from '../assets/symbols/LeafLogo'
+import TVLogo from '../assets/symbols/TVLogo'
+import MountainsLogo from '../assets/symbols/MountainsLogo'
+import CassetteTapeLogo from '../assets/symbols/CassetteTapeLogo'
+import SortDescLogo from '../assets/symbols/SortDescLogo'
+import EyeLogo from '../assets/symbols/EyeLogo'
 
 const statusMap = ['PLANNING', 'CURRENT', 'COMPLETED', 'DROPPED', 'PAUSED']
 
@@ -185,8 +191,9 @@ function Anilist() {
   return (
     <div className="w-full select-none p-10 px-5 font-space-mono tracking-tight">
       <div className="flex w-full items-center justify-between gap-x-5">
-        <div className="flex w-fit items-center gap-x-5">
-          <div className="search_bar flex items-center md:w-72">
+        {/* <div className="flex w-fit items-center gap-x-5"> */}
+        <div className="grid grid-cols-4 items-center gap-5 lg:flex lg:grid-cols-8">
+          <div className="search_bar flex items-center lg:w-72">
             <TextField.Root
               size={'2'}
               variant="soft"
@@ -205,12 +212,13 @@ function Anilist() {
           </div>
 
           {/* Genre */}
-          <div className="flex">
+          <div className="flex w-fit">
             <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger>
                 <Button variant="ghost" color="gray">
                   <div className="flex animate-fade items-center gap-x-2">
-                    <div className="font-inter text-[.8rem] tracking-wider">
+                    <div className="flex items-center gap-2 font-inter text-[.8rem] tracking-wider">
+                      <MountainsLogo />
                       {genre ? genre[1] + genre.replace(/"/g, '').slice(1).toLowerCase() : 'GENRE'}
                     </div>
                   </div>
@@ -267,13 +275,14 @@ function Anilist() {
           </div>
 
           {/* Format */}
-          <div className="flex">
+          <div className="flex w-fit">
             <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger>
                 <Button variant="ghost" color="gray">
                   <div className="flex animate-fade items-center gap-x-2">
-                    <div className="font-inter text-[.8rem] tracking-wider">
+                    <div className="flex items-center gap-2 font-inter text-[.8rem] tracking-wider">
                       {/* TV_SHORT, TV, OVA, MOVIE */}
+                      <TVLogo />
                       {format
                         ? format.split('_').length === 1
                           ? format[0] + format.slice(1).toLowerCase()
@@ -310,12 +319,14 @@ function Anilist() {
           </div>
 
           {/* Season */}
-          <div className="flex">
+          <div className="flex w-fit">
             <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger>
                 <Button variant="ghost" color="gray">
                   <div className="flex animate-fade items-center gap-x-2">
-                    <div className="font-inter text-[.8rem] tracking-wider">
+                    <div className="flex items-center gap-2 font-inter text-[.8rem] tracking-wider">
+                      <LeafLogo style="" />
+
                       {season ? season[0] + season.slice(1).toLowerCase() : 'SEASON'}
                     </div>
                   </div>
@@ -340,7 +351,7 @@ function Anilist() {
           </div>
 
           {/* YEAR */}
-          <div className="flex items-center">
+          <div className="flex w-fit items-center">
             <DropdownMenu.Root modal={false}>
               <TextField.Root
                 color="gray"
@@ -399,12 +410,13 @@ function Anilist() {
           </div>
 
           {/* STATUS */}
-          <div className="flex">
+          <div className="flex w-fit">
             <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger>
                 <Button variant="ghost" color="gray">
                   <div className="flex animate-fade items-center gap-x-2">
-                    <div className="font-inter text-[.8rem] tracking-wider">
+                    <div className="flex items-center gap-2 font-inter text-[.8rem] tracking-wider">
+                      <CassetteTapeLogo />
                       {status
                         ? status
                             .split('_')
@@ -443,12 +455,13 @@ function Anilist() {
           </div>
 
           {/* SORT */}
-          <div className="flex">
+          <div className="flex w-fit">
             <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger>
                 <Button variant="ghost" color="gray">
                   <div className="flex animate-fade items-center gap-x-2">
-                    <div className="font-inter text-[.8rem] tracking-wider">
+                    <div className="flex items-center gap-2 font-inter text-[.8rem] tracking-wider">
+                      <SortDescLogo />
                       {sort
                         ? sort
                             .split('_')
@@ -483,7 +496,7 @@ function Anilist() {
           </div>
 
           {/* USER STATUS */}
-          <div className="flex">
+          <div className="flex w-fit">
             <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger>
                 <Button
@@ -495,7 +508,7 @@ function Anilist() {
                   }}
                 >
                   <div className="flex animate-fade items-center gap-x-2">
-                    <div className="font-inter text-[.8rem] tracking-wider">
+                    <div className="flex items-center gap-2 font-inter text-[.8rem] tracking-wider">
                       {watchStatus
                         ? watchStatus
                             .split('_')
@@ -537,7 +550,14 @@ function Anilist() {
           </div>
         </div>
         <div className="mx-5">
-          <Button variant="soft" size={'1'} color="gray" onClick={clearAll}>
+          <Button
+            variant="soft"
+            size={'1'}
+            onClick={clearAll}
+            color={
+              genre || season || format || status || sort || year || watchStatus ? 'red' : 'gray'
+            }
+          >
             <TrashIcon width={'15'} height={'15'} />
           </Button>
         </div>
