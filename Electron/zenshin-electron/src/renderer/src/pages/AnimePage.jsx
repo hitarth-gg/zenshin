@@ -224,7 +224,7 @@ export default function AnimePage() {
                   <BooksLogo />
                 </Button>
               )}
-              <Link target="_blank" to={data?.siteUrl}>
+              <Link target="_blank" to={`https://anilist.co/anime/${data?.id}`}>
                 <Button size={'1'} variant="ghost" color="gray">
                   <AniListLogo />
                 </Button>

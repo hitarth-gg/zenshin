@@ -25,7 +25,7 @@ export default function EpisodesPlayer({
             {isActive && (
               <div className="ml-2 mt-2 flex animate-fade-down gap-x-3 animate-duration-500">
                 <Button
-                  onClitck={(e) => {
+                  onClick={(e) => {
                     e.stopPropagation()
                     setCurrentEpisode(file.name)
                     handleStreamBrowser(file.name)

@@ -126,6 +126,16 @@ export default function Player(query) {
 
   /* ------------------------------------------------------ */
 
+  /* ---------------- Handling batch files ---------------- */
+
+  const handleStreamBrowser = (eipsode) => {
+    setVideoSrc(
+      `http://localhost:64621/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(eipsode)}`
+    )
+  }
+  console.log(videoSrc);
+
+
   const playerRef = useRef(null)
   const [isActive, setIsActive] = useState(false)
   const [currentEpisode, setCurrentEpisode] = useState('')
@@ -141,14 +151,6 @@ export default function Player(query) {
       ],
       autoplay: true
     }
-  }
-
-  /* ---------------- Handling batch files ---------------- */
-
-  const handleStreamBrowser = (eipsode) => {
-    setVideoSrc(
-      `http://localhost:64621/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(eipsode)}`
-    )
   }
 
   const { vlcPath } = useZenshinContext()
