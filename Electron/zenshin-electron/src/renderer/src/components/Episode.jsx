@@ -22,7 +22,6 @@ export default function Episode({
   all,
   bannerImage
 }) {
-  console.log(data)
 
   const navigate = useNavigate()
   const [active, setActive] = useState(false)

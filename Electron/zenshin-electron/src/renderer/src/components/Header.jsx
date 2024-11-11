@@ -17,7 +17,7 @@ import Pikacon from '../assets/pikacon.ico'
 import { Button, DropdownMenu, Tooltip } from '@radix-ui/themes'
 // import { useZenshinContext } from '../utils/ContextProvider'
 import { anilistAuthUrl } from '../utils/auth'
-import { ANILIST_CLIENT_ID } from '../utils/auth'
+// import { ANILIST_CLIENT_ID } from '../utils/auth'
 import { useEffect, useState } from 'react'
 import useGetAnilistProfile from '../hooks/useGetAnilistProfile'
 import { toast } from 'sonner'
@@ -32,7 +32,7 @@ export default function Header({ theme }) {
   const checkBackendRunning = async () => {
     try {
       const response = await axios.get('http://localhost:64621/ping')
-      console.log(response)
+      // console.log(response)
 
       if (response.status === 200) {
         toast.success('Backend is running', {
@@ -60,8 +60,6 @@ export default function Header({ theme }) {
   const [anilistToken, setAnilistToken] = useState(localStorage.getItem('anilist_token') || '')
 
   useEffect(() => {
-    console.log('useEffect')
-
     window.electron.receiveDeeplink((deeplink) => {
       // console.log('Deeplink received in React app:', link)
       const arr = deeplink.split('#')
@@ -93,7 +91,7 @@ export default function Header({ theme }) {
     }
   }, [userProfile])
 
-  console.log('anilistToken: ', anilistToken)
+  // console.log('anilistToken: ', anilistToken)
 
   const handleLogin = () => {
     // window.location.href = anilistAuthUrl

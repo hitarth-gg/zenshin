@@ -1,0 +1,82 @@
+{
+  "json": {
+    "edges": [
+      {
+        "relationType": "SOURCE",
+        "node": {
+          "id": 30023,
+          "title": { "userPreferred": "Ranma ½" },
+          "coverImage": {
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/small/bx30023-NWoD28ZKC73c.jpg"
+          },
+          "type": "MANGA",
+          "status": "FINISHED",
+          "format": "MANGA",
+          "episodes": null,
+          "synonyms": ["รันม่า1/2 ไอ้หนุ่มกังฟู ", "란마1/2"],
+          "season": null,
+          "seasonYear": null,
+          "startDate": { "year": 1987, "month": 8, "day": 5 },
+          "endDate": { "year": 1996, "month": 2, "day": 21 }
+        }
+      },
+      {
+        "relationType": "ALTERNATIVE",
+        "node": {
+          "id": 149939,
+          "title": { "userPreferred": "Ranma ½ (1989)" },
+          "coverImage": {
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx149939-3lDyYgDZ0AbI.png"
+          },
+          "type": "ANIME",
+          "status": "FINISHED",
+          "format": "TV",
+          "episodes": 143,
+          "synonyms": ["ينبوع الأحلام", "รันม่า1/2 ไอ้หนุ่มกังฟู"],
+          "season": "FALL",
+          "seasonYear": 1989,
+          "startDate": { "year": 1989, "month": 10, "day": 20 },
+          "endDate": { "year": 1992, "month": 9, "day": 25 }
+        }
+      },
+      {
+        "relationType": "ALTERNATIVE",
+        "node": {
+          "id": 210,
+          "title": { "userPreferred": "Ranma ½" },
+          "coverImage": {
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx210-qgahLDYT0t9b.png"
+          },
+          "type": "ANIME",
+          "status": "FINISHED",
+          "format": "TV",
+          "episodes": 18,
+          "synonyms": ["ينبوع الأحلام", "รันม่า1/2 ไอ้หนุ่มกังฟู "],
+          "season": "SPRING",
+          "seasonYear": 1989,
+          "startDate": { "year": 1989, "month": 4, "day": 15 },
+          "endDate": { "year": 1989, "month": 9, "day": 16 }
+        }
+      },
+      {
+        "relationType": "OTHER",
+        "node": {
+          "id": 183390,
+          "title": { "userPreferred": "Anta Nante." },
+          "coverImage": {
+            "medium": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx183390-Ds74xbI3pafK.png"
+          },
+          "type": "ANIME",
+          "status": "FINISHED",
+          "format": "MUSIC",
+          "episodes": 1,
+          "synonyms": [],
+          "season": null,
+          "seasonYear": null,
+          "startDate": { "year": 2024, "month": 10, "day": 19 },
+          "endDate": { "year": 2024, "month": 10, "day": 19 }
+        }
+      }
+    ]
+  }
+}

@@ -1,14 +1,1 @@
-const bookmarks = {
-  torrents: {
-    url: '',
-    title: '',
-    image: '',
-    episodesWatched: 9
-  },
-  animepahe: {
-    url: '',
-    title: '',
-    image: '',
-    episodesWatched: 9
-  }
-}
+console.log(["a", "b", "c"][-1]);

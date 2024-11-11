@@ -13,7 +13,7 @@ export default function SearchBar() {
   const inputRef = useRef(null)
   const searchBarRef = useRef(null)
 
-  console.log(searchText)
+  // console.log(searchText)
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -53,7 +53,7 @@ export default function SearchBar() {
     }
   }, [])
 
-  console.log(searchData)
+  // console.log(searchData)
 
   useEffect(() => {
     const handleKeyPress = (event) => {

@@ -193,8 +193,8 @@ export default function Home() {
           <div className="my-12 flex h-full w-8/12 flex-col items-center justify-start gap-y-1 p-3 lg:w-2/5">
             <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[6rem] object-scale-down" />
             <p className="font-space-mono">
-              Stream your favourite torrents instantly with our service, no waiting for downloads,
-              reliable and seamless streaming directly to your browser / VLC Media Player.
+              Stream your favourite anime instantly with our service, no waiting for downloads,
+              reliable and seamless streaming directly to the app / External Media Player.
             </p>
           </div>
 

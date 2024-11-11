@@ -1,13 +1,10 @@
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import useGetAnimeAnimePahe from '../hooks/useGetAnimeAnimePahe'
 import CenteredLoader from '../../../ui/CenteredLoader'
 import { Button, Skeleton } from '@radix-ui/themes'
 import useGetAnimeById from '../../../hooks/useGetAnimeById'
 import { useZenshinContext } from '../../../utils/ContextProvider'
-import {
-  PersonIcon,
-  StarIcon
-} from '@radix-ui/react-icons'
+import { PersonIcon, StarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
 import useGetAnimeByMalId from '../../../hooks/useGetAnimeByMalId'
 import parse from 'html-react-parser'
@@ -20,6 +17,7 @@ import AniListLogo from '../../../assets/symbols/AniListLogo'
 import MyAnimeListLogo from '../../../assets/symbols/MyAnimeListLogo'
 import YouTubeLogo from '../../../assets/symbols/YouTubeLogo'
 import AnilistEditorModal from '../../../components/AnilistEditorModal'
+import BooksLogo from '../../../assets/symbols/BooksLogo'
 
 function AnimePahePage() {
   const zenshinContext = useZenshinContext()
@@ -54,7 +52,9 @@ function AnimePahePage() {
   } = useGetAnimePaheEps(animeId, 1)
 
   const [episodesWatched, setEpisodesWatched] = useState(animeData?.mediaListEntry?.progress || 0)
-
+  const [showRelations, setShowRelations] = useState(false)
+  const relations = animeData?.relations?.edges.filter((edge) => edge.node.type === 'ANIME')
+  const navigate = useNavigate()
   useEffect(() => {
     setEpisodesWatched(animeData?.mediaListEntry?.progress || 0)
   }, [animeData?.mediaListEntry?.progress])
@@ -228,6 +228,16 @@ function AnimePahePage() {
               )}
             </div>
             <div className="mt-6 flex items-center gap-x-5">
+              {relations?.length > 0 && (
+                <Button
+                  size={'1'}
+                  variant="ghost"
+                  color={showRelations ? 'blue' : 'gray'}
+                  onClick={() => setShowRelations(!showRelations)}
+                >
+                  <BooksLogo />
+                </Button>
+              )}
               {anilistId && (
                 <Link target="_blank" to={data?.siteUrl}>
                   <Button size={'1'} variant="ghost" color="gray">
@@ -262,6 +272,42 @@ function AnimePahePage() {
             </div>
           </div>
         </div>
+
+        {relations && showRelations && (
+          <div
+            className={`grid h-full w-full animate-fade grid-cols-2 animate-duration-300 xl:grid-cols-3`}
+          >
+            {relations.map((relation, ix) => (
+              <div
+                key={ix}
+                className="my-2 h-fit cursor-pointer transition-all duration-200 ease-in-out"
+                onClick={() => navigate(`/anime/${relation?.node?.id}`)}
+              >
+                <div className="flex w-[25rem] font-space-mono text-xs text-[#dcdcdc]">
+                  <img
+                    src={relation?.node?.coverImage?.medium}
+                    alt=""
+                    className="h-28 w-20 object-cover transition-all ease-in-out"
+                  />
+                  <div className="flex w-full flex-col items-start border border-gray-700 py-2 pl-2">
+                    <p className="line-clamp-3 pr-3">{relation?.node?.title?.userPreferred}</p>
+                    <p
+                      className={`my-2 line-clamp-3 border ${
+                        ['text-cyan-400', 'text-orange-400'][
+                          ['SEQUEL', 'PREQUEL'].indexOf(relation?.relationType)
+                        ]
+                      } border-[#545454] bg-[#00000080] px-1`}
+                    >
+                      {relation?.relationType?.replace('_', ' ')}{' '}
+                      {relation?.node?.seasonYear ? ` | ${relation?.node?.seasonYear}` : ''}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {true && epsData?.data[0] !== null && (
           <div className="mb-64 mt-12">
             <div className="flex items-center gap-x-3">

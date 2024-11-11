@@ -587,7 +587,6 @@ export async function setWatchedEpisodes(animeId, episodesWatched) {
     }
 
     const data = await response.json()
-    console.log(data)
 
     return data.data.SaveMediaListEntry
   } catch (error) {
@@ -694,8 +693,6 @@ export async function searchAnilist(searchObject, page = 1, perPage = 30) {
         }
       }`
   }
-  console.log(query)
-  console.log(searchObject)
 
   try {
     const headers = {
@@ -759,7 +756,6 @@ export async function searchAnilist(searchObject, page = 1, perPage = 30) {
         }
       }
     } else data = data?.Page?.media
-    console.log(data)
     return data
     // return data?.Page?.media || data.MediaListCollection.lists[0].entries
   } catch (error) {

@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import useGetAnimeById from '../hooks/useGetAnimeById'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
@@ -16,6 +16,7 @@ import AniListLogo from '../assets/symbols/AniListLogo'
 import MyAnimeListLogo from '../assets/symbols/MyAnimeListLogo'
 import YouTubeLogo from '../assets/symbols/YouTubeLogo'
 import AnilistEditorModal from '../components/AnilistEditorModal'
+import BooksLogo from '../assets/symbols/BooksLogo'
 
 export default function AnimePage() {
   const zenshinContext = useZenshinContext()
@@ -81,10 +82,11 @@ export default function AnimePage() {
     tempEps = tempEps.filter((ep) => ep !== null)
     episodesAnizip = tempEps
   }
-
+  const navigate = useNavigate()
   const [dualAudio, setDualAudio] = useState(false)
   const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
   const [showFullDescription, setShowFullDescription] = useState(false)
+  const [showRelations, setShowRelations] = useState(false)
 
   if (isLoading) return <CenteredLoader />
 
@@ -103,6 +105,8 @@ export default function AnimePage() {
   }
 
   if (status !== 'success') return <CenteredLoader />
+
+  const relations = animeData?.relations?.edges.filter((edge) => edge.node.type === 'ANIME')
 
   const data = animeData
 
@@ -146,7 +150,7 @@ export default function AnimePage() {
           )}
           <img
             src={data?.bannerImage}
-            className="z-10 h-72 w-full animate-fade-down object-cover brightness-90 transition-all ease-in-out "
+            className="z-10 h-72 w-full animate-fade-down object-cover brightness-90 transition-all ease-in-out"
             alt=""
           />
         </div>
@@ -210,6 +214,16 @@ export default function AnimePage() {
               )}
             </div>
             <div className="mt-6 flex items-center gap-x-5">
+              {relations?.length > 0 && (
+                <Button
+                  size={'1'}
+                  variant="ghost"
+                  color={showRelations ? 'blue' : 'gray'}
+                  onClick={() => setShowRelations(!showRelations)}
+                >
+                  <BooksLogo />
+                </Button>
+              )}
               <Link target="_blank" to={data?.siteUrl}>
                 <Button size={'1'} variant="ghost" color="gray">
                   <AniListLogo />
@@ -238,6 +252,47 @@ export default function AnimePage() {
             </div>
           </div>
         </div>
+
+        {relations && showRelations && (
+          <div
+            className={`grid ${data?.bannerImage ? '' : 'mt-14'} h-full w-full animate-fade grid-cols-2 animate-duration-300 xl:grid-cols-3`}
+          >
+            {relations.map((relation, ix) => (
+              <div
+                key={ix}
+                className="my-2 h-fit cursor-pointer transition-all duration-200 ease-in-out"
+                onClick={() => navigate(`/anime/${relation?.node?.id}`)}
+              >
+                <div className="flex w-[25rem] font-space-mono text-xs text-[#dcdcdc]">
+                  <Skeleton
+                    style={{
+                      borderRadius: '0rem'
+                    }}
+                  >
+                    <img
+                      src={relation?.node?.coverImage?.medium}
+                      alt=""
+                      className="h-28 w-20 object-cover transition-all ease-in-out"
+                    />
+                  </Skeleton>
+                  <div className="flex w-full flex-col items-start border border-gray-700 py-2 pl-2">
+                    <p className="line-clamp-3 pr-3">{relation?.node?.title?.userPreferred}</p>
+                    <p
+                      className={`my-2 line-clamp-3 border ${
+                        ['text-cyan-400', 'text-orange-400'][
+                          ['SEQUEL', 'PREQUEL'].indexOf(relation?.relationType)
+                        ]
+                      } border-[#545454] bg-[#00000080] px-1`}
+                    >
+                      {relation?.relationType?.replace('_', ' ')}{' '}
+                      {relation?.node?.seasonYear ? ` | ${relation?.node?.seasonYear}` : ''}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {true && (
           <div className="mb-64 mt-12">
