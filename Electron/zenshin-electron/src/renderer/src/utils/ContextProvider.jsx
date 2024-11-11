@@ -17,6 +17,7 @@ export default function ZenshinProvider({ children }) {
   const [scrollOpacity, setScrollOpacity] = useState(false)
   const [hideHero, setHideHero] = useState(false)
   const [userId, setUserId] = useState('')
+  const [checkForUpdates, setCheckForUpdates] = useState(false)
 
   useEffect(() => {
     const glow = localStorage.getItem('glow')
@@ -43,6 +44,11 @@ export default function ZenshinProvider({ children }) {
     if (hideHero) {
       setHideHero(hideHero === 'true')
     }
+
+    const updateCheck = localStorage.getItem('checkForUpdates')
+    if (updateCheck) {
+      setCheckForUpdates(updateCheck === 'true')
+    }
   }, [])
 
   return (
@@ -59,7 +65,9 @@ export default function ZenshinProvider({ children }) {
         hideHero,
         setHideHero,
         userId,
-        setUserId
+        setUserId,
+        checkForUpdates,
+        setCheckForUpdates,
       }}
     >
       {children}

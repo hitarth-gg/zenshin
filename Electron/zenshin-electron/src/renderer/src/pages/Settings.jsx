@@ -12,7 +12,9 @@ export default function Settings() {
     scrollOpacity,
     setScrollOpacity,
     hideHero,
-    setHideHero
+    setHideHero,
+    checkForUpdates,
+    setCheckForUpdates,
   } = useZenshinContext()
 
   function toggleGlow() {
@@ -52,8 +54,14 @@ export default function Settings() {
     }
   }
 
+  function toggleCheckForUpdates() {
+    const newCheckForUpdatesState = !checkForUpdates
+    setCheckForUpdates(newCheckForUpdatesState)
+    localStorage.setItem('checkForUpdates', newCheckForUpdatesState ? 'true' : 'false')
+  }
+
   return (
-    <div className="w-full animate-fade animate-duration-500 select-none px-16 py-10 font-space-mono">
+    <div className="w-full animate-fade select-none px-16 py-10 font-space-mono animate-duration-500">
       <div className="mb-8 border-b border-gray-700 pb-2 font-semibold tracking-wider text-[#b5b5b5ff]">
         Settings
       </div>
@@ -118,6 +126,20 @@ export default function Settings() {
             onCheckedChange={toggleHideHero}
           />
         </div>
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="switch_card">
+            <p className="font-bold">Check for Updates on App Launch</p>
+            <p className="text-xs">
+              If turned on, Zenshin will automatically check for updates on app launch and notify
+              you if a new version is available.
+            </p>
+          </div>
+          <Switch
+            checked={checkForUpdates}
+            style={{ marginLeft: '1.5rem', cursor: 'pointer' }}
+            onCheckedChange={toggleCheckForUpdates}
+          />
+        </div>
 
         <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
           <div className="text_input_card">
@@ -133,6 +155,7 @@ export default function Settings() {
           ></TextField.Root>
         </div>
       </div>
+
       <div className="keyboard_shortcuts mt-8">
         <div className="mb-8 border-b border-gray-700 pb-2 font-semibold tracking-wider text-[#b5b5b5ff]">
           Keyboard Shortcuts

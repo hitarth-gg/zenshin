@@ -206,27 +206,33 @@ export default function Header({ theme }) {
 
       <div className="nodrag mx-5 w-2/6">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
       <div className="nodrag mr-36 flex items-center justify-center gap-x-8">
-        {!anilistToken && (
+        {/* {!anilistToken && (
           <Tooltip content="Login With Anilist">
             <Button color="gray" variant="ghost" size={'1'} onClick={handleLogin}>
               <PersonIcon className="my-1" width={16} height={16} />
             </Button>
           </Tooltip>
-        )}
+        )} */}
 
-        {userProfile && (
+        {true && (
           <DropdownMenu.Root className="nodrag" modal={false}>
             <DropdownMenu.Trigger>
               <Button variant="ghost" color="gray">
                 <div className="flex animate-fade items-center gap-x-2">
-                  <img
-                    src={userProfile.avatar.large}
-                    alt="avatar"
-                    className="h-6 w-6 rounded-full"
-                  />
-                  <div className="font-space-mono text-[.8rem]">{userProfile.name}</div>
+                  {userProfile ? (
+                    <img
+                      src={userProfile.avatar.large}
+                      alt="avatar"
+                      className="h-6 w-6 rounded-full"
+                    />
+                  ) : (
+                    <PersonIcon className="my-1" width={16} height={16} />
+                  )}
+                  <div className="font-space-mono text-[.8rem]">{userProfile?.name || 'anonuser'}</div>
                 </div>
-                <DropdownMenu.TriggerIcon />
+                <DropdownMenu.TriggerIcon
+                className='ml-1'
+                />
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content>
@@ -265,9 +271,15 @@ export default function Header({ theme }) {
                 </DropdownMenu.SubContent>
               </DropdownMenu.Sub> */}
               <DropdownMenu.Separator />
-              <DropdownMenu.Item color="red" onClick={handleLogout}>
-                Logout
-              </DropdownMenu.Item>
+              {userProfile ? (
+                <DropdownMenu.Item color="red" onClick={handleLogout}>
+                  Logout
+                </DropdownMenu.Item>
+              ) : (
+                <DropdownMenu.Item color="green" onClick={handleLogin}>
+                  Login With AniList
+                </DropdownMenu.Item>
+              )}
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         )}

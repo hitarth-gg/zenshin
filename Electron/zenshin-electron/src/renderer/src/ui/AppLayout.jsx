@@ -1,15 +1,18 @@
-import { Theme } from '@radix-ui/themes'
-import { Outlet, useNavigate, useNavigation } from 'react-router-dom'
+import { Button, Theme } from '@radix-ui/themes'
+import { Link, Outlet, useNavigate, useNavigation } from 'react-router-dom'
 import Loader from './Loader'
-import { Toaster } from 'sonner'
+import { toast, Toaster } from 'sonner'
 import { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { ReactLenis } from '@studio-freight/react-lenis'
+import { DownloadIcon, GitHubLogoIcon } from '@radix-ui/react-icons'
+import { useZenshinContext } from '../utils/ContextProvider'
 
 export default function AppLayout({ props }) {
   const navigation = useNavigation()
   const isLoading = navigation.state === 'loading'
   const [theme, setTheme] = useState('dark')
+  const { checkForUpdates } = useZenshinContext()
 
   function toggleTheme() {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
@@ -32,19 +35,59 @@ export default function AppLayout({ props }) {
     }
   }, [navigation])
 
-  // // use crtl + r to refresh the page
-  // useEffect(() => {
-  //   document.addEventListener('keydown', (e) => {
-  //     if (e.ctrlKey && e.key === 'r') {
-  //       e.preventDefault()
-  //       navigate('/')
-  //       // window.location.reload()
-  //     }
-  //   })
-  //   return () => {
-  //     document.removeEventListener('keydown', () => {})
-  //   }
-  // }, [navigate])
+  /* ------------- CHECK LATEST GITHUB RELEASE ------------ */
+  const owner = 'hitarth-gg' // Replace with the repository owner
+  const repo = 'zenshin' // Replace with the repository name
+  const currentVersion = 'v2.1.1' // Replace with the current version
+
+  const getLatestRelease = async () => {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.tag_name !== currentVersion) {
+        // console.log(chalk.blue('New version available:', data.tag_name))
+        // console.log('Release notes:', data.body)
+        // console.log(chalk.yellow('Download URL: https://github.com/hitarth-gg/zenshin/releases'))
+        toast.success('New version available!', {
+          // description: `Download the latest version from GitHub: ${data.html_url}`,
+          description: (
+            <div className="">
+              Current version: <span className="font-semibold">{currentVersion}</span>
+              <br />
+              Latest version: <span className="font-semibold">{data.tag_name}</span>
+              <br />
+              <div className="mt-2">
+                <Button
+                  size={'1'}
+                  color="green"
+                  variant="soft"
+                  onClick={() => window.open(`${data.html_url}`, '_blank')}
+                >
+                  <DownloadIcon className="mr-2" />
+                  Download
+                </Button>
+              </div>
+            </div>
+          ),
+          icon: <GitHubLogoIcon />
+        })
+      }
+    } catch (error) {
+      console.error('Error fetching latest release:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (checkForUpdates) getLatestRelease()
+  }, [checkForUpdates])
+
+  /* ------------------------------------------------------ */
 
   return (
     <ReactLenis root options={{ lerp: 0.15 }}>
