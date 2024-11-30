@@ -20,7 +20,7 @@ A web and electron based anime torrent streamer which can stream torrents and sc
 ## Electron Port (Beta) :
 ![image](https://github.com/user-attachments/assets/02158f0e-e2dd-4269-8ab9-d7ec57d5af6f)
 ![image](https://github.com/user-attachments/assets/18fffde2-676d-44e8-9137-0e5e04ed000e)
-![image](https://github.com/user-attachments/assets/92fdd304-a916-4bfd-a1fa-577800a3ed3e)
+![image](https://github.com/user-attachments/assets/cc74840c-722f-4c7c-8d63-d541f3ee7f92)
 ![image](https://github.com/user-attachments/assets/47a662ad-0983-43a9-95bd-7bee26acce4d)
 ![image](https://github.com/user-attachments/assets/783330e9-1a84-49e5-a2a7-befc674d571d)
 ![image](https://github.com/user-attachments/assets/b8c61b0f-08b2-4005-a073-f0200a9c8842)
