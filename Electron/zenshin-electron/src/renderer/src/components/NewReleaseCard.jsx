@@ -60,7 +60,8 @@ export default function NewReleaseCard({
   // console.log(data)
 
   function handleClick() {
-    navigate(`/player/${encodeURIComponent(magnet)}`)
+    // navigate(`/player/${encodeURIComponent(magnet)}`)
+    navigate(`/anime/${anilistId}`)
   }
   const filename = data?.title
   const [anilistData, setAnilistData] = useState(null)
@@ -132,9 +133,9 @@ export default function NewReleaseCard({
       <div className="h-42 relative aspect-video w-full">
         {imageUrl || anilistCover ? (
           <div>
-            <div className="absolute z-10 h-full w-full opacity-0 transition-all duration-150 ease-in-out hover:opacity-100">
+            {/* <div className="absolute z-10 h-full w-full opacity-0 transition-all duration-150 ease-in-out hover:opacity-100">
               <PlayIcon className="absolute left-1/2 top-1/2 h-14 w-14 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-[#00000070] p-3 backdrop-blur-[2px]" />
-            </div>
+            </div> */}
             <img
               src={imageUrl || anilistCover}
               alt="episode_image"
