@@ -116,7 +116,7 @@ export default function Player(query) {
 
   const checkBackendRunning = async () => {
     try {
-      const response = await axios.get('http://localhost:${backendPort}/ping')
+      const response = await axios.get(`http://localhost:${backendPort}/ping`)
       console.log(response)
 
       if (response.status === 200) {
