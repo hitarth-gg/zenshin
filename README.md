@@ -29,7 +29,7 @@ A web and electron based anime torrent streamer which can stream torrents and sc
 
 
 ## Demo : (Click the image)
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Mdh2HuqTFyQ/0.jpg)](https://youtu.be/Mdh2HuqTFyQ)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/nhUhcBWD4HE/0.jpg)](https://youtu.be/nhUhcBWD4HE)
 
 ---
 Note: The video player in the browser currently does not support subtitle rendering as extracting embedded subtitles from an mkv file is quite tricky and is way out of my league. To play the video with subtitles open it in VLC by clicking on the `Open VLC` button when playing an episode.
