@@ -4,7 +4,7 @@
   <img src="https://github.com/user-attachments/assets/af797fd4-e7ca-428f-82fc-c50d13b9407c" width="120">
 </p>
 <p align="center">
-  <a href="https://github.com/hitarth-gg/zenshin/releases/tag/v2.1.0">
+  <a href="https://github.com/hitarth-gg/zenshin/releases">
     <img src="https://img.shields.io/github/downloads/hitarth-gg/zenshin/total?style=flat-square&color=blue" width="90">
   </a>
 </p>
