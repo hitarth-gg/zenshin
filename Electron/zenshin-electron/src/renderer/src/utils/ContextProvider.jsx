@@ -18,6 +18,8 @@ export default function ZenshinProvider({ children }) {
   const [hideHero, setHideHero] = useState(false)
   const [userId, setUserId] = useState('')
   const [checkForUpdates, setCheckForUpdates] = useState(false)
+  const [backendPort, setBackendPort] = useState(64621)
+  const [broadcastDiscordRpc, setBroadcastDiscordRpc] = useState(false)
 
   useEffect(() => {
     const glow = localStorage.getItem('glow')
@@ -49,6 +51,18 @@ export default function ZenshinProvider({ children }) {
     if (updateCheck) {
       setCheckForUpdates(updateCheck === 'true')
     }
+
+    // getSettingsJson
+    const getSettingsJson = async () => {
+      const settings = await window.api.getSettingsJson()
+      if (settings.backendPort) {
+        setBackendPort(settings.backendPort)
+      }
+      if (settings.broadcastDiscordRpc) {
+        setBroadcastDiscordRpc(settings.broadcastDiscordRpc)
+      }
+    }
+    getSettingsJson()
   }, [])
 
   return (
@@ -68,6 +82,10 @@ export default function ZenshinProvider({ children }) {
         setUserId,
         checkForUpdates,
         setCheckForUpdates,
+        backendPort,
+        setBackendPort,
+        broadcastDiscordRpc,
+        setBroadcastDiscordRpc
       }}
     >
       {children}

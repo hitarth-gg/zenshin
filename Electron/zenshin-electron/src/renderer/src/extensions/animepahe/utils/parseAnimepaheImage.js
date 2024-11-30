@@ -1,4 +1,11 @@
-const BASE_URL = 'http://localhost:64621/animepahe'
+let BASE_URL = 'http://localhost:64621/animepahe'
+
+async function backendPort() {
+  const response = await window.api.getSettingsJson()
+  const backendPort = response.backendPort
+  BASE_URL = `http://localhost:${backendPort}/animepahe`
+}
+backendPort()
 
 // convert the image URL to the localhost animepahe image URL
 export const parseAnimepaheImage = (url) => {

@@ -33,7 +33,7 @@ function AnimePahe() {
 
   useEffect(() => {
     if (infiniteQueryError) {
-      toast.error('Error fetching Top Animes', {
+      toast.error('Error fetching Latest AnimePahe Episodes', {
         icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
         description: infiniteQueryError?.message,
         classNames: {
@@ -79,7 +79,8 @@ function AnimePahe() {
             loads completely close the webview and <Code color="gray">restart</Code> the app.
           </div>
         )}
-        {!infiniteQueryError && (
+        {/* {!infiniteQueryError && ( */}
+        {true && (
           <>
             <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
               <div className="flex items-center gap-4">

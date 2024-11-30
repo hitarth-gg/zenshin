@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { parseAnimepaheImage } from '../utils/parseAnimepaheImage'
 import { format } from 'date-fns'
@@ -23,7 +23,8 @@ export default function AnimePaheEpisode({ data }) {
     finalEpWatched,
     ix,
     progress,
-    hideWatchedEpisodes
+    hideWatchedEpisodes,
+    discordRpcActivity
   } = data
 
   const navigate = useNavigate()
@@ -63,6 +64,16 @@ export default function AnimePaheEpisode({ data }) {
   }
 
   const [videoSrc, setVideoSrc] = useState(null)
+
+  useEffect(() => {
+    if (discordRpcActivity && videoSrc) {
+      window.api.setDiscordRpc({ ...discordRpcActivity, state: `Watching Episode ${episode}` })
+    }
+    // return () => {
+    // window.api.setDiscordRpc({ ...discordRpcActivity })
+    // }
+  }, [videoSrc])
+
   if (parseInt(episode) <= parseInt(progress) && hideWatchedEpisodes) return null
 
   return (
@@ -120,6 +131,7 @@ export default function AnimePaheEpisode({ data }) {
         onRequestClose={() => {
           setPaneState({ isPaneOpen: false })
           setVideoSrc(null)
+          window.api.setDiscordRpc({ ...discordRpcActivity })
         }}
         overlayClassName=""
         className="bg-black font-space-mono"

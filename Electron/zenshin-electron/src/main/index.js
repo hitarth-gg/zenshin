@@ -8,6 +8,10 @@ import express from 'express'
 import WebTorrent from 'webtorrent'
 import cors from 'cors'
 import fs from 'fs'
+import { animepaheRouter } from './animepahe/routes/search'
+import encUrls from '../../common/utils'
+import DiscordRPC from '../renderer/src/utils/discord'
+
 // import path from 'path'
 // import { fileURLToPath } from 'url'
 let chalk
@@ -19,6 +23,16 @@ import('chalk').then((module) => {
 // import isDev from 'electron-is-dev'
 
 let mainWindow // Define mainWindow here
+const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
+let downloadsDir = path.join(app.getPath('downloads'), 'ZenshinDownloads')
+let defaultDownloadsDir = path.join(app.getPath('downloads'), 'ZenshinDownloads')
+const settingsPath = path.join(zenshinPathDocuments, 'settings.json')
+let backendPort = 64621
+let backendServer
+const discordClientId = '1312155472781901824'
+// let rpcClient = new DiscordRPC(discordClientId)
+let rpcClient = null
+let broadcastDiscordRpc = true
 
 function createWindow() {
   // Create the browser window.
@@ -114,6 +128,30 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
+  // create settings.json file if it doesn't exist
+  if (!fs.existsSync(settingsPath)) {
+    let json_obj = {
+      downloadsFolderPath: downloadsDir,
+      backendPort: backendPort,
+      broadcastDiscordRpc: true
+    }
+    fs.writeFileSync(settingsPath, JSON.stringify(json_obj, null, 2))
+  }
+  // change variables according to settings.json
+  let settings = JSON.parse(fs.readFileSync(settingsPath))
+  backendPort = settings.backendPort || 64621
+  downloadsDir = settings.downloadsFolderPath || defaultDownloadsDir
+  broadcastDiscordRpc = settings.broadcastDiscordRpc && true
+  console.log(
+    'Settings:',
+    '\nDownloads Folder:',
+    downloadsDir,
+    '\nBackend Port:',
+    backendPort,
+    '\nBroadcast Discord RPC:',
+    broadcastDiscordRpc
+  )
+
   const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
   if (!fs.existsSync(zenshinPathDocuments)) {
     fs.mkdirSync(zenshinPathDocuments)
@@ -152,6 +190,101 @@ app.whenReady().then(() => {
     })
   })
 
+  ipcMain.on('change-downloads-folder', () => {
+    dialog
+
+      .showOpenDialog({
+        title: 'Select Downloads Folder',
+        defaultPath: downloadsDir,
+        properties: ['openDirectory']
+      })
+      .then((result) => {
+        if (!result.canceled) {
+          downloadsDir = result.filePaths[0]
+          console.log('Downloads directory changed to:', downloadsDir)
+
+          // Save the new downloads directory in settings.json
+          const settingsPath = path.join(zenshinPathDocuments, 'settings.json')
+          fs.writeFileSync(
+            settingsPath,
+            JSON.stringify(
+              {
+                ...JSON.parse(fs.readFileSync(settingsPath)),
+                downloadsFolderPath: downloadsDir
+              },
+              null,
+              2
+            )
+          )
+          // Send the new downloads directory to the renderer process
+          mainWindow.webContents.send(
+            'receive-settings-json',
+            JSON.parse(fs.readFileSync(settingsPath))
+          )
+        }
+      })
+      .catch((err) => {
+        console.error('Error selecting downloads folder:', err)
+      })
+  })
+
+  // change port of backend server
+  ipcMain.on('change-backend-port', (event, port) => {
+    backendPort = port
+    console.log('Backend port changed to:', backendPort)
+
+    // Save the new backend port in settings.json
+    fs.writeFileSync(
+      settingsPath,
+      JSON.stringify(
+        {
+          ...JSON.parse(fs.readFileSync(settingsPath)),
+          backendPort: backendPort
+        },
+        null,
+        2
+      )
+    )
+    // Send the new backend port to the renderer process
+    mainWindow.webContents.send('receive-settings-json', JSON.parse(fs.readFileSync(settingsPath)))
+
+    // Restart the backend server
+    if (backendServer) {
+      backendServer.close(() => {
+        console.log('Backend server stopped.')
+        startServer() // Restart the server on the new port
+      })
+    } else {
+      startServer() // Start the server if it's not running yet
+    }
+  })
+
+  // change discord rpc setting
+  ipcMain.on('broadcast-discord-rpc', (event, value) => {
+    broadcastDiscordRpc = value
+
+    fs.writeFileSync(
+      settingsPath,
+      JSON.stringify(
+        {
+          ...JSON.parse(fs.readFileSync(settingsPath)),
+          broadcastDiscordRpc: broadcastDiscordRpc
+        },
+        null,
+        2
+      )
+    )
+    if (value === false && rpcClient) {
+      rpcClient.disconnect()
+      rpcClient = null
+    } else if (value === true) startBroadcastingDiscordRpc()
+    console.log('Discord RPC setting changed to:', broadcastDiscordRpc)
+  })
+
+  ipcMain.on('get-settings-json', () => {
+    mainWindow.webContents.send('receive-settings-json', JSON.parse(fs.readFileSync(settingsPath)))
+  })
+
   ipcMain.on('reload-window', (event) => {
     const win = BrowserWindow.fromWebContents(event.sender)
     if (win) {
@@ -167,8 +300,43 @@ app.whenReady().then(() => {
     app.setAsDefaultProtocolClient('zenshin2')
   }
 
-  app2.listen(64621, () => {
-    console.log('Server running at http://localhost:64621')
+  // start the backend server
+  if (backendServer) {
+    backendServer.close(() => {
+      console.log('Backend server stopped.')
+      startServer() // Restart the server on the new port
+    })
+  } else {
+    startServer() // Start the server if it's not running yet
+  }
+
+  function startBroadcastingDiscordRpc() {
+    rpcClient = new DiscordRPC(discordClientId)
+    rpcClient.initialize()
+
+    // set default activity
+    setTimeout(() => {
+      rpcClient.setActivity({
+        details: 'Watch Anime.',
+        state: 'Browsing Anime...',
+        // largeImageKey: 'logo',
+        // largeImageText: 'Anime Time!',
+        // smallImageKey: 'logo',
+        // smallImageText: 'Streaming',
+        startTimestamp: Date.now()
+      })
+    }, 3000)
+  }
+
+  // Discord RPC
+  if (broadcastDiscordRpc) {
+    startBroadcastingDiscordRpc()
+  }
+
+  // set discord rpc activity
+  ipcMain.on('set-discord-rpc', (event, activityDetails) => {
+    if (!rpcClient || broadcastDiscordRpc === false) return
+    rpcClient.setActivity(activityDetails)
   })
 
   app.on('activate', function () {
@@ -183,6 +351,15 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    // remove rpc client
+    if (rpcClient) rpcClient.disconnect()
+
+    if (backendServer) {
+      backendServer.close(() => {
+        console.log('Backend server stopped.')
+      })
+    }
+
     app.quit()
   }
 })
@@ -198,21 +375,7 @@ deeplink.on('received', (link) => {
   }
 })
 
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
-
-// Get the current directory
-// const __filename = fileURLToPath(import.meta.url)
-// const __dirname = path.dirname(__filename)
-
-// const downloadsDir = path.join(__dirname, 'downloads')
-// const downloadsDir = path.join(app.getPath('downloads'), 'Zenshin')
-
-// const appPath = app.getAppPath()
-// console.log('App is running from:', appPath)
-// const downloadsDir = path.join(appPath, 'ZenshinDownloads')
-
-let downloadsDir = path.join(app.getPath('downloads'), 'ZenshinDownloads')
+// const { downloadsFolderPath } = JSON.parse(fs.readFileSync(settingsPath))
 
 const app2 = express()
 const client = new WebTorrent()
@@ -228,69 +391,49 @@ function mkdirp(dir) {
   fs.mkdirSync(dir)
 }
 
-mkdirp(downloadsDir)
+if (downloadsDir === defaultDownloadsDir) mkdirp(defaultDownloadsDir)
 
 /* ------------------------------------------------------ */
 /* ------------------------------------------------------ */
 /* ------------------------------------------------------ */
 /* ------------------------------------------------------ */
 /* ------------------------------------------------------ */
-/* ------------------------------------------------------ */
 
-const owner = 'hitarth-gg' // Replace with the repository owner
-const repo = 'zenshin' // Replace with the repository name
-const currentVersion = 'v1.0.0' // Replace with the current version
-
-// const getLatestRelease = async () => {
-//   try {
-//     const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/releases/latest`)
-
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`)
-//     }
-
-//     const data = await response.json()
-
-//     if (data.tag_name !== currentVersion) {
-//       console.log(chalk.blue('New version available:', data.tag_name))
-//       console.log('Release notes:', data.body)
-//       console.log(chalk.yellow('Download URL: https://github.com/hitarth-gg/zenshin/releases'))
-//     }
-//   } catch (error) {
-//     console.error('Error fetching latest release:', error)
-//   }
-// }
-// getLatestRelease()
-/* ------------------------------------------------------ */
-
-/* ----------------- SEED EXISTING FILES ---------------- */
-// Seed all existing files on server startup
-const seedExistingFiles = () => {
-  fs.readdir(downloadsDir, (err, files) => {
-    if (err) {
-      console.error('Error reading downloads directory:', err)
-      return
-    }
-
-    files.forEach((file) => {
-      const filePath = path.join(downloadsDir, file)
-
-      if (fs.lstatSync(filePath).isFile()) {
-        client.seed(filePath, { path: downloadsDir }, (torrent) => {
-          // console.log(`Seeding file: ${filePath}`);
-          // console.log(`Magnet URI: ${torrent.magnetURI}`);
-          console.log(chalk.bgBlue('Seeding started: '), chalk.cyan(torrent.name))
-          torrent.on('error', (err) => {
-            console.error(chalk.bgRed('Error seeding file:'), err)
-          })
-        })
-      }
-    })
+function startServer() {
+  backendServer = app2.listen(backendPort, () => {
+    console.log(`Server running at http://localhost:${backendPort}`)
   })
 }
 
-// Call the function to start seeding existing files
-seedExistingFiles()
+/* ----------------- SEED EXISTING FILES ---------------- */
+// Seed all existing files on server startup
+// let torrentDownloadPath = downloadsFolderPath || defaultDownloadsDir
+// const seedExistingFiles = () => {
+//   fs.readdir(downloadsDir, (err, files) => {
+//     if (err) {
+//       console.error('Error reading downloads directory:', err)
+//       return
+//     }
+
+//     files.forEach((file) => {
+//       const filePath = path.join(downloadsDir, file)
+
+//       if (fs.lstatSync(filePath).isFile()) {
+//         client.seed(filePath, { path: downloadsDir }, (torrent) => {
+//           // console.log(`Seeding file: ${filePath}`);
+//           // console.log(`Magnet URI: ${torrent.magnetURI}`);
+//           console.log(chalk.bgBlue('Seeding started: '), chalk.cyan(torrent.name))
+//           torrent.on('error', (err) => {
+//             console.error(chalk.bgRed('Error seeding file:'), err)
+//           })
+//         })
+//       }
+//     })
+//   })
+// }
+
+// // Call the function to start seeding existing files
+// seedExistingFiles()
 /* ------------------------------------------------------ */
 
 app2.get('/add/:magnet', async (req, res) => {
@@ -586,8 +729,6 @@ app2.get('/details/:magnet', async (req, res) => {
 /* --------------- Handling VLC streaming --------------- */
 import { get } from 'http'
 import { fileURLToPath } from 'url'
-import { animepaheRouter } from './animepahe/routes/search'
-import encUrls from '../../common/utils'
 // Full path to VLC executable, change it as needed
 const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"' // Adjust this path as needed
 

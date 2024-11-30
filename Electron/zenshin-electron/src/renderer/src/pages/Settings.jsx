@@ -1,5 +1,7 @@
-import { Checkbox, Flex, Switch, TextField } from '@radix-ui/themes'
+import { Button, Checkbox, Flex, Switch, TextField } from '@radix-ui/themes'
 import { useZenshinContext } from '../utils/ContextProvider'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 export default function Settings() {
   const {
@@ -15,7 +17,14 @@ export default function Settings() {
     setHideHero,
     checkForUpdates,
     setCheckForUpdates,
+    backendPort,
+    setBackendPort,
+    broadcastDiscordRpc,
+    setBroadcastDiscordRpc
   } = useZenshinContext()
+
+  const [settingsJson, setSettingsJson] = useState({})
+  const [tempBackendPort, setTempBackendPort] = useState(backendPort)
 
   function toggleGlow() {
     const newGlowState = !glow // Determine the new state
@@ -59,6 +68,22 @@ export default function Settings() {
     setCheckForUpdates(newCheckForUpdatesState)
     localStorage.setItem('checkForUpdates', newCheckForUpdatesState ? 'true' : 'false')
   }
+
+  async function getSettingsJson() {
+    let data = await window.api.getSettingsJson()
+    setSettingsJson(data)
+  }
+
+  async function changeDownloadsFolder() {
+    let data = await window.api.changeDownloadsFolder()
+    setSettingsJson(data)
+  }
+
+  useEffect(() => {
+    getSettingsJson()
+  }, [])
+
+  console.log(settingsJson)
 
   return (
     <div className="w-full animate-fade select-none px-16 py-10 font-space-mono animate-duration-500">
@@ -154,6 +179,87 @@ export default function Settings() {
             className="w-1/2"
           ></TextField.Root>
         </div>
+
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="button_card">
+            <p className="font-bold">Change Torrent Download Location</p>
+            <p className="text-xs">Change the default download location of torrent files.</p>
+            <p className="text-xs">Current path: &quot;{settingsJson.downloadsFolderPath}&quot;</p>
+          </div>
+          <Button
+            variant="outline"
+            className="cursor-pointer"
+            onClick={() => {
+              changeDownloadsFolder()
+            }}
+          >
+            Change Download Folder
+          </Button>
+        </div>
+        {/* Form with input */}
+
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="">
+            <p className="font-bold">Change Backend Port</p>
+            <p className="text-xs">
+              Change the port of the backend server. <b className="tracking-wider">Re-Launch</b> the
+              app after changing port and Refresh the cookies.
+              <br />
+              Do not change the port unnecessarily.
+            </p>
+            <p className="text-xs">
+              Current port: <b className="tracking-wider">{backendPort}</b>
+            </p>
+          </div>
+
+          <div className="flex w-fit">
+            <TextField.Root
+              placeholder={backendPort}
+              type="number"
+              value={tempBackendPort}
+              onInput={(e) => setTempBackendPort(e.target.value)}
+              className="w-24"
+              style={{
+                borderRadius: '0.25rem 0 0 0.25rem'
+              }}
+            ></TextField.Root>
+
+            <Button
+              variant="outline"
+              color="gray"
+              onClick={() => {
+                setBackendPort(tempBackendPort)
+                window.api.changeBackendPort(tempBackendPort)
+                toast.success('Backend port changed to ' + tempBackendPort)
+                // window.api.changeBackendPort(64622)
+              }}
+              style={{
+                borderRadius: '0 0.25rem 0.25rem 0',
+                // boxShadow: '0 0 1px 0px #4863bd'
+                boxShadow: 'none',
+                border: '1px solid #4e5359',
+                borderLeft: '0px'
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="switch_card">
+            <p className="font-bold">Discord RPC</p>
+            <p className="text-xs">Broadcast your activity on Zenshin to Discord.</p>
+          </div>
+          <Switch
+            checked={broadcastDiscordRpc}
+            style={{ marginLeft: '1.5rem', cursor: 'pointer' }}
+            onCheckedChange={() => {
+              setBroadcastDiscordRpc(!broadcastDiscordRpc)
+              window.api.broadcastDiscordRpc(!broadcastDiscordRpc)
+            }}
+          />
+        </div>
       </div>
 
       <div className="keyboard_shortcuts mt-8">
@@ -188,8 +294,8 @@ export default function Settings() {
         </div>
       </div>
       <p className="mt-8 text-xs opacity-45">
-        This app or it's servers do not host or distribute any copyrighted files or media. It is an
-        educational project built solely to learn about new technologies.
+        This app or it&apos;s servers do not host or distribute any copyrighted files or media. It
+        is an educational project built solely to learn about new technologies.
       </p>
     </div>
   )

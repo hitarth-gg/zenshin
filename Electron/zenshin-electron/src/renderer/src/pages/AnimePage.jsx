@@ -88,6 +88,27 @@ export default function AnimePage() {
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [showRelations, setShowRelations] = useState(false)
 
+  const activityDetails = {
+    details: `${animeData?.title.romaji} • ${animeData?.title.native}`,
+    state: `Browsing ${animeData?.title.romaji}`,
+    assets: {
+      large_image: animeData?.coverImage?.medium || animeData?.coverImage.extraLarge,
+      small_text: 'Zenshin Player'
+    }
+  }
+
+  function setDiscordRPC() {
+    if (!animeData) return
+    window.api.setDiscordRpc(activityDetails)
+  }
+
+  useEffect(() => {
+    setDiscordRPC()
+    return () => {
+      window.api.setDiscordRpc({ details: 'Stream Anime.' })
+    }
+  }, [animeData, episodesWatched])
+
   if (isLoading) return <CenteredLoader />
 
   if (errorMappings || errorMalId) {
@@ -353,6 +374,7 @@ export default function AnimePage() {
                   dualAudio={dualAudio}
                   data={{ aids: mappingsData?.mappings?.anidb_id, quality, eids: 0 }}
                   bannerImage={data?.bannerImage}
+                  discordRpcActivity={activityDetails}
                 />
                 {animeEpisodes?.map((episode, ix) => (
                   <Episode
@@ -369,6 +391,7 @@ export default function AnimePage() {
                     episodeNumber={ix + 1}
                     aniZip_titles={aniZip_titles}
                     bannerImage={data?.bannerImage}
+                    discordRpcActivity={activityDetails}
                   />
                 ))}
               </div>

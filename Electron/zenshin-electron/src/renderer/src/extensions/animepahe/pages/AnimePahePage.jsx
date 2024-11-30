@@ -141,6 +141,27 @@ function AnimePahePage() {
     setBookmarkData(bookmarks.animepahe[url])
   }
 
+  const activityDetails = {
+    details: `${animeData?.title.romaji} • ${animeData?.title.native}`,
+    state: `Browsing ${animeData?.title.romaji}`,
+    assets: {
+      large_image: animeData?.coverImage?.medium || animeData?.coverImage.extraLarge,
+      small_text: 'Zenshin Player'
+    }
+  }
+
+  function setDiscordRPC() {
+    if (!animeData) return
+    window.api.setDiscordRpc(activityDetails)
+  }
+
+  useEffect(() => {
+    setDiscordRPC()
+    return () => {
+      window.api.setDiscordRpc({ details: 'Stream Anime.' })
+    }
+  }, [animeData, episodesWatched])
+
   if (isLoading || (isLoadingAnilist && anilistId)) return <CenteredLoader />
 
   return (
@@ -334,7 +355,8 @@ function AnimePahePage() {
                         finalEpWatched,
                         ix,
                         hideWatchedEpisodes,
-                        progress: episodesWatched
+                        progress: episodesWatched,
+                        discordRpcActivity: activityDetails
                       }}
                     />
                   ))}

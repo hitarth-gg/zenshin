@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import formatBytes from '../utils/formatBytes'
+import { useZenshinContext } from '../utils/ContextProvider'
 // const formatBytes = (bytes, decimals = 2) => {
 //   if (bytes === 0) return '0 Bytes'
 
@@ -14,10 +15,10 @@ import formatBytes from '../utils/formatBytes'
 
 export default function StreamStats({ magnetURI }) {
   const [details, setDetails] = useState(null)
-
+  const {backendPort} = useZenshinContext()
   useEffect(() => {
     const fetchDetails = () => {
-      fetch(`http://localhost:64621/details/${encodeURIComponent(magnetURI)}`)
+      fetch(`http://localhost:${backendPort}/details/${encodeURIComponent(magnetURI)}`)
         .then((response) => response.json())
         .then((data) => setDetails(data))
         .catch((error) => console.error('Error fetching torrent details:', error))

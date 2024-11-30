@@ -28,16 +28,20 @@ import { useZenshinContext } from '../utils/ContextProvider'
 
 export default function Header({ theme }) {
   const navigate = useNavigate()
+  const { setUserId, backendPort } = useZenshinContext()
+  const [mainjsBackendPort, setMainjsBackendPort] = useState('xxxxx')
 
   const checkBackendRunning = async () => {
+    let mainJsBP = await window.api.getSettingsJson()
     try {
-      const response = await axios.get('http://localhost:64621/ping')
+      // const response = await axios.get(`http://localhost:${backendPort}/ping`)
+      const response = await axios.get(`http://localhost:${backendPort}/ping`)
       // console.log(response)
 
       if (response.status === 200) {
         toast.success('Backend is running', {
           icon: <LightningBoltIcon height="16" width="16" color="#ffffff" />,
-          description: 'Backend is running on your local machine',
+          description: `Backend is running on your local machine: ${backendPort} - ${mainJsBP.backendPort}`,
           classNames: {
             title: 'text-green-500'
           }
@@ -46,7 +50,7 @@ export default function Header({ theme }) {
     } catch (error) {
       toast.error('Backend is not running', {
         icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
-        description: 'Backend is not running on your local machine',
+        description: `Backend is not running on your local machine: ${backendPort} - ${mainJsBP.backendPort}`,
         classNames: {
           title: 'text-rose-500'
         }
@@ -82,8 +86,6 @@ export default function Header({ theme }) {
     error: userProfileError,
     status
   } = useGetAnilistProfile(anilistToken)
-
-  const { setUserId } = useZenshinContext()
 
   useEffect(() => {
     if (userProfile) {
@@ -228,11 +230,11 @@ export default function Header({ theme }) {
                   ) : (
                     <PersonIcon className="my-1" width={16} height={16} />
                   )}
-                  <div className="font-space-mono text-[.8rem]">{userProfile?.name || 'anonuser'}</div>
+                  <div className="font-space-mono text-[.8rem]">
+                    {userProfile?.name || 'anonuser'}
+                  </div>
                 </div>
-                <DropdownMenu.TriggerIcon
-                className='ml-1'
-                />
+                <DropdownMenu.TriggerIcon className="ml-1" />
               </Button>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content>

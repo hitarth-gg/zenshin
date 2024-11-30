@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
 import VideoJS, { PlyrPlayer } from './VideoJs'
 import videojs from 'video.js'
 import StreamStats from '../components/StreamStats'
@@ -19,6 +19,23 @@ export default function Player(query) {
   const [videoSrc, setVideoSrc] = useState('')
   const [subtitleSrc, setSubtitleSrc] = useState('')
   const [files, setFiles] = useState([])
+  const { vlcPath, backendPort } = useZenshinContext()
+  // receive params from navigation hook
+  const { episodeTitle, episodeNumber, animeTitle, bannerImage, discordRpcActivity } =
+    useLocation().state
+
+  function setDiscordRPC() {
+    if (!discordRpcActivity) return
+    window.api.setDiscordRpc({ ...discordRpcActivity, state: `Watching Episode ${episodeNumber}` })
+  }
+
+  useEffect(() => {
+    setDiscordRPC()
+    return () => {
+      window.api.setDiscordRpc({ details: 'Stream Anime.' })
+    }
+  }, [discordRpcActivity])
+
   // console.log(magnetURI);
 
   const handleSubmit = async (e) => {
@@ -26,13 +43,13 @@ export default function Player(query) {
     try {
       // Step 1: Add the torrent
       const response = await axios.get(
-        `http://localhost:64621/add/${encodeURIComponent(magnetURI)}`
+        `http://localhost:${backendPort}/add/${encodeURIComponent(magnetURI)}`
       )
       console.log(response)
       // Step 2: Set the video source for streaming
-      setVideoSrc(`http://localhost:64621/stream/${encodeURIComponent(magnetURI)}`)
+      setVideoSrc(`http://localhost:${backendPort}/stream/${encodeURIComponent(magnetURI)}`)
       // Step 3: Set the subtitle source
-      setSubtitleSrc(`http://localhost:64621/subtitles/${encodeURIComponent(magnetURI)}`)
+      setSubtitleSrc(`http://localhost:${backendPort}/subtitles/${encodeURIComponent(magnetURI)}`)
     } catch (error) {
       console.error('Error adding the torrent or streaming video', error)
 
@@ -52,7 +69,7 @@ export default function Player(query) {
     try {
       console.log('Inside getFiles')
       const response = await axios.get(
-        `http://localhost:64621/metadata/${encodeURIComponent(magnetURI)}`
+        `http://localhost:${backendPort}/metadata/${encodeURIComponent(magnetURI)}`
       )
       console.log('magnetURI: ' + magnetURI)
 
@@ -76,12 +93,12 @@ export default function Player(query) {
 
   const handleVlcStream = async () => {
     try {
-      await axios.get(`http://localhost:64621/add/${encodeURIComponent(magnetURI)}`)
+      await axios.get(`http://localhost:${backendPort}/add/${encodeURIComponent(magnetURI)}`)
 
       // Send a request to the server to open VLC with the video stream URL
       await axios.get(
-        `http://localhost:64621/stream-to-vlc?url=${encodeURIComponent(
-          `http://localhost:64621/stream/${encodeURIComponent(magnetURI)}`
+        `http://localhost:${backendPort}/stream-to-vlc?url=${encodeURIComponent(
+          `http://localhost:${backendPort}/stream/${encodeURIComponent(magnetURI)}`
         )}`
       )
     } catch (error) {
@@ -99,7 +116,7 @@ export default function Player(query) {
 
   const checkBackendRunning = async () => {
     try {
-      const response = await axios.get('http://localhost:64621/ping')
+      const response = await axios.get('http://localhost:${backendPort}/ping')
       console.log(response)
 
       if (response.status === 200) {
@@ -130,11 +147,10 @@ export default function Player(query) {
 
   const handleStreamBrowser = (eipsode) => {
     setVideoSrc(
-      `http://localhost:64621/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(eipsode)}`
+      `http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(eipsode)}`
     )
   }
-  console.log(videoSrc);
-
+  console.log(videoSrc)
 
   const playerRef = useRef(null)
   const [isActive, setIsActive] = useState(false)
@@ -153,13 +169,12 @@ export default function Player(query) {
     }
   }
 
-  const { vlcPath } = useZenshinContext()
   // const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"'
 
   const handleStreamVlc = async (episode) => {
     try {
       window.api.openVlc(
-        `${vlcPath} http://localhost:64621/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
+        `${vlcPath} http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
       )
     } catch (error) {
       console.error('Error streaming to VLC', error)
@@ -178,11 +193,11 @@ export default function Player(query) {
     try {
       // Send a DELETE request to remove the torrent
       console.log(
-        `http://localhost:64621/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
+        `http://localhost:${backendPort}/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
       )
 
       await axios.get(
-        `http://localhost:64621/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
+        `http://localhost:${backendPort}/deselect/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
       )
 
       // Clear the video and subtitle sources
@@ -227,7 +242,7 @@ export default function Player(query) {
   const handleRemoveTorrent = async () => {
     try {
       // Send a DELETE request to remove the torrent
-      await axios.delete(`http://localhost:64621/remove/${encodeURIComponent(magnetURI)}`)
+      await axios.delete(`http://localhost:${backendPort}/remove/${encodeURIComponent(magnetURI)}`)
 
       // Clear the video and subtitle sources
       setVideoSrc('')

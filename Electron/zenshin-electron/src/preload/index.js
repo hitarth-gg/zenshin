@@ -9,7 +9,29 @@ const api = {
   oauth: (url) => ipcRenderer.send('oauth-login', url),
   openVlc: (url) => ipcRenderer.send('open-vlc', url),
   openAnimePahe: (url) => ipcRenderer.send('open-animepahe', url),
-  windowReload: () => ipcRenderer.send('reload-window')
+  windowReload: () => ipcRenderer.send('reload-window'),
+  changeBackendPort: (port) => ipcRenderer.send('change-backend-port', port),
+  changeDownloadsFolder: () => {
+    ipcRenderer.send('change-downloads-folder')
+    return new Promise((resolve) => {
+      ipcRenderer.once('receive-settings-json', (event, updatedSettings) =>
+        resolve(updatedSettings)
+      )
+    })
+  },
+  getSettingsJson: () => {
+    ipcRenderer.send('get-settings-json')
+    return new Promise((resolve) => {
+      ipcRenderer.once('receive-settings-json', (event, data) => resolve(data))
+    })
+  },
+  setDiscordRpc: (activityDetails) => {
+    ipcRenderer.send('set-discord-rpc', activityDetails)
+  },
+  broadcastDiscordRpc: (value) => {
+    ipcRenderer.send('broadcast-discord-rpc', value)
+  }
+
 }
 
 const deeplinks = {

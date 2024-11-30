@@ -90,7 +90,8 @@ function App() {
     defaultOptions: {
       queries: {
         // staleTime: 60 * 1000, // staleTime is the time in milliseconds after which the data is considered stale
-        staleTime: 0
+        staleTime: 0,
+        refetchOnWindowFocus: false
       }
     }
   })
