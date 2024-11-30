@@ -1,6 +1,6 @@
 {
   "name": "zenshin",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "AniList Client with Media Streaming Capabilities",
   "main": "./out/main/index.js",
   "author": "hitarth-gg",

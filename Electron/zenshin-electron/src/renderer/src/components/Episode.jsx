@@ -199,14 +199,14 @@ export default function Episode({
   // if the data is defined, then it is a normal episode
   if (episodeNumber <= progress && data?.hideWatchedEpisodes) return null
   return (
-    <div className="flex w-full animate-fade cursor-default flex-col border border-gray-700 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100">
+    <div className="flex w-full  cursor-default flex-col border border-gray-700 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100">
       <div className="flex">
         {data.thumbnail && (
           <img
             loading="lazy"
             src={data.thumbnail}
             alt="episode_img"
-            className="duration-400 mr-3 h-28 object-cover transition-all ease-in-out hover:z-20 hover:scale-150 hover:rounded-md"
+            className="duration-400 mr-3 h-28 animate-fade object-cover transition-all ease-in-out hover:z-20 hover:scale-150 hover:rounded-md"
           />
         )}
 
