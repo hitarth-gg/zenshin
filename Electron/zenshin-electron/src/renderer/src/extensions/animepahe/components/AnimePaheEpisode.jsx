@@ -54,7 +54,7 @@ export default function AnimePaheEpisode({ data }) {
 
   const { vlcPath } = useZenshinContext()
 
-  console.log(ix + ' ' + finalEpWatched)
+  // console.log(ix + ' ' + finalEpWatched)
 
   // disable scrolling when dropdown is open
   if (paneState.isPaneOpen) {
@@ -81,6 +81,7 @@ export default function AnimePaheEpisode({ data }) {
       <div className="flex">
         {snapshot && (
           <img
+            loading="lazy"
             src={parseAnimepaheImage(snapshot)}
             alt="episode_img"
             className="duration-400 mr-3 h-28 animate-fade object-cover transition-all ease-in-out hover:z-20 hover:scale-150 hover:rounded-md"

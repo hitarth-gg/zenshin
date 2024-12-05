@@ -24,11 +24,6 @@ export default function NewReleases() {
 
   const [anilistIds, setAnilistIds] = useState([])
 
-  console.log('anilistIds')
-  console.log(totalCards2)
-
-  console.log(anilistIds)
-
   const {
     isLoading: isLoadingAnilist,
     data: dataAnilist,

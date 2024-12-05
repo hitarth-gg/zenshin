@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { getTopAnime, searchAnilist } from '../utils/helper'
 import { useEffect, useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { Spinner, Tooltip } from '@radix-ui/themes'
+import { Button, Spinner, Tooltip } from '@radix-ui/themes'
 import { toast } from 'sonner'
 import { ExclamationTriangleIcon, PersonIcon, StarIcon, VideoIcon } from '@radix-ui/react-icons'
 // import loundraw from "../assets/loundraw.jpg";
@@ -23,9 +23,10 @@ import { useZenshinContext } from '../utils/ContextProvider'
 import useGetAnimepaheReleases from '../hooks/useGetAnimepaheReleases'
 import AnimepaheEpisodeCard from '../extensions/animepahe/components/AnimepaheEpisodeCard'
 import useGetAnilistSearch from '../hooks/useGetAnilistSearch'
+import CurrentlyWatchingCard from '../components/CurrentlyWatchingCard'
 
 export default function Home() {
-  const { scrollOpacity, hideHero } = useZenshinContext()
+  const { scrollOpacity, hideHero, userId } = useZenshinContext()
 
   const {
     isLoading: isLoadingRecentActivity,
@@ -80,6 +81,20 @@ export default function Home() {
     49
   )
 
+  const {
+    isLoadingCurrentlyWatching,
+    data: currentlyWatching,
+    errorCurrentlyWatching
+  } = useGetAnilistSearch(
+    userId
+      ? {
+          isAdult: 'false',
+          watchStatus: 'CURRENT',
+          userId: userId
+        }
+      : {}
+  )
+
   // get current year and season
   const currentYear = new Date().getFullYear()
   // season: WINTER, SPRING, SUMMER, FALL
@@ -94,7 +109,13 @@ export default function Home() {
   } = useInfiniteQuery({
     queryKey: ['top_animes'],
     queryFn: ({ pageParam = 1 }) =>
-      searchAnilist({ sort: 'POPULARITY_DESC', isAdult: false }, pageParam),
+      // searchAnilist({ sort: 'POPULARITY_DESC', isAdult: false }, pageParam),
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(searchAnilist({ sort: 'POPULARITY_DESC', isAdult: false }, pageParam))
+        }, 2) // 10-second delay
+      }),
+
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       return allPages.length + 1
@@ -306,6 +327,19 @@ export default function Home() {
         <div className="text-red-500">Failed to fetch Top Airing Anime : {error.message}</div>
       )}
 
+      {userId && currentlyWatching?.length > 0 && (
+        <div className="mx-3 mt-4">
+          <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+            Continue Watching
+          </div>
+          <div className="grid animate-fade grid-cols-4">
+            {currentlyWatching?.slice(0, 4)?.map((anime) => (
+              <CurrentlyWatchingCard key={anime.id + 'currentlyWatching'} data={anime} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* {status === 'success' && !error && ( */}
       {!error && (
         <div className="mx-5 mt-8">
@@ -337,7 +371,7 @@ export default function Home() {
         <div className="text-red-500">Failed to fetch Top Anime : {infiniteQueryError.message}</div>
       )}
 
-      {!infiniteQueryError && topAnime.length > 0 && (
+      {!infiniteQueryError && topAnime?.length > 0 && (
         <div className="mx-5 mt-12">
           <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Anime
@@ -403,7 +437,7 @@ export default function Home() {
 
           <InfiniteScroll
             style={{ all: 'unset' }}
-            dataLength={topAnime.length}
+            dataLength={topAnime?.length}
             next={() => fetchNextPage()}
             hasMore={topAnime?.length < 500}
             loader={

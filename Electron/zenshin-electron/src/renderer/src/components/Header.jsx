@@ -282,6 +282,7 @@ export default function Header({ theme }) {
                   Login With AniList
                 </DropdownMenu.Item>
               )}
+              {/* <Button color='gray' onClick={() => navigate('/test')}>Test</Button> */}
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         )}
