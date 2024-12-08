@@ -1,0 +1,1 @@
+- Web Version of Zenshin is outdated and is no longer being worked on upon. Please switch to electron version of Zenshin.
