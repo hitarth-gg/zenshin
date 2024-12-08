@@ -22,10 +22,12 @@ export default function AnimePaheEpisode({ data }) {
     anime_hash,
     finalEpWatched,
     ix,
+    anime_title,
     progress,
     hideWatchedEpisodes,
     discordRpcActivity
   } = data
+  const sanitize = (str) => str.replace(/["]/g, '\\"') // Simple sanitization for double quotes
 
   const navigate = useNavigate()
   const [active, setActive] = useState(false)
@@ -75,6 +77,7 @@ export default function AnimePaheEpisode({ data }) {
   }, [videoSrc])
 
   if (parseInt(episode) <= parseInt(progress) && hideWatchedEpisodes) return null
+  const knownPlayers = ['mpv', 'vlc']
 
   return (
     <div className="flex w-full cursor-default flex-col border border-gray-700 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100">
@@ -190,7 +193,12 @@ export default function AnimePaheEpisode({ data }) {
                   className="text-xs"
                   onClick={(e) => {
                     e.stopPropagation()
-                    window.api.openVlc(`${vlcPath} ${epdata.videoSrc}"`)
+                    // if (knownPlayers.some((player) => vlcPath.includes(player))) {
+                    //   window.api.openVlc(
+                    //     `${vlcPath} --title "${sanitize(`${anime_title} - Episode: ${episode}`)}" ${epdata.videoSrc}`
+                    //   )
+                    // } else
+                     window.api.openVlc(`${vlcPath} ${epdata.videoSrc}`)
                   }}
                 >
                   Stream on External Player

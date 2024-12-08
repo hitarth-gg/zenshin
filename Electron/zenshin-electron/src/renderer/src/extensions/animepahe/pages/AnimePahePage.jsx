@@ -351,6 +351,7 @@ function AnimePahePage() {
                       key={episode.id}
                       data={{
                         ...episode,
+                        anime_title: data?.title.romaji || animepaheData.title,
                         anime_hash: animeId,
                         finalEpWatched,
                         ix,

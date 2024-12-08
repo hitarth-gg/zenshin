@@ -109,12 +109,7 @@ export default function Home() {
   } = useInfiniteQuery({
     queryKey: ['top_animes'],
     queryFn: ({ pageParam = 1 }) =>
-      // searchAnilist({ sort: 'POPULARITY_DESC', isAdult: false }, pageParam),
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(searchAnilist({ sort: 'POPULARITY_DESC', isAdult: false }, pageParam))
-        }, 2) // 10-second delay
-      }),
+      searchAnilist({ sort: 'POPULARITY_DESC', isAdult: false }, pageParam),
 
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
@@ -332,8 +327,8 @@ export default function Home() {
           <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Continue Watching
           </div>
-          <div className="grid animate-fade grid-cols-4">
-            {currentlyWatching?.slice(0, 4)?.map((anime) => (
+          <div className="grid animate-fade grid-cols-3">
+            {currentlyWatching?.slice(0, 3)?.map((anime) => (
               <CurrentlyWatchingCard key={anime.id + 'currentlyWatching'} data={anime} />
             ))}
           </div>

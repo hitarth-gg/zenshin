@@ -33,7 +33,8 @@ export default function Settings() {
   }
 
   function updateVlcPath(e) {
-    const newPath = e.target.value
+    // replace double quotes with empty string
+    const newPath = e.target.value.replace(/"/g, '')
     setVlcPath(`"${newPath}"`)
     localStorage.setItem('vlcPath', newPath)
   }

@@ -103,7 +103,7 @@ function createWindow() {
     exec(command, (error) => {
       if (error) {
         dialog.showErrorBox(
-          'Error launching VLC, make sure the path to VLC.exe is correct. You can specify the correct path to it in the settings\n',
+          'Error launching External Player, make sure the path to .exe is correct. You can specify the correct path to it in the settings\n',
           error.message
         )
       }
