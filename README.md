@@ -91,5 +91,3 @@ Define the path to vlc.exe in BACKEND/server.js :
 - Sonner
 - Plyr
 - Puppeteer
-
-Inspired by Miru :)
