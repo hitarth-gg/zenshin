@@ -18,7 +18,8 @@ const MyComponent = ({ videoSrc }) => {
       }
 
       hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        ref.current.plyr.play()
+        // ref.current.plyr.play()
+        video.play()
       })
     }
 
