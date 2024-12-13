@@ -33,6 +33,7 @@ const discordClientId = '1312155472781901824'
 // let rpcClient = new DiscordRPC(discordClientId)
 let rpcClient = null
 let broadcastDiscordRpc = true
+let extensionUrls = {}
 
 function createWindow() {
   // Create the browser window.
@@ -133,7 +134,8 @@ app.whenReady().then(() => {
     let json_obj = {
       downloadsFolderPath: downloadsDir,
       backendPort: backendPort,
-      broadcastDiscordRpc: true
+      broadcastDiscordRpc: true,
+      extensionUrls: {}
     }
     fs.writeFileSync(settingsPath, JSON.stringify(json_obj, null, 2))
   }
@@ -142,15 +144,7 @@ app.whenReady().then(() => {
   backendPort = settings.backendPort || 64621
   downloadsDir = settings.downloadsFolderPath || defaultDownloadsDir
   broadcastDiscordRpc = settings.broadcastDiscordRpc && true
-  console.log(
-    'Settings:',
-    '\nDownloads Folder:',
-    downloadsDir,
-    '\nBackend Port:',
-    backendPort,
-    '\nBroadcast Discord RPC:',
-    broadcastDiscordRpc
-  )
+  extensionUrls = settings.extensionUrls
 
   const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
   if (!fs.existsSync(zenshinPathDocuments)) {
@@ -275,8 +269,12 @@ app.whenReady().then(() => {
       )
     )
     if (value === false && rpcClient) {
-      rpcClient.disconnect()
-      rpcClient = null
+      try {
+        rpcClient.disconnect()
+        rpcClient = null
+      } catch (error) {
+        console.error('Error stopping Discord RPC:')
+      }
     } else if (value === true) startBroadcastingDiscordRpc()
     console.log('Discord RPC setting changed to:', broadcastDiscordRpc)
   })
@@ -311,21 +309,25 @@ app.whenReady().then(() => {
   }
 
   function startBroadcastingDiscordRpc() {
-    rpcClient = new DiscordRPC(discordClientId)
-    rpcClient.initialize()
+    try {
+      rpcClient = new DiscordRPC(discordClientId)
+      rpcClient.initialize()
 
-    // set default activity
-    setTimeout(() => {
-      rpcClient.setActivity({
-        details: 'Watch Anime.',
-        state: 'Browsing Anime...',
-        // largeImageKey: 'logo',
-        // largeImageText: 'Anime Time!',
-        // smallImageKey: 'logo',
-        // smallImageText: 'Streaming',
-        startTimestamp: Date.now()
-      })
-    }, 3000)
+      // set default activity
+      setTimeout(() => {
+        rpcClient.setActivity({
+          details: 'Watch Anime.',
+          state: 'Browsing Anime...',
+          // largeImageKey: 'logo',
+          // largeImageText: 'Anime Time!',
+          // smallImageKey: 'logo',
+          // smallImageText: 'Streaming',
+          startTimestamp: Date.now()
+        })
+      }, 3000)
+    } catch (error) {
+      console.error('Error starting Discord RPC:')
+    }
   }
 
   // Discord RPC
@@ -786,3 +788,6 @@ app2.get('/ping', (req, res) => {
 /* ------------------------------------------------------ */
 
 app2.use('/animepahe', animepaheRouter)
+
+module.exports.extensionUrls = extensionUrls
+

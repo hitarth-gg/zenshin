@@ -33,6 +33,7 @@
     "@wordpress/autop": "^4.6.0",
     "axios": "^1.7.4",
     "chalk": "^5.0.0",
+    "comlink": "^4.4.2",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "discord-rpc": "^4.0.1",

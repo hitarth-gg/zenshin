@@ -9,8 +9,6 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { Button, Spinner, Tooltip } from '@radix-ui/themes'
 import { toast } from 'sonner'
 import { ExclamationTriangleIcon, PersonIcon, StarIcon, VideoIcon } from '@radix-ui/react-icons'
-// import loundraw from "../assets/loundraw.jpg";
-// import gradient1 from '../assets/gradient1.jpg'
 import SkeletonAnimeCard from '../skeletons/SkeletonAnimeCard'
 import { getCurrentSeason } from '../utils/currentSeason'
 import { Carousel } from 'react-responsive-carousel'

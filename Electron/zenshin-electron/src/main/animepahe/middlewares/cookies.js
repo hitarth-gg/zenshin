@@ -1,7 +1,7 @@
 import { app } from 'electron'
 import fs from 'fs'
 import path from 'path'
-import encUrls from '../../../../common/utils'
+import encUrls from '../../../../common/utils.js'
 
 const baseUrl = encUrls.pahe
 

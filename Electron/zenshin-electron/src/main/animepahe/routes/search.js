@@ -1,6 +1,6 @@
 import express from 'express'
-import cookieMiddleware from '../middlewares/cookies'
-import encUrls from '../../../../common/utils'
+import cookieMiddleware from '../middlewares/cookies.js'
+import encUrls from '../../../../common/utils.js'
 
 const router = express.Router() // Use a router to define routes
 

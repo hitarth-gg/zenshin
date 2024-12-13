@@ -7,4 +7,5 @@ const encUrls = {
   ),
   nyaaApi: decodeURIComponent(atob('aHR0cHM6Ly9ueWFhYXBpLm9ucmVuZGVyLmNvbS9ueWFh'))
 }
+
 export default encUrls

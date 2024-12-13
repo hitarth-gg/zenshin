@@ -25,6 +25,12 @@ import { parseStringPromise } from 'xml2js'
 
 const token = localStorage.getItem('anilist_token')
 
+import * as Comlink from 'comlink'
+const worker = new Worker(new URL('../workers/worker.js', import.meta.url), {
+  type: 'module'
+})
+export const toshoExtension = Comlink.wrap(worker)
+
 export async function searchAnime(text, limit = 10) {
   try {
     const query = `
@@ -521,19 +527,10 @@ export async function getRecentActivity() {
 // getNewReleases(default"[SubsPlease]")
 export async function getNewReleases(packer = '[SubsPlease]') {
   try {
-    const response = await fetch(GET_TOSHO_RSS(packer))
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
-
-    // const xml = await response.text()
-    // const data = await parseStringPromise(xml, { mergeAttrs: true })
-    // return data.rss.channel[0].item
-    const data = await response.json()
-    return data
+    const response = await toshoExtension.getNewReleases(packer)
+    return response
   } catch (error) {
-    console.log(error)
+    console.error(error)
     throw new Error(error)
   }
 }
@@ -596,16 +593,12 @@ export async function setWatchedEpisodes(animeId, episodesWatched) {
 
 export async function getToshoEpisodes(quality, aids, eids) {
   try {
-    const response = await fetch(GET_TOSHO_RSS_BY_QUERY(quality, aids, eids))
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
-
-    const data = await response.json()
+    const data = await toshoExtension.getToshoEpisodes({ quality, aids, eids })
+    console.log('Fetched episodes:', data)
     return data
   } catch (error) {
-    throw new Error(error)
+    console.error('Error fetching episodes:', error)
+    throw error
   }
 }
 
