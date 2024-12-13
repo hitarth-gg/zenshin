@@ -15,9 +15,7 @@ import {
 } from '@radix-ui/react-icons'
 import Pikacon from '../assets/pikacon.ico'
 import { Button, DropdownMenu, Tooltip } from '@radix-ui/themes'
-// import { useZenshinContext } from '../utils/ContextProvider'
 import { anilistAuthUrl } from '../utils/auth'
-// import { ANILIST_CLIENT_ID } from '../utils/auth'
 import { useEffect, useState } from 'react'
 import useGetAnilistProfile from '../hooks/useGetAnilistProfile'
 import { toast } from 'sonner'
@@ -29,7 +27,6 @@ import { useZenshinContext } from '../utils/ContextProvider'
 export default function Header({ theme }) {
   const navigate = useNavigate()
   const { setUserId, backendPort } = useZenshinContext()
-  const [mainjsBackendPort, setMainjsBackendPort] = useState('xxxxx')
 
   const checkBackendRunning = async () => {
     let mainJsBP = await window.api.getSettingsJson()
