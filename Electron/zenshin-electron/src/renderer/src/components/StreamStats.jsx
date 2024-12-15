@@ -1,21 +1,10 @@
 import { useEffect, useState } from 'react'
 import formatBytes from '../utils/formatBytes'
 import { useZenshinContext } from '../utils/ContextProvider'
-// const formatBytes = (bytes, decimals = 2) => {
-//   if (bytes === 0) return '0 Bytes'
-
-//   const k = 1024
-//   const dm = decimals < 0 ? 0 : decimals
-//   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-
-//   const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-//   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
-// }
 
 export default function StreamStats({ magnetURI }) {
   const [details, setDetails] = useState(null)
-  const {backendPort} = useZenshinContext()
+  const { backendPort } = useZenshinContext()
   useEffect(() => {
     const fetchDetails = () => {
       fetch(`http://localhost:${backendPort}/details/${encodeURIComponent(magnetURI)}`)
@@ -38,7 +27,7 @@ export default function StreamStats({ magnetURI }) {
     <div className="mt-2 flex flex-col gap-y-1 font-space-mono">
       <div className="text-cyan-200">{details?.name}</div>
       <div className="opacity-45">
-        <div className="flex gap-x-32">
+        <div className="grid grid-flow-row grid-cols-3">
           <p>
             <strong>Size:</strong> {formatBytes(details?.length)}
           </p>
@@ -49,7 +38,7 @@ export default function StreamStats({ magnetURI }) {
             <strong>Uploaded:</strong> {formatBytes(details?.uploaded)}
           </p>
         </div>
-        <div className="flex gap-x-16 overflow-hidden text-sm">
+        <div className="grid grid-flow-row grid-cols-2 lg:grid-cols-3 overflow-hidden text-sm">
           {/* <div className="relative grid grid-flow-col-dense grid-cols-3 gap-x-12 overflow-hidden border text-sm"> */}
           <p className="flex gap-x-2">
             <p className="text-nowrap">Download Speed: </p>{' '}

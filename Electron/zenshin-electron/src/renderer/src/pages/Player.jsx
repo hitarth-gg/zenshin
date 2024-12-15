@@ -15,6 +15,7 @@ import { useZenshinContext } from '../utils/ContextProvider'
 
 export default function Player(query) {
   const magnetURI = useParams().magnetId
+  const ref = useRef(null)
 
   const [videoSrc, setVideoSrc] = useState('')
   const [subtitleSrc, setSubtitleSrc] = useState('')
@@ -35,6 +36,34 @@ export default function Player(query) {
       window.api.setDiscordRpc({ details: 'Stream Anime.' })
     }
   }, [discordRpcActivity])
+
+  const handleKeyDown = (event) => {
+    if (ref.current && ref.current.plyr) {
+      const player = ref.current.plyr
+      switch (event.key) {
+        case 'ArrowLeft':
+          event.preventDefault() // Prevent default browser behavior (scrolling)
+          player.currentTime = Math.max(player.currentTime - 5, 0) // Seek backward 5 seconds
+          break
+        case 'ArrowRight':
+          event.preventDefault() // Prevent default browser behavior
+          player.currentTime = Math.min(player.currentTime + 5, player.duration) // Seek forward 5 seconds
+          break
+        default:
+          break
+      }
+    }
+  }
+
+  // Attach event listener to the entire window
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [videoSrc])
 
   // console.log(magnetURI);
 
@@ -279,11 +308,11 @@ export default function Player(query) {
 
   return (
     <div className="mb-32 flex items-center justify-center px-8 font-space-mono">
-      <div className="">
+      <div className="w-full">
         {videoSrc && (
           <div className="flex w-full justify-center">
-            <div className="aspect-video w-4/6">
-              <Plyr {...plyrProps} />
+            <div className="mx-0 aspect-video w-4/6 lg2:mx-32">
+              <Plyr {...plyrProps} ref={ref} />
             </div>
           </div>
         )}
@@ -301,7 +330,7 @@ export default function Player(query) {
           />
         )}
 
-        <div className="fixed-width w-full border border-gray-700 bg-[#1d1d20] p-4">
+        <div className="fixed-width border border-gray-700 bg-[#1d1d20] p-4">
           <StreamStats magnetURI={magnetURI} />
 
           <div className="mt-5 flex gap-x-3">
@@ -320,6 +349,7 @@ export default function Player(query) {
           <div className="mt-8">
             {files.map((file) => (
               <EpisodesPlayer
+                key={file.name}
                 file={file}
                 handleStreamBrowser={handleStreamBrowser}
                 handleStreamVlc={handleStreamVlc}
