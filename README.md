@@ -13,7 +13,7 @@
     <img src="https://github.com/user-attachments/assets/c0dbeb01-36a8-432e-95c5-e643694901c7">
 </p>
 
-
+![zenshin banner github](https://github.com/user-attachments/assets/54a37351-b064-4749-a4b5-7fb19ce86ceb)
 
 A web and electron based anime torrent streamer which can stream torrents and scraped anime episodes within the app or on an external media player (like VLC or MPV).
 
