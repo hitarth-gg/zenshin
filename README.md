@@ -13,11 +13,13 @@
     <img src="https://github.com/user-attachments/assets/c0dbeb01-36a8-432e-95c5-e643694901c7">
 </p>
 
-
+![zenshin banner github](https://github.com/user-attachments/assets/54a37351-b064-4749-a4b5-7fb19ce86ceb)
 
 A web and electron based anime torrent streamer which can stream torrents and scraped anime episodes within the app or on an external media player (like VLC or MPV).
 
-## Electron Port (Beta) :
+<details>
+<summary><h1>Screenshots 🖼️: </h1></summary>
+  
 ![image](https://github.com/user-attachments/assets/02158f0e-e2dd-4269-8ab9-d7ec57d5af6f)
 ![image](https://github.com/user-attachments/assets/18fffde2-676d-44e8-9137-0e5e04ed000e)
 ![image](https://github.com/user-attachments/assets/cc74840c-722f-4c7c-8d63-d541f3ee7f92)
@@ -26,6 +28,8 @@ A web and electron based anime torrent streamer which can stream torrents and sc
 ![image](https://github.com/user-attachments/assets/b8c61b0f-08b2-4005-a073-f0200a9c8842)
 ![image](https://github.com/user-attachments/assets/6c17a60c-34ed-44c8-b8d4-7e886ea2c496)
 ![image](https://github.com/user-attachments/assets/6948d885-fe74-463a-b004-4c4cb372049e)
+
+</details>
 
 
 ## Demo : (Click the image)
