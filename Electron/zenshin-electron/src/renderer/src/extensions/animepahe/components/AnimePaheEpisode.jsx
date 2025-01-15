@@ -13,6 +13,7 @@ export default function AnimePaheEpisode({ data }) {
   const {
     id,
     anime_id,
+    idMal ,
     anime_session,
     episode,
     episode2,
@@ -141,7 +142,15 @@ export default function AnimePaheEpisode({ data }) {
         className="bg-black font-space-mono"
         width="100%"
       >
-        {paneState.isPaneOpen && <AnimePahePlayerEmbedded videoSrc={videoSrc} />}
+        {paneState.isPaneOpen && (
+          <AnimePahePlayerEmbedded
+            videoSrc={videoSrc}
+            animeData={{
+              idMal,
+              episode
+            }}
+          />
+        )}
       </SlidingPane>
       {active && (
         <div className="mx-3 my-3 flex flex-col gap-y-2">
@@ -198,7 +207,7 @@ export default function AnimePaheEpisode({ data }) {
                     //     `${vlcPath} --title "${sanitize(`${anime_title} - Episode: ${episode}`)}" ${epdata.videoSrc}`
                     //   )
                     // } else
-                     window.api.openVlc(`${vlcPath} ${epdata.videoSrc}`)
+                    window.api.openVlc(`${vlcPath} ${epdata.videoSrc}`)
                   }}
                 >
                   Stream on External Player
