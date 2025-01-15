@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import useGetAnimeById from '../hooks/useGetAnimeById'
-import { format } from 'date-fns'
+import { format, formatDate, fromUnixTime, getUnixTime } from 'date-fns'
 import { useEffect, useState } from 'react'
 import CenteredLoader from '../ui/CenteredLoader'
 import Episode from '../components/Episode'
@@ -221,7 +221,10 @@ export default function AnimePage() {
             </div>
             {genresString && (
               <div className="mb-2 flex w-fit gap-x-1 border-b border-[#545454] pb-2 font-space-mono text-xs tracking-wide opacity-90">
-                {genresString}
+                {genresString}{' '}
+                {data?.airingSchedule?.nodes[0]?.episode
+                  ? ` • Episode ${data?.airingSchedule.nodes[0].episode} : ${format(fromUnixTime(data?.airingSchedule.nodes[0].airingAt), 'dd-LLL-yyyy hh:mm a')}`
+                  : ''}
               </div>
             )}
 

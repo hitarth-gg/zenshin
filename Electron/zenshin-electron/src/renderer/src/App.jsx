@@ -104,7 +104,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <div data-lenis-prevent="true">
+        <ReactQueryDevtools initialIsOpen={false} />
+      </div>
       <RouterProvider router={router} />
     </QueryClientProvider>
   )

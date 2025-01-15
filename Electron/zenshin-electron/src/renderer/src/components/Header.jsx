@@ -123,7 +123,7 @@ export default function Header({ theme }) {
   const animepahe = pathname.includes('/animepahe')
 
   return (
-    <div className="draggable sticky top-0 z-20 flex h-11 items-center justify-between border-[#5a5e6750] bg-[#111113] bg-opacity-60 px-4 py-3 backdrop-blur-md">
+    <div className="draggable sticky top-0 z-50 flex h-11 items-center justify-between border-[#5a5e6750] bg-[#111113] bg-opacity-60 px-4 py-3 backdrop-blur-md">
       <div className="nodrag flex items-center justify-center gap-x-2">
         <Link
           className="nodrag hover: font-spaceMono flex w-fit cursor-pointer select-none gap-x-2 rounded-sm p-1 text-sm transition-all duration-200 hover:bg-[#70707030]"

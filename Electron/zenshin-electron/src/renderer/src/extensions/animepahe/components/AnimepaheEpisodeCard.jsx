@@ -44,7 +44,7 @@ function AnimepaheEpisodeCard({ data }) {
             <img
               src={parseAnimepaheImage(snapshot)}
               alt={`${anime_title}`}
-              className="duration-400 h-42 aspect-video w-96 animate-fade rounded-sm object-cover object-center transition-all ease-in-out"
+              className="duration-400 h-42 aspect-video animate-fade rounded-sm object-cover object-center transition-all ease-in-out"
               onLoad={() => setImageIsLoading(false)}
               onError={() => setImageIsLoading(false)}
             />
@@ -60,7 +60,9 @@ function AnimepaheEpisodeCard({ data }) {
           navigate(`/animepahe/anime/${anime_session}`)
         }}
       >
-        <div title={anime_title} className="w-full truncate text-sm font-medium opacity-90">{anime_title}</div>
+        <div title={anime_title} className="w-full truncate text-sm font-medium opacity-90">
+          {anime_title}
+        </div>
 
         <div className="flex justify-between text-xs opacity-60">
           <p className="text-nowrap">{timeAgo(created_at)}</p>

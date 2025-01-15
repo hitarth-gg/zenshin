@@ -14,7 +14,9 @@ const status = {
   REPEATING: 'REPEATING'
 }
 
-function AnilistEditorModal({ anilist_data, setEpisodesWatchedMainPage }) {
+function AnilistEditorModal({ anilist_data, setEpisodesWatchedMainPage, customStyle }) {
+  // customStyle = "buttonOnly"
+
   const [title, setTitle] = useState(
     anilist_data?.mediaListEntry?.status
       ? anilist_data?.mediaListEntry?.status[0].toUpperCase() +
@@ -101,7 +103,7 @@ function AnilistEditorModal({ anilist_data, setEpisodesWatchedMainPage }) {
   return (
     <div className="font-space-mono">
       {anilist_data && (
-        <div className="flex items-center gap-x-4">
+        <div className={`flex items-center gap-x-4`}>
           <div className="font-space-mono">
             <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger>
@@ -137,50 +139,54 @@ function AnilistEditorModal({ anilist_data, setEpisodesWatchedMainPage }) {
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           </div>
-          <div className="flex border border-[#545454]">
-            <Button
-              size={'1'}
-              color="gray"
-              variant="soft"
-              onClick={() => anilistEpisodeHandler('decrease')}
-              style={{
-                borderRadius: '0rem'
-              }}
-            >
-              <MinusIcon width={'16px'} height={'16px'} />
-            </Button>
-            <div className="flex items-center">
-              <TextField.Root
-                placeholder="?"
+          {customStyle !== 'buttonOnly' && (
+            <div className="flex border border-[#545454]">
+              <Button
                 size={'1'}
-                className="w-10"
-                value={episodesWatched}
-                onChange={(e) => setEpisodesWatched(e.target.value)}
+                color="gray"
+                variant="soft"
+                onClick={() => anilistEpisodeHandler('decrease')}
                 style={{
-                  backgroundColor: 'transparent',
-                  textAlign: 'right',
-                  boxShadow: 'none',
-                  fontFamily: 'Space Mono'
+                  borderRadius: '0rem'
                 }}
-                onBlur={() => {
-                  // setEpisodesWatched(parseInt(episodesWatched))
-                  anilistEpisodeHandler(parseInt(episodesWatched))
+              >
+                <MinusIcon width={'16px'} height={'16px'} />
+              </Button>
+              <div className="flex items-center">
+                <TextField.Root
+                  placeholder="?"
+                  size={'1'}
+                  className="w-10"
+                  value={episodesWatched}
+                  onChange={(e) => setEpisodesWatched(e.target.value)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    textAlign: 'right',
+                    boxShadow: 'none',
+                    fontFamily: 'Space Mono'
+                  }}
+                  onBlur={() => {
+                    // setEpisodesWatched(parseInt(episodesWatched))
+                    anilistEpisodeHandler(parseInt(episodesWatched))
+                  }}
+                ></TextField.Root>
+                <p className="ml-2 mr-8 text-nowrap pb-[2.41px] text-xs">
+                  / {anilist_data?.episodes || '?'}
+                </p>
+              </div>
+              <Button
+                size={'1'}
+                color="gray"
+                variant="soft"
+                onClick={() => anilistEpisodeHandler('increase')}
+                style={{
+                  borderRadius: '0rem'
                 }}
-              ></TextField.Root>
-              <p className="ml-2 mr-8 pb-[2.41px] text-xs">/ {anilist_data?.episodes || '?'}</p>
+              >
+                <PlusIcon width={'16px'} height={'16px'} />
+              </Button>
             </div>
-            <Button
-              size={'1'}
-              color="gray"
-              variant="soft"
-              onClick={() => anilistEpisodeHandler('increase')}
-              style={{
-                borderRadius: '0rem'
-              }}
-            >
-              <PlusIcon width={'16px'} height={'16px'} />
-            </Button>
-          </div>
+          )}
           {updating && <Spinner />}
         </div>
       )}

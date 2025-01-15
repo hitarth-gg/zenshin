@@ -1,4 +1,5 @@
 import { Skeleton } from '@radix-ui/themes'
+import { format, fromUnixTime } from 'date-fns'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -23,12 +24,17 @@ function CurrentlyWatchingCard({ data }) {
             />
             <div className="relative">
               <div className="absolute z-10 w-full px-2 py-1 tracking-wider">
-                <div className=" line-clamp-1 ">{data?.title?.romaji}</div>
+                <div className="line-clamp-1">{data?.title?.romaji}</div>
                 <div className="line-clamp-1 w-full text-xs opacity-80">
                   {data?.title?.english} • {data?.title?.native}
                 </div>
                 <div className="mt-1 line-clamp-1 w-full border-b border-t border-[#ffffff50] py-1 text-xs opacity-80 lg:text-sm">
                   Episode: {data?.mediaListEntry?.progress} / {data?.episodes || '?'}
+                </div>
+                <div className="mt-1 line-clamp-1 w-full border-b border-[#ffffff50] py-1 text-[.77rem] opacity-80">
+                  {data?.airingSchedule?.nodes[0]?.episode
+                    ? `Episode ${data?.airingSchedule.nodes[0].episode} : ${format(fromUnixTime(data?.airingSchedule.nodes[0].airingAt), 'dd-LLL-yyyy hh:mm a')}`
+                    : ''}
                 </div>
               </div>
               <img
