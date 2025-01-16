@@ -43,8 +43,8 @@ export default function AnimeCard({ data }) {
     const r = window.innerWidth - cut.right
 
     setPos2('-4rem')
-    if (l < 50) setPos2('0rem')
-    else if (r < 50) setPos2('-7rem')
+    if (l < 80) setPos2('0rem')
+    else if (r < 80) setPos2('-8rem')
   }, [card])
   const genresString = data?.genres?.join(', ') || ''
 
