@@ -11,7 +11,6 @@ import YouTubeLogo from '../assets/symbols/YouTubeLogo'
 export default function AnimeCard({ data }) {
   // console.log(data);
   const navigate = useNavigate()
-
   function handleClick() {
     navigate(`/anime/${data.id}`, { state: { data } })
   }
@@ -19,7 +18,7 @@ export default function AnimeCard({ data }) {
   const [imageLoading, setImageLoading] = useState(true)
   const [videoLoading, setVideoLoading] = useState(true)
   const zenshinContext = useZenshinContext()
-  const { glow } = zenshinContext
+  const { glow, hoverCard } = zenshinContext
 
   const date = data?.startDate?.year
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
@@ -29,8 +28,12 @@ export default function AnimeCard({ data }) {
   const [card, setCard] = useState(0)
   const divRef = useRef(null)
   const videoSrc =
-    data?.trailer?.site === 'youtube' ? `https://www.youtube.com/embed/${data?.trailer?.id}` : null //0c4IoCA5fY0
-    // data?.trailer?.site === 'youtube' ? `https://www.youtube.com/embed/${data?.trailer?.id}?autoplay=1` : null //0c4IoCA5fY0
+    data?.trailer?.site === 'youtube'
+      ? `https://www.youtube.com/watch?v=${data?.trailer?.id}`
+      : null //0c4IoCA5fY0
+  // data?.trailer?.site === 'youtube'
+  // ? `https://www.youtube.com/embed/${data?.trailer?.id}?autoplay=1`
+  // : null //0c4IoCA5fY0
 
   const [pos2, setPos2] = useState(0)
   useEffect(() => {
@@ -43,6 +46,7 @@ export default function AnimeCard({ data }) {
     if (l < 50) setPos2('0rem')
     else if (r < 50) setPos2('-7rem')
   }, [card])
+  const genresString = data?.genres?.join(', ') || ''
 
   return (
     <div
@@ -55,7 +59,7 @@ export default function AnimeCard({ data }) {
       {
         <div
           onClick={() => handleClick()}
-          className="group relative mt-6 flex w-48 animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out"
+          className={`group relative mt-6 flex w-48 animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out ${hoverCard ? '' : 'hover:scale-110'}`}
         >
           <div className="relative z-10">
             {imageLoading && (
@@ -116,7 +120,7 @@ export default function AnimeCard({ data }) {
           </div>
 
           {/* FOR IMAGE GLOW */}
-          {glow && (
+          {glow && !hoverCard && (
             <img
               src={data?.coverImage?.extraLarge}
               alt=""
@@ -126,7 +130,7 @@ export default function AnimeCard({ data }) {
         </div>
       }
       {/* {true && ( */}
-      {card === 1 && (
+      {card === 1 && hoverCard && (
         <div
           // className="absolute -left-10 top-0 z-40 h-[21.3rem] w-72 animate-fade bg-[#1a1a1d] shadow-3xl drop-shadow-4xl animate-duration-300"
           className="absolute top-0 z-40 h-[21.3rem] w-80 animate-fade bg-[#1a1a1d] shadow-3xl drop-shadow-4xl animate-duration-300"
@@ -135,9 +139,10 @@ export default function AnimeCard({ data }) {
           }}
         >
           <div
-            className={`duration-400  relative aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
+            // className={`duration-400 relative aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
+            className={`duration-400 relative h-36 w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
           ></div>
-          {videoSrc && (
+          {/* {videoSrc && (
             <iframe
               onLoad={() => setVideoLoading(false)}
               src={videoSrc}
@@ -145,13 +150,14 @@ export default function AnimeCard({ data }) {
               className={`duration-400 absolute top-0 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
               allowFullScreen
             />
-          )}
+          )} */}
 
           {videoLoading && (
             <img
               src={bannerImage || data?.coverImage?.extraLarge}
               alt=""
-              className={`duration-400 absolute top-0 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
+              // className={`duration-400 absolute top-0 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
+              className={`duration-400 absolute top-0 h-36 w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
             />
           )}
           <div className="flex flex-col gap-y-2">
@@ -192,6 +198,12 @@ export default function AnimeCard({ data }) {
               </div>
             </div>
 
+            {genresString && (
+              <div className="mx-2 line-clamp-1 flex w-full items-center justify-between gap-x-2 border-b border-[#545454] pb-1 text-xs text-gray-300">
+                {genresString}
+              </div>
+            )}
+
             <div className="line-clamp-1 px-2 pb-1 text-xs tracking-wide">
               {data?.airingSchedule?.nodes[0]?.episode
                 ? `Episode ${data?.airingSchedule.nodes[0].episode} : ${format(fromUnixTime(data?.airingSchedule.nodes[0].airingAt), 'dd-LLL-yyyy hh:mm a')}`
@@ -207,29 +219,31 @@ export default function AnimeCard({ data }) {
               >
                 <AnilistEditorModal anilist_data={data} customStyle={'buttonOnly'} />
               </div>
-              {/* <div
-                className="mx-2 w-fit"
-                onClick={(e) => {
-                  e.stopPropagation()
-                }}
-              >
-                <div className="flex">
-                  <div className="bg-[#2f3236] px-1">
-                    <YouTubeLogo />
+              {videoSrc && (
+                <div
+                  className="mx-2 w-fit"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    window.open(videoSrc, '_blank')
+                  }}
+                >
+                  <div className="flex">
+                    <div className="bg-[#2f3236] px-1">
+                      <YouTubeLogo />
+                    </div>
+                    <Button
+                      size={'1'}
+                      color="gray"
+                      variant="soft"
+                      style={{
+                        borderRadius: '0rem'
+                      }}
+                    >
+                      Trailer
+                    </Button>
                   </div>
-                  <Button
-                    size={'1'}
-                    color="gray"
-                    variant="soft"
-                    // onClick={() => anilistEpisodeHandler('decrease')}
-                    style={{
-                      borderRadius: '0rem'
-                    }}
-                  >
-                    Trailer
-                  </Button>
                 </div>
-              </div> */}
+              )}
             </div>
           </div>
         </div>

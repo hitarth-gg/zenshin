@@ -20,6 +20,7 @@ export default function ZenshinProvider({ children }) {
   const [checkForUpdates, setCheckForUpdates] = useState(false)
   const [backendPort, setBackendPort] = useState(64621)
   const [broadcastDiscordRpc, setBroadcastDiscordRpc] = useState(false)
+  const [hoverCard, setHoverCard] = useState(true)
 
   useEffect(() => {
     const glow = localStorage.getItem('glow')
@@ -62,6 +63,12 @@ export default function ZenshinProvider({ children }) {
         setBroadcastDiscordRpc(settings.broadcastDiscordRpc)
       }
     }
+
+    const animateHoverCard = localStorage.getItem('hoverCard')
+    if (animateHoverCard) {
+      setHoverCard(animateHoverCard === 'true')
+    }
+
     getSettingsJson()
   }, [])
 
@@ -85,7 +92,9 @@ export default function ZenshinProvider({ children }) {
         backendPort,
         setBackendPort,
         broadcastDiscordRpc,
-        setBroadcastDiscordRpc
+        setBroadcastDiscordRpc,
+        hoverCard,
+        setHoverCard
       }}
     >
       {children}

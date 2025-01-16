@@ -20,7 +20,9 @@ export default function Settings() {
     backendPort,
     setBackendPort,
     broadcastDiscordRpc,
-    setBroadcastDiscordRpc
+    setBroadcastDiscordRpc,
+    hoverCard,
+    setHoverCard
   } = useZenshinContext()
 
   const [settingsJson, setSettingsJson] = useState({})
@@ -78,6 +80,12 @@ export default function Settings() {
   async function changeDownloadsFolder() {
     let data = await window.api.changeDownloadsFolder()
     setSettingsJson(data)
+  }
+
+  function toggleHoverCard() {
+    const newHoverCardState = !hoverCard
+    setHoverCard(newHoverCardState)
+    localStorage.setItem('hoverCard', newHoverCardState ? 'true' : 'false')
   }
 
   useEffect(() => {
@@ -150,6 +158,20 @@ export default function Settings() {
             checked={hideHero}
             style={{ marginLeft: '1.5rem', cursor: 'pointer' }}
             onCheckedChange={toggleHideHero}
+          />
+        </div>
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="switch_card">
+            <p className="font-bold">Modal popup when hovering over anime cards</p>
+            <p className="text-xs">
+              Enable or disable the modal popup when hovering over anime cards. <br /> Disabling
+              this will slightly <b>improve performance</b> and reduce scroll lag.
+            </p>
+          </div>
+          <Switch
+            checked={hoverCard}
+            style={{ marginLeft: '1.5rem', cursor: 'pointer' }}
+            onCheckedChange={toggleHoverCard}
           />
         </div>
         <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
