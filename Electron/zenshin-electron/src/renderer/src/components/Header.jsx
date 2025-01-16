@@ -5,6 +5,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   DividerVerticalIcon,
+  DownloadIcon,
   ExclamationTriangleIcon,
   GearIcon,
   GitHubLogoIcon,
@@ -26,7 +27,7 @@ import { useZenshinContext } from '../utils/ContextProvider'
 
 export default function Header({ theme }) {
   const navigate = useNavigate()
-  const { setUserId, backendPort } = useZenshinContext()
+  const { setUserId, backendPort, settings } = useZenshinContext()
 
   const checkBackendRunning = async () => {
     let mainJsBP = await window.api.getSettingsJson()
@@ -117,6 +118,11 @@ export default function Header({ theme }) {
       }
     })
   }
+  // async function getSettingsJson() {
+  //   let data = await window.api.getSettingsJson()
+  //   setSettingsJson(data)
+  // }
+
   // get current route and check if it is /animepahe
   const { pathname } = useLocation()
 
@@ -251,6 +257,12 @@ export default function Header({ theme }) {
                 shortcut={<LayersIcon />}
               >
                 Ping Backend
+              </DropdownMenu.Item>
+              <DropdownMenu.Item
+                onClick={() => window.api.openFolder(settings.downloadsFolderPath)}
+                shortcut={<DownloadIcon />}
+              >
+                Downloads
               </DropdownMenu.Item>
               <DropdownMenu.Item
                 color="gray"

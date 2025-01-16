@@ -22,10 +22,12 @@ export default function Settings() {
     broadcastDiscordRpc,
     setBroadcastDiscordRpc,
     hoverCard,
-    setHoverCard
+    setHoverCard,
+    settings,
+    setSettings
   } = useZenshinContext()
 
-  const [settingsJson, setSettingsJson] = useState({})
+  // const [settingsJson, setSettingsJson] = useState({})
   const [tempBackendPort, setTempBackendPort] = useState(backendPort)
 
   function toggleGlow() {
@@ -72,14 +74,15 @@ export default function Settings() {
     localStorage.setItem('checkForUpdates', newCheckForUpdatesState ? 'true' : 'false')
   }
 
-  async function getSettingsJson() {
-    let data = await window.api.getSettingsJson()
-    setSettingsJson(data)
-  }
+  // async function getSettingsJson() {
+  //   let data = await window.api.getSettingsJson()
+  //   setSettingsJson(data)
+  // }
 
   async function changeDownloadsFolder() {
     let data = await window.api.changeDownloadsFolder()
-    setSettingsJson(data)
+    // setSettingsJson(data)
+    setSettings(data)
   }
 
   function toggleHoverCard() {
@@ -88,11 +91,11 @@ export default function Settings() {
     localStorage.setItem('hoverCard', newHoverCardState ? 'true' : 'false')
   }
 
-  useEffect(() => {
-    getSettingsJson()
-  }, [])
+  // useEffect(() => {
+  //   getSettingsJson()
+  // }, [])
 
-  console.log(settingsJson)
+  console.log(settings)
 
   return (
     <div className="w-full animate-fade select-none px-16 py-10 font-space-mono animate-duration-500">
@@ -207,7 +210,7 @@ export default function Settings() {
           <div className="button_card">
             <p className="font-bold">Change Torrent Download Location</p>
             <p className="text-xs">Change the default download location of torrent files.</p>
-            <p className="text-xs">Current path: &quot;{settingsJson.downloadsFolderPath}&quot;</p>
+            <p className="text-xs">Current path: &quot;{settings.downloadsFolderPath}&quot;</p>
           </div>
           <Button
             variant="outline"

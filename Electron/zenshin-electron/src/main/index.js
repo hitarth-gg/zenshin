@@ -87,6 +87,9 @@ function createWindow() {
 
   // Handle IPC events
   ipcMain.on('minimize-window', () => mainWindow.minimize())
+  ipcMain.on('open-folder', (event, folder) => {
+    shell.openPath(folder)
+  })
   ipcMain.on('maximize-window', () => {
     if (mainWindow.isMaximized()) {
       mainWindow.unmaximize()
@@ -790,4 +793,3 @@ app2.get('/ping', (req, res) => {
 app2.use('/animepahe', animepaheRouter)
 
 module.exports.extensionUrls = extensionUrls
-

@@ -11,6 +11,7 @@ const api = {
   openAnimePahe: (url) => ipcRenderer.send('open-animepahe', url),
   windowReload: () => ipcRenderer.send('reload-window'),
   changeBackendPort: (port) => ipcRenderer.send('change-backend-port', port),
+  openFolder: (folder) => ipcRenderer.send('open-folder', folder),
   changeDownloadsFolder: () => {
     ipcRenderer.send('change-downloads-folder')
     return new Promise((resolve) => {
@@ -31,7 +32,6 @@ const api = {
   broadcastDiscordRpc: (value) => {
     ipcRenderer.send('broadcast-discord-rpc', value)
   }
-
 }
 
 const deeplinks = {
