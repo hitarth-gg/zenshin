@@ -132,6 +132,11 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
+  const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
+  if (!fs.existsSync(zenshinPathDocuments)) {
+    fs.mkdirSync(zenshinPathDocuments)
+  }
+
   // create settings.json file if it doesn't exist
   if (!fs.existsSync(settingsPath)) {
     try {
@@ -153,11 +158,6 @@ app.whenReady().then(() => {
   downloadsDir = settings.downloadsFolderPath || defaultDownloadsDir
   broadcastDiscordRpc = settings.broadcastDiscordRpc && true
   extensionUrls = settings.extensionUrls
-
-  const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
-  if (!fs.existsSync(zenshinPathDocuments)) {
-    fs.mkdirSync(zenshinPathDocuments)
-  }
 
   ipcMain.on('open-animepahe', () => {
     const webview = new BrowserWindow({
