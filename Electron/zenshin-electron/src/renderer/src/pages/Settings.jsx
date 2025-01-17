@@ -40,7 +40,7 @@ export default function Settings() {
     // replace double quotes with empty string
     const newPath = e.target.value.replace(/"/g, '')
     setVlcPath(`"${newPath}"`)
-    localStorage.setItem('vlcPath', newPath)
+    localStorage.setItem('vlcPath', `"${newPath}"`)
   }
 
   function toggleAutoUpdateAnilistEpisode() {
