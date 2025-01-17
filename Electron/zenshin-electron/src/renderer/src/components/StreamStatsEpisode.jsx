@@ -110,7 +110,7 @@ export default function StreamStatsEpisode({
           >
             Stop downloading the episode
           </Button>
-          <Button
+          {/* <Button
             size="1"
             color="orange"
             variant="soft"
@@ -120,7 +120,7 @@ export default function StreamStatsEpisode({
             }}
           >
             Open VLC
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
