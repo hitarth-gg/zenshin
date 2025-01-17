@@ -134,13 +134,18 @@ app.whenReady().then(() => {
 
   // create settings.json file if it doesn't exist
   if (!fs.existsSync(settingsPath)) {
-    let json_obj = {
-      downloadsFolderPath: downloadsDir,
-      backendPort: backendPort,
-      broadcastDiscordRpc: true,
-      extensionUrls: {}
+    try {
+      let json_obj = {
+        downloadsFolderPath: downloadsDir,
+        backendPort: backendPort,
+        broadcastDiscordRpc: true,
+        extensionUrls: {}
+      }
+      fs.writeFileSync(settingsPath, JSON.stringify(json_obj, null, 2))
+    } catch (error) {
+      console.error('Error creating settings.json file:', error)
+      dialog.showErrorBox('Error creating settings.json file:', error.message)
     }
-    fs.writeFileSync(settingsPath, JSON.stringify(json_obj, null, 2))
   }
   // change variables according to settings.json
   let settings = JSON.parse(fs.readFileSync(settingsPath))
@@ -732,8 +737,8 @@ app2.get('/details/:magnet', async (req, res) => {
 })
 
 /* --------------- Handling VLC streaming --------------- */
-import { get } from 'http'
-import { fileURLToPath } from 'url'
+// import { get } from 'http'
+// import { fileURLToPath } from 'url'
 // Full path to VLC executable, change it as needed
 const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"' // Adjust this path as needed
 
