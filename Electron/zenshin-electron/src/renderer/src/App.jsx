@@ -15,6 +15,7 @@ import AnimePahePlayer from './extensions/animepahe/pages/AnimePahePlayer'
 import Bookmarks from './pages/Bookmarks'
 import Anilist from './pages/Anilist'
 import Test from './pages/Test'
+import Downloads from './pages/Downloads'
 
 // import { lazy } from "react";
 
@@ -69,6 +70,11 @@ const router = createHashRouter([
       {
         path: '/bookmarks',
         element: <Bookmarks />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: '/downloads',
+        element: <Downloads />,
         errorElement: <ErrorPage />
       },
       {

@@ -21,6 +21,8 @@ import('chalk').then((module) => {
 })
 
 // import isDev from 'electron-is-dev'
+// app.commandLine.appendSwitch('force_low_power_gpu')
+// app.commandLine.appendSwitch('force_high_performance_gpu')
 
 let mainWindow // Define mainWindow here
 const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
@@ -74,6 +76,10 @@ function createWindow() {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
+
+  // app.getGPUInfo('complete').then((info) => {
+  //   console.log(info)
+  // })
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
@@ -413,6 +419,19 @@ function startServer() {
   backendServer = app2.listen(backendPort, () => {
     console.log(`Server running at http://localhost:${backendPort}`)
   })
+
+  backendServer.on('upgrade', (request, socket, head) => {
+    console.log('UPGRADE event triggered')
+
+    if (request.url === '/ws') {
+      wss.handleUpgrade(request, socket, head, (ws) => {
+        wss.emit('connection', ws, request)
+      })
+    } else {
+      console.log('Invalid WebSocket upgrade request')
+      socket.destroy()
+    }
+  })
 }
 
 /* ----------------- SEED EXISTING FILES ---------------- */
@@ -498,6 +517,12 @@ app2.get('/metadata/:magnet', async (req, res) => {
   }
   /* ------------------------------------------------------ */
 
+  // stop all other torrents
+  client.torrents.forEach((torrent) => {
+    console.log(chalk.bgRed('Download Stopped:') + ' ' + chalk.cyan(torrent.name))
+    torrent.destroy()
+  })
+
   const torrent = client.add(magnet, { path: downloadsDir, deselect: true })
 
   torrent.on('metadata', () => {
@@ -516,6 +541,68 @@ app2.get('/metadata/:magnet', async (req, res) => {
   })
 })
 
+/* ------------------------------------------------------ */
+/*                        NEW META                        */
+/* ------------------------------------------------------ */
+import WebSocket from 'ws'
+const wss = new WebSocket.Server({ noServer: true })
+// const wss = new WebSocket.Server({ port: 64622 })
+
+wss.on('connection', (ws) => {
+  console.log('Client connected')
+  const interval = setInterval(() => {
+    let data = []
+    // data.push()
+    data.push({ clientDownloadSpeed: client.downloadSpeed, clientUploadSpeed: client.uploadSpeed })
+    const file = client.torrents.map((torrent) => ({
+      name: torrent.name,
+      length: torrent.length,
+      downloadSpeed: torrent.downloadSpeed,
+      uploadSpeed: torrent.uploadSpeed,
+      downloaded: torrent.downloaded,
+      uploaded: torrent.uploaded,
+      progress: torrent.progress,
+      done: torrent.done,
+      magnet: torrent.magnetURI
+    }))
+
+    data = [...data, ...file]
+
+    ws.send(JSON.stringify(data))
+  }, 1000
+
+  // Clear interval when the client disconnects
+  ws.on('close', () => {
+    console.log('Client disconnected')
+    clearInterval(interval)
+  })
+})
+
+app2.get('/downloadsInfo', async (req, res) => {
+  let files = []
+
+  client.torrents.forEach((torrent) => {
+    let torrentFiles = {
+      name: torrent.name,
+      length: torrent.length,
+      downloadSpeed: torrent.downloadSpeed,
+      uploadSpeed: torrent.uploadSpeed,
+      downloaded: torrent.downloaded,
+      uploaded: torrent.uploaded,
+      progress: torrent.progress,
+      done: torrent.done,
+      magnet: torrent.magnetURI
+    }
+
+    // files = files.concat(torrentFiles)
+    files.push(torrentFiles)
+  })
+
+  res.status(200).json(files)
+})
+
+/* ------------------------------------------------------ */
+/* ------------------------------------------------------ */
 app2.get('/streamfile/:magnet/:filename', async function (req, res, next) {
   let magnet = req.params.magnet
   let filename = req.params.filename

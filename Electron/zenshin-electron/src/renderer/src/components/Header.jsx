@@ -24,6 +24,7 @@ import axios from 'axios'
 import AnimePaheSearchBar from '../extensions/animepahe/components/AnimePaheSearchBar'
 import AniListLogo from '../assets/symbols/AniListLogo'
 import { useZenshinContext } from '../utils/ContextProvider'
+import DownloadMeter from './DownloadMeter'
 
 export default function Header({ theme }) {
   const navigate = useNavigate()
@@ -145,7 +146,7 @@ export default function Header({ theme }) {
         </a> */}
 
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
-        <div className="flex gap-6">
+        <div className="flex gap-3">
           <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(-1)}>
             <ArrowLeftIcon className="my-1" width={16} height={16} />
           </Button>
@@ -154,24 +155,13 @@ export default function Header({ theme }) {
           </Button>
         </div>
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
-        <Button className="nodrag" color="gray" variant="ghost" size={'1'}>
+        <Button className="nodrag" color="gray" variant="soft" size={'1'}>
           <Link to="/newreleases">
             {/* <div className="p-1 font-space-mono text-[.8rem]">New Releases</div> */}
-            <div className="p-1 font-space-mono text-[.8rem]">New</div>
+            <div className="font-space-mono text-[.8rem]">New</div>
           </Link>
         </Button>
-        <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
-        {/* <Tooltip content="Ping Backend">
-          <Button
-            className="nodrag"
-            size="1"
-            color="green"
-            variant="soft"
-            onClick={checkBackendRunning}
-          >
-            <LayersIcon />
-          </Button>
-        </Tooltip> */}
+        {/* <DividerVerticalIcon width={20} height={20} color="#ffffff40" /> */}
         <Button
           className="nodrag"
           size="1"
@@ -183,7 +173,7 @@ export default function Header({ theme }) {
           <img src={Pikacon} alt="pikacon" className="h-4 w-4" />
         </Button>
 
-        <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
+        {/* <DividerVerticalIcon width={20} height={20} color="#ffffff40" /> */}
 
         <Button
           className="nodrag"
@@ -210,14 +200,11 @@ export default function Header({ theme }) {
       </div>
 
       <div className="nodrag mx-5 w-2/6">{animepahe ? <AnimePaheSearchBar /> : <SearchBar />}</div>
-      <div className="nodrag mr-36 flex items-center justify-center gap-x-8">
-        {/* {!anilistToken && (
-          <Tooltip content="Login With Anilist">
-            <Button color="gray" variant="ghost" size={'1'} onClick={handleLogin}>
-              <PersonIcon className="my-1" width={16} height={16} />
-            </Button>
-          </Tooltip>
-        )} */}
+      <div className="nodrag mr-36 flex items-center justify-center gap-x-4">
+        <Button color="gray" variant="soft" size={'1'} onClick={() => navigate('/downloads')}>
+          <DownloadIcon />
+        </Button>
+        <DownloadMeter />
 
         {true && (
           <DropdownMenu.Root className="nodrag" modal={false}>

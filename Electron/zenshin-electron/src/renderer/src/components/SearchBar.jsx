@@ -76,30 +76,33 @@ export default function SearchBar() {
 
   return (
     <div ref={searchBarRef} className="relative">
-      <TextField.Root
-        placeholder={'Search'}
-        onInput={handleSearchChange}
-        ref={inputRef}
-        type="text"
-        value={searchText}
-        onFocus={() => setIsActive(true)}
-        // onBlur={() => setIsActive(false)}
-      >
-        <TextField.Slot>
-          <MagnifyingGlassIcon height="16" width="16" />
-        </TextField.Slot>
-        <TextField.Slot
-          className="transition-all duration-100 ease-in-out hover:cursor-pointer hover:bg-[#5a5e6750]"
-          onClick={() => handleSearchText(searchText)}
+      <div className="draggable px-3">
+        <TextField.Root
+          placeholder={'Search'}
+          className="nodrag"
+          onInput={handleSearchChange}
+          ref={inputRef}
+          type="text"
+          value={searchText}
+          onFocus={() => setIsActive(true)}
+          // onBlur={() => setIsActive(false)}
         >
-          <Code size={'1'} color="gray" variant="outline">
-            ctrl
-          </Code>
-          <Code size={'1'} color="gray" variant="outline">
-            k
-          </Code>
-        </TextField.Slot>
-      </TextField.Root>
+          <TextField.Slot>
+            <MagnifyingGlassIcon height="16" width="16" />
+          </TextField.Slot>
+          <TextField.Slot
+            className="transition-all duration-100 ease-in-out hover:cursor-pointer hover:bg-[#5a5e6750]"
+            onClick={() => handleSearchText(searchText)}
+          >
+            <Code size={'1'} color="gray" variant="outline">
+              ctrl
+            </Code>
+            <Code size={'1'} color="gray" variant="outline">
+              k
+            </Code>
+          </TextField.Slot>
+        </TextField.Root>
+      </div>
 
       {isActive && (
         <div className="absolute mt-1 flex w-full animate-fade-down flex-col justify-center rounded-sm animate-duration-[400ms]">
