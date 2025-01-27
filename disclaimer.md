@@ -21,4 +21,4 @@ This project uses client-side content access mechanisms. Hence, the copyright in
 Do not harass the maintainer.
 
 ### Contacting the maintainer
-Begin by making a GitHub issue or sending an email to z8aqnuaqr@mozmail.com
+Begin by making a GitHub issue or sending an email to "go2for2hit2arth2@gmail.com" : **remove** all '2's from the mail (for e.g. "rem2o2ve2" becomes "remove")
