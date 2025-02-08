@@ -569,8 +569,7 @@ wss.on('connection', (ws) => {
     data = [...data, ...file]
 
     ws.send(JSON.stringify(data))
-  }, 1000
-
+  }, 1000)
   // Clear interval when the client disconnects
   ws.on('close', () => {
     console.log('Client disconnected')
