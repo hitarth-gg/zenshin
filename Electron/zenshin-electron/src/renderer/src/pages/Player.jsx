@@ -27,7 +27,7 @@ export default function Player(query) {
 
   function setDiscordRPC() {
     if (!discordRpcActivity) return
-    window.api.setDiscordRpc({ ...discordRpcActivity, state: `Watching Episode ${episodeNumber}` })
+    window.api.setDiscordRpc({ ...discordRpcActivity, state: `Episode ${episodeNumber}: ${episodeTitle}` })
   }
 
   useEffect(() => {

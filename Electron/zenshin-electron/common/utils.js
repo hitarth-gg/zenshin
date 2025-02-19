@@ -3,7 +3,7 @@ const encUrls = {
   pahe: decodeURIComponent(atob('aHR0cHM6Ly9hbmltZXBhaGUucnU=')),
   paheimages: decodeURIComponent(atob('aHR0cHM6Ly9pLmFuaW1lcGFoZS5ydQ==')),
   zenshinSupabase: decodeURIComponent(
-    atob('aHR0cHM6Ly96ZW5zaGluLXN1cGFiYXNlLWFwaS5vbnJlbmRlci5jb20=')
+    atob('aHR0cDovL3plbnNoaW4tc3VwYWJhc2UtYXBpLW15aWcub25yZW5kZXIuY29t')
   ),
   nyaaApi: decodeURIComponent(atob('aHR0cHM6Ly9ueWFhYXBpLm9ucmVuZGVyLmNvbS9ueWFh'))
 }

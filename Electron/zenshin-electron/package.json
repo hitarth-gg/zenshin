@@ -1,6 +1,6 @@
 {
   "name": "zenshin",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "AniList Client with Media Streaming Capabilities",
   "main": "./out/main/index.js",
   "author": "hitarth-gg",
@@ -64,8 +64,8 @@
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
-    "electron": "^31.0.2",
-    "electron-builder": "^24.13.3",
+    "electron": "^34.0.2",
+    "electron-builder": "^25.1.8",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",

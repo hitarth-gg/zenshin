@@ -38,7 +38,7 @@ export default function AppLayout({ props }) {
   /* ------------- CHECK LATEST GITHUB RELEASE ------------ */
   const owner = 'hitarth-gg' // Replace with the repository owner
   const repo = 'zenshin' // Replace with the repository name
-  const currentVersion = 'v2.1.5' // Replace with the current version
+  const currentVersion = 'v2.1.6' // Replace with the current version
 
   const getLatestRelease = async () => {
     try {

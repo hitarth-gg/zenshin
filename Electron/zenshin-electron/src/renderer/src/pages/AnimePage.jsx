@@ -89,7 +89,7 @@ export default function AnimePage() {
   const [showRelations, setShowRelations] = useState(false)
 
   const activityDetails = {
-    details: `${animeData?.title.romaji} • ${animeData?.title.native}`,
+    details: `${animeData?.title.romaji} • ${malIdData?.data?.title_japanese || animeData?.title.native || ''}`,
     state: `Browsing ${animeData?.title.romaji}`,
     assets: {
       large_image: animeData?.coverImage?.medium || animeData?.coverImage.extraLarge,
@@ -107,7 +107,7 @@ export default function AnimePage() {
     return () => {
       window.api.setDiscordRpc({ details: 'Stream Anime.' })
     }
-  }, [animeData, episodesWatched])
+  }, [animeData, episodesWatched, malIdData])
 
   if (isLoading) return <CenteredLoader />
 
