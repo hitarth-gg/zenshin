@@ -1,7 +1,7 @@
 import express from 'express'
 import cookieMiddleware from '../middlewares/cookies.js'
 import encUrls from '../../../../common/utils.js'
-
+import rageParse from '../../../../common/unpacker.js'
 const router = express.Router() // Use a router to define routes
 
 // Define the /search route with the cookieMiddleware
@@ -269,10 +269,20 @@ router.get('/play', cookieMiddleware, async (req, res) => {
         if (scripts) {
           for (const script of scripts) {
             const evalMatch = script.match(/eval(.+)/)
+            // console.log('Eval match:', evalMatch[1])
+
             if (evalMatch && evalMatch[1]) {
               try {
-                const decode_script = eval(evalMatch[1]) // Safely evaluate the script
+                // const decode_script = eval(evalMatch[1]) // Safely evaluate the script
+
+                // console.log('Eval matcg:', evalMatch[1])
+                let decode_script = rageParse(evalMatch[1].toString())
+                decode_script = decode_script.replace(/\\/g, '') // removes the character '\'
+                // console.log('Decoded script:', decode_script)
+
                 const urlMatch = decode_script.match(/source='(.+?)'/)
+                // console.log('URL match:', urlMatch);
+
                 if (urlMatch && urlMatch[1]) {
                   urls.push({
                     videoSrc: urlMatch[1],

@@ -97,3 +97,9 @@
   width: 100%;
 }
 
+/* * {
+  outline: 1px solid #f00;
+  &:hover {
+    outline: 2px solid #f00;
+  }
+} */

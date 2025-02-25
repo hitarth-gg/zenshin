@@ -46,6 +46,11 @@ export default function AnimePaheEpisode({ data }) {
     error
   } = useGetAnimePaheEps(anime_hash, active ? session : null)
 
+  console.log("Episode Play Data: ");
+
+  console.log(episodePlayData);
+
+
   function handleClick() {
     // e.stopPropagation()
     if (active) {
