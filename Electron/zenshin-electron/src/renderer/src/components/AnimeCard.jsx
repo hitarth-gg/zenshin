@@ -43,14 +43,14 @@ export default function AnimeCard({ data }) {
     const r = window.innerWidth - cut.right
 
     setPos2('-4rem')
-    if (l < 80) setPos2('0rem')
-    else if (r < 80) setPos2('-8rem')
+    if (l < 100) setPos2('0rem')
+    else if (r < 100) setPos2('-8rem')
   }, [card])
   const genresString = data?.genres?.join(', ') || ''
 
   return (
     <div
-      className="relative w-fit"
+      className="relative my-4 w-fit"
       onMouseOver={() => setCard(1)}
       onMouseLeave={() => setCard(0)}
       onClick={() => handleClick()}
@@ -59,7 +59,7 @@ export default function AnimeCard({ data }) {
       {
         <div
           onClick={() => handleClick()}
-          className={`group relative mt-6 flex w-48 animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out ${hoverCard ? '' : 'hover:scale-110'}`}
+          className={`group relative flex w-[10.6rem] animate-fade cursor-pointer flex-col items-center justify-center gap-y-2 transition-all ease-in-out ${hoverCard ? '' : 'hover:scale-110'}`}
         >
           <div className="relative z-10">
             {imageLoading && (
@@ -133,7 +133,7 @@ export default function AnimeCard({ data }) {
       {card === 1 && hoverCard && (
         <div
           // className="absolute -left-10 top-0 z-40 h-[21.3rem] w-72 animate-fade bg-[#1a1a1d] shadow-3xl drop-shadow-4xl animate-duration-300"
-          className="absolute top-0 z-40 h-[21.3rem] w-80 animate-fade bg-[#1a1a1d] shadow-3xl drop-shadow-4xl animate-duration-300"
+          className="absolute -top-5 z-40 h-[21.3rem] w-80 animate-fade bg-[#1a1a1d] shadow-3xl drop-shadow-4xl animate-duration-300"
           style={{
             left: pos2
           }}
@@ -153,16 +153,26 @@ export default function AnimeCard({ data }) {
           )} */}
 
           {videoLoading && (
-            <img
-              src={bannerImage || data?.coverImage?.extraLarge}
-              alt=""
-              // className={`duration-400 absolute top-0 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
-              className={`duration-400 absolute top-0 h-36 w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
-            />
+            <>
+              <img
+                src={bannerImage || data?.coverImage?.extraLarge}
+                alt=""
+                // className={`duration-400 absolute top-0 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
+                className={`duration-400 absolute top-0 z-10 h-36 w-full animate-fade rounded-sm object-cover object-center drop-shadow-4xl transition-all ease-in-out`}
+              />
+              {/* {glow && (
+                <img
+                  src={bannerImage || data?.coverImage?.extraLarge}
+                  alt=""
+                  // className={`duration-400 absolute top-0 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
+                  className={`duration-400 absolute top-20 -z-10 h-36 w-full rounded-sm object-cover object-center opacity-70 blur-2xl brightness-75 saturate-150 transition-all ease-in-out`}
+                />
+              )} */}
+            </>
           )}
           <div className="flex flex-col gap-y-2">
             <div
-              className="line-clamp-2 px-2 py-1 text-sm font-medium tracking-wide"
+              className="line-clamp-2 px-2 py-1 text-sm font-medium tracking-wide "
               style={{
                 // gradient left to right fade to black
                 backgroundImage: `linear-gradient(to right, ${
@@ -199,7 +209,7 @@ export default function AnimeCard({ data }) {
             </div>
 
             {genresString && (
-              <div className="mx-2 line-clamp-1 flex w-full items-center justify-between gap-x-2 border-b border-[#545454] pb-1 text-xs text-gray-300">
+              <div className="mx-2 line-clamp-1 border-b border-[#545454] pb-1 text-xs text-gray-300">
                 {genresString}
               </div>
             )}

@@ -206,7 +206,7 @@ export default function Home() {
 
           <div className="my-12 flex h-full w-8/12 flex-col items-center justify-start gap-y-1 p-3 lg:w-2/5">
             <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[6rem] object-scale-down" />
-            <p className="font-space-mono">
+            <p className="text-center font-space-mono">
               Stream your favourite anime instantly with our service, no waiting for downloads,
               reliable and seamless streaming directly to the app / External Media Player.
             </p>
@@ -253,11 +253,11 @@ export default function Home() {
                   // gradient from left to right black to transparent
                   <div
                     key={anime.id + 'bannerAnime'}
-                    className="relative h-72 cursor-pointer"
+                    className="relative h-72 cursor-pointer 2xl:h-96"
                     onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
                   >
                     <div className="mask absolute h-full w-8/12 bg-gradient-to-r from-[#141414] backdrop-blur-md"></div>
-                    <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2">
+                    <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2 2xl:gap-y-6">
                       <div className="line-clamp-1 max-w-xl bg-gradient-to-r from-[#14141480] py-1 text-start text-2xl font-semibold tracking-wider text-white drop-shadow-3xl">
                         {anime.title.romaji}
                       </div>
@@ -288,7 +288,11 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <img src={anime.bannerImage} alt="" className="h-72 w-full object-cover" />
+                    <img
+                      src={anime.bannerImage}
+                      alt=""
+                      className="h-72 w-full object-cover 2xl:h-96"
+                    />
                   </div>
                 ))}
             </Carousel>
@@ -336,10 +340,10 @@ export default function Home() {
       {/* {status === 'success' && !error && ( */}
       {!error && (
         <div className="mx-5 mt-8">
-          <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+          <div className="mb-2 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Airing Anime
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg2:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-9">
+          <div className="ml-4 grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-x-4">
             {!isLoading &&
               !error &&
               topAiringAnime?.map((anime) => (
@@ -366,7 +370,7 @@ export default function Home() {
 
       {!infiniteQueryError && topAnime?.length > 0 && (
         <div className="mx-5 mt-12">
-          <div className="mb-2 ml-5 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
+          <div className="mb-2 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Anime
           </div>
 
@@ -386,11 +390,11 @@ export default function Home() {
                   // gradient from left to right black to transparent
                   <div
                     key={anime.id + 'bannerAnime'}
-                    className="relative h-72 cursor-pointer"
+                    className="relative h-72 cursor-pointer 2xl:h-96"
                     onClick={() => navigate(`/anime/${anime.id}`, { state: { data: anime } })}
                   >
                     <div className="mask absolute h-full w-8/12 bg-gradient-to-r from-[#141414] backdrop-blur-md"></div>
-                    <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2">
+                    <div className="absolute ml-5 flex h-full flex-col items-start justify-center gap-y-2 px-2 2xl:gap-y-6">
                       <div className="line-clamp-1 max-w-xl bg-gradient-to-r from-[#14141480] py-1 text-start text-2xl font-semibold tracking-wider text-white drop-shadow-3xl">
                         {anime.title.romaji}
                       </div>
@@ -421,7 +425,11 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <img src={anime.bannerImage} alt="" className="h-72 w-full object-cover" />
+                    <img
+                      src={anime.bannerImage}
+                      alt=""
+                      className="h-72 w-full object-cover 2xl:h-96"
+                    />
                   </div>
                 ))}
               </Carousel>
@@ -440,7 +448,7 @@ export default function Home() {
               </div>
             }
           >
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 lg2:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-9">
+            <div className="ml-4 grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-x-4">
               {topAnime?.map((anime) => {
                 return <AnimeCard key={anime.id + 'topAnime'} data={anime} />
               })}

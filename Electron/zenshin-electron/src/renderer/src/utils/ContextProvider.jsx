@@ -22,6 +22,8 @@ export default function ZenshinProvider({ children }) {
   const [broadcastDiscordRpc, setBroadcastDiscordRpc] = useState(false)
   const [hoverCard, setHoverCard] = useState(true)
   const [settings, setSettings] = useState({})
+  const [smoothScroll, setSmoothScroll] = useState(false)
+
 
   useEffect(() => {
     const glow = localStorage.getItem('glow')
@@ -71,6 +73,11 @@ export default function ZenshinProvider({ children }) {
       setHoverCard(animateHoverCard === 'true')
     }
 
+    const smoothScroll = localStorage.getItem('smoothScroll')
+    if (smoothScroll) {
+      setSmoothScroll(smoothScroll === 'true')
+    }
+
     getSettingsJson()
   }, [])
 
@@ -98,7 +105,9 @@ export default function ZenshinProvider({ children }) {
         hoverCard,
         setHoverCard,
         settings,
-        setSettings
+        setSettings,
+        smoothScroll,
+        setSmoothScroll
       }}
     >
       {children}

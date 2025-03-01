@@ -12,7 +12,7 @@ export default function AppLayout({ props }) {
   const navigation = useNavigation()
   const isLoading = navigation.state === 'loading'
   const [theme, setTheme] = useState('dark')
-  const { checkForUpdates } = useZenshinContext()
+  const { checkForUpdates, smoothScroll } = useZenshinContext()
 
   function toggleTheme() {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
@@ -87,10 +87,8 @@ export default function AppLayout({ props }) {
     if (checkForUpdates) getLatestRelease()
   }, [checkForUpdates])
 
-  /* ------------------------------------------------------ */
-
-  return (
-    <ReactLenis root options={{ lerp: 0.15 }}>
+  const MainComponent = () => {
+    return (
       <Theme appearance={theme}>
         <Toaster
           theme={theme}
@@ -116,6 +114,19 @@ export default function AppLayout({ props }) {
           <main className="">{props || <Outlet />}</main>
         </div>
       </Theme>
-    </ReactLenis>
+    )
+  }
+
+  /* ------------------------------------------------------ */
+  return (
+    <>
+      {smoothScroll ? (
+        <ReactLenis root options={{ lerp: 0.15 }}>
+          <MainComponent />
+        </ReactLenis>
+      ) : (
+        <MainComponent />
+      )}
+    </>
   )
 }

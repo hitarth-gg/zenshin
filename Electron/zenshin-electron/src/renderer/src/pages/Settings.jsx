@@ -24,7 +24,9 @@ export default function Settings() {
     hoverCard,
     setHoverCard,
     settings,
-    setSettings
+    setSettings,
+    smoothScroll,
+    setSmoothScroll
   } = useZenshinContext()
 
   // const [settingsJson, setSettingsJson] = useState({})
@@ -89,6 +91,12 @@ export default function Settings() {
     const newHoverCardState = !hoverCard
     setHoverCard(newHoverCardState)
     localStorage.setItem('hoverCard', newHoverCardState ? 'true' : 'false')
+  }
+
+  function toggleSmoothScroll() {
+    const newSmoothScrollState = !smoothScroll
+    setSmoothScroll(newSmoothScrollState)
+    localStorage.setItem('smoothScroll', newSmoothScrollState ? 'true' : 'false')
   }
 
   // useEffect(() => {
@@ -283,6 +291,23 @@ export default function Settings() {
             onCheckedChange={() => {
               setBroadcastDiscordRpc(!broadcastDiscordRpc)
               window.api.broadcastDiscordRpc(!broadcastDiscordRpc)
+            }}
+          />
+        </div>
+
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="switch_card">
+            <p className="font-bold">Smooth Scroll</p>
+            <p className="text-xs">
+              Enable or disable smooth scroll effect on the home page. <br /> Disabling this might
+              reduce scroll lag.
+            </p>
+          </div>
+          <Switch
+            checked={smoothScroll}
+            style={{ marginLeft: '1.5rem', cursor: 'pointer' }}
+            onCheckedChange={() => {
+              toggleSmoothScroll()
             }}
           />
         </div>

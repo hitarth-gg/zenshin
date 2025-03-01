@@ -139,7 +139,7 @@ export default function NewReleaseCard({
             <img
               src={imageUrl || anilistCover}
               alt="episode_image"
-              className="duration-400 h-42 aspect-video w-96 animate-fade rounded-sm object-cover object-center transition-all ease-in-out"
+              className="duration-400 aspect-video h-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out"
               onLoad={() => setImageIsLoading(false)}
               onError={() => setImageIsLoading(false)}
             />
@@ -159,7 +159,7 @@ export default function NewReleaseCard({
 
         <div className="flex justify-between text-xs opacity-60">
           <p className="text-nowrap">{timeAgo(data.timestamp)}</p>
-          <p className="text-nowrap">Episode {episode}</p>
+          <p className="text-nowrap">Episode {episode ? episode : '?'}</p>
         </div>
         <div></div>
       </div>

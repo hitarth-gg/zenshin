@@ -279,7 +279,6 @@ router.get('/play', cookieMiddleware, async (req, res) => {
                 let decode_script = rageParse(evalMatch[1].toString())
                 decode_script = decode_script.replace(/\\/g, '') // removes the character '\'
                 // console.log('Decoded script:', decode_script)
-
                 const urlMatch = decode_script.match(/source='(.+?)'/)
                 // console.log('URL match:', urlMatch);
 

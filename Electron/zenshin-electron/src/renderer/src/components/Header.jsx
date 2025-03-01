@@ -146,7 +146,7 @@ export default function Header({ theme }) {
         </a> */}
 
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
-        <div className="flex gap-3">
+        <div className="flex gap-4">
           <Button color="gray" variant="ghost" size={'1'} onClick={() => navigate(-1)}>
             <ArrowLeftIcon className="my-1" width={16} height={16} />
           </Button>
