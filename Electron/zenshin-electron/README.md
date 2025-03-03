@@ -51,6 +51,8 @@ PS> cordova create zenshin-cordova com.zenshin.app Zenshin
 
 ### Copy existing Electron application files into the Cordova project
 
+Delete everything in the `zenshin-cordova/www` directory before copying files.
+
 Copy the contents of the `Electron/zenshin-electron` directory into the `zenshin-cordova/www` directory.
 
 ### Build the APK using Cordova CLI
