@@ -1,0 +1,8 @@
+{
+  "name": "zenshin",
+  "version": "1.0.0",
+  "description": "AniList Client with Media Streaming Capabilities",
+  "dependencies": {
+    "cordova-android": "^10.1.1"
+  }
+}
