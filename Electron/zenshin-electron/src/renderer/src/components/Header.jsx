@@ -26,7 +26,7 @@ import AniListLogo from '../assets/symbols/AniListLogo'
 import { useZenshinContext } from '../utils/ContextProvider'
 import DownloadMeter from './DownloadMeter'
 
-export default function Header({ theme }) {
+export default function Header() {
   const navigate = useNavigate()
   const { setUserId, backendPort, settings } = useZenshinContext()
 

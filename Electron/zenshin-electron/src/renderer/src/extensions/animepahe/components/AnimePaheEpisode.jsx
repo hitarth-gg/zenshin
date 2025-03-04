@@ -114,7 +114,7 @@ export default function AnimePaheEpisode({ data }) {
                       <p className="h-2 min-h-2 w-2 min-w-2 rounded-full bg-green-500"></p>
                     </Tooltip>
                   )}
-                  <p className="line-clamp-1">Episode. {episode}</p>
+                  <p className="line-clamp-1"> <span className=''>{ix+1}.</span> Episode. {episode}</p>
                 </p>
               </div>
             </div>

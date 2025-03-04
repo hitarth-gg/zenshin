@@ -11,6 +11,9 @@ import fs from 'fs'
 import { animepaheRouter } from './animepahe/routes/search'
 import encUrls from '../../common/utils'
 import DiscordRPC from '../renderer/src/utils/discord'
+import WebSocket from 'ws'
+
+console.log('IN MAIN !!!')
 
 // import path from 'path'
 // import { fileURLToPath } from 'url'
@@ -68,6 +71,23 @@ function createWindow() {
     }
   })
 
+  const gotTheLock = app.requestSingleInstanceLock()
+
+  if (!gotTheLock) {
+    app.quit() // Quit the app if another instance is already running
+    return
+  } else {
+    app.on('second-instance', () => {
+      // If the user tried to run a second instance, show the existing window
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) {
+          mainWindow.restore()
+        }
+        mainWindow.focus()
+      }
+    })
+  }
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -119,6 +139,16 @@ function createWindow() {
       }
     })
   })
+
+  // start the backend server
+  if (backendServer) {
+    backendServer.close(() => {
+      console.log('Backend server stopped.')
+      startServer() // Restart the server on the new port
+    })
+  } else {
+    startServer() // Start the server if it's not running yet
+  }
 }
 
 // This method will be called when Electron has finished
@@ -310,16 +340,6 @@ app.whenReady().then(() => {
     app.setAsDefaultProtocolClient('zenshin2', process.execPath, [path.resolve(process.argv[1])])
   } else {
     app.setAsDefaultProtocolClient('zenshin2')
-  }
-
-  // start the backend server
-  if (backendServer) {
-    backendServer.close(() => {
-      console.log('Backend server stopped.')
-      startServer() // Restart the server on the new port
-    })
-  } else {
-    startServer() // Start the server if it's not running yet
   }
 
   function startBroadcastingDiscordRpc() {
@@ -544,7 +564,6 @@ app2.get('/metadata/:magnet', async (req, res) => {
 /* ------------------------------------------------------ */
 /*                        NEW META                        */
 /* ------------------------------------------------------ */
-import WebSocket from 'ws'
 const wss = new WebSocket.Server({ noServer: true })
 // const wss = new WebSocket.Server({ port: 64622 })
 

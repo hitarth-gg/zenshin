@@ -58,8 +58,8 @@ function DownloadMeter() {
         </Button>
       </Tooltip>
       {(showFullSpeed || alwaysShow) && (
-        <div className="absolute -left-20 top-10 z-50 rounded-sm bg-[#111113]">
-          <div className="flex w-52 select-none justify-center gap-x-2 text-nowrap px-1 py-2 font-space-mono text-xs">
+        <div className="absolute -left-[6rem] top-10 z-50 rounded-sm bg-[#111113]">
+          <div className="flex w-64 select-none justify-center gap-x-2 text-nowrap px-1 py-2 font-space-mono text-xs">
             <div className="flex items-center gap-x-1">
               {formatBytes(clientDownloadSpeed)}/{/* asddasddas */}
               <ArrowDownIcon />

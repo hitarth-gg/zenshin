@@ -74,7 +74,7 @@ export default function AnimeCard({ data }) {
             />
           </div>
 
-          <div className="z-20 flex w-[85%] flex-col gap-y-1">
+          <div className="z-20 flex w-full  flex-col gap-y-1">
             <div
               title={data?.title?.romaji}
               className="line-clamp-2 h-11 w-full text-sm font-medium opacity-90"
@@ -172,7 +172,7 @@ export default function AnimeCard({ data }) {
           )}
           <div className="flex flex-col gap-y-2">
             <div
-              className="line-clamp-2 px-2 py-1 text-sm font-medium tracking-wide "
+              className="line-clamp-2 px-2 py-1 text-sm font-medium tracking-wide"
               style={{
                 // gradient left to right fade to black
                 backgroundImage: `linear-gradient(to right, ${

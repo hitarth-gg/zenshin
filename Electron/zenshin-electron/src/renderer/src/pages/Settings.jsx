@@ -344,6 +344,7 @@ export default function Settings() {
           </div>
         </div>
       </div>
+
       <p className="mt-8 text-xs opacity-45">
         This app or it&apos;s servers do not host or distribute any copyrighted files or media. It
         is an educational project built solely to learn about new technologies.
