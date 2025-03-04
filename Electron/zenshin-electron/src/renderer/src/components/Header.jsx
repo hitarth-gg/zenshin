@@ -155,12 +155,12 @@ export default function Header() {
           </Button>
         </div>
         <DividerVerticalIcon width={20} height={20} color="#ffffff40" />
-        <Button className="nodrag" color="gray" variant="soft" size={'1'}>
-          <Link to="/newreleases">
+        <Link to="/newreleases">
+          <Button className="nodrag" color="gray" variant="soft" size={'1'}>
             {/* <div className="p-1 font-space-mono text-[.8rem]">New Releases</div> */}
             <div className="font-space-mono text-[.8rem]">New</div>
-          </Link>
-        </Button>
+          </Button>
+        </Link>
         {/* <DividerVerticalIcon width={20} height={20} color="#ffffff40" /> */}
         <Button
           className="nodrag"

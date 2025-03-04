@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, dialog, session } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog, session, globalShortcut } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -39,6 +39,7 @@ const discordClientId = '1312155472781901824'
 let rpcClient = null
 let broadcastDiscordRpc = true
 let extensionUrls = {}
+let zoomFactor = 1.0
 
 function createWindow() {
   // Create the browser window.
@@ -70,7 +71,6 @@ function createWindow() {
       webSecurity: false
     }
   })
-
   const gotTheLock = app.requestSingleInstanceLock()
 
   if (!gotTheLock) {
@@ -156,6 +156,24 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
+  // Reset Zoom to default
+
+  // globalShortcut.register('CommandOrControl+=', () => {
+  //   zoomFactor += 0.1
+  //   mainWindow.webContents.setZoomFactor(zoomFactor)
+  // })
+
+  // globalShortcut.register('CommandOrControl+-', () => {
+  //   zoomFactor -= 0.1
+  //   if (zoomFactor < 0.1) zoomFactor = 0.1
+  //   mainWindow.webContents.setZoomFactor(zoomFactor)
+  // })
+
+  // globalShortcut.register('CommandOrControl+0', () => {
+  //   zoomFactor = 1.0
+  //   mainWindow.webContents.setZoomFactor(zoomFactor)
+  // })
+
   electronApp.setAppUserModelId('com.electron')
 
   // Default open or close DevTools by F12 in development
