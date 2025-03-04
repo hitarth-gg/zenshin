@@ -78,7 +78,7 @@ Define the path to vlc.exe in BACKEND/server.js :
 ```
 ---
 
-### Contributiing :
+### Contributing :
 Forks are welcomed, but contributions directly to this project and branch are not encouraged as of now.
 You can still open issues for feature requests, bug reports or any other inquiries.
 
