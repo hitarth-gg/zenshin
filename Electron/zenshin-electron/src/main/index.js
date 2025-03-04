@@ -39,7 +39,7 @@ const discordClientId = '1312155472781901824'
 let rpcClient = null
 let broadcastDiscordRpc = true
 let extensionUrls = {}
-let zoomFactor = 1.0
+// let zoomFactor = 1.0
 
 function createWindow() {
   // Create the browser window.
