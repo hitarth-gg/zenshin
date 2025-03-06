@@ -33,7 +33,7 @@ A web and electron based anime torrent streamer which can stream torrents and sc
 
 
 ## Demo : (Click the images)
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/cpMpWohodUc/0.jpg)](https://youtu.be/nhUhcBWD4HE)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/cpMpWohodUc/0.jpg)](https://youtu.be/cpMpWohodUc)
 <!-- [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/nhUhcBWD4HE/0.jpg)](https://youtu.be/nhUhcBWD4HE) -->
 
 ---
