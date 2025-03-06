@@ -343,7 +343,7 @@ export default function Home() {
           <div className="mb-2 border-b border-gray-700 pb-1 font-space-mono text-lg font-bold tracking-wider">
             Top Airing Anime
           </div>
-          <div className="ml-4 grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-x-4 overflow-x-hidden">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-x-4 overflow-x-visible pl-4">
             {!isLoading &&
               !error &&
               topAiringAnime?.map((anime) => (
@@ -448,7 +448,7 @@ export default function Home() {
               </div>
             }
           >
-            <div className="ml-4 grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-x-4 overflow-x-hidden">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-x-4 overflow-x-visible pl-4">
               {topAnime?.map((anime) => {
                 return <AnimeCard key={anime.id + 'topAnime'} data={anime} />
               })}

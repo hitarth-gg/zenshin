@@ -361,6 +361,8 @@ app.whenReady().then(() => {
   }
 
   function startBroadcastingDiscordRpc() {
+    console.log('Starting Discord RPC...')
+
     try {
       rpcClient = new DiscordRPC(discordClientId)
       rpcClient.initialize()
@@ -368,8 +370,8 @@ app.whenReady().then(() => {
       // set default activity
       setTimeout(() => {
         rpcClient.setActivity({
-          details: 'Watch Anime.',
-          state: 'Browsing Anime...',
+          details: 'Browsing Anime',
+          state: 'At Home',
           // largeImageKey: 'logo',
           // largeImageText: 'Anime Time!',
           // smallImageKey: 'logo',
