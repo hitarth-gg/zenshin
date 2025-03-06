@@ -42,7 +42,7 @@ A web and electron based anime torrent streamer which can stream torrents and sc
 
 ---
 
-### Disclaimer : [disclaimer.md](https://github.com/hitarth-gg/zenshin/blob/af8cd6485cc9fa8ea59434312d022fce223daa28/disclaimer.md)
+### Disclaimer : [disclaimer.md](https://github.com/hitarth-gg/zenshin/blob/main/disclaimer.md)
 
 ---
 
