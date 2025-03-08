@@ -32,15 +32,17 @@ A web and electron based anime torrent streamer which can stream torrents and sc
 </details>
 
 
-## Demo : (Click the image)
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/nhUhcBWD4HE/0.jpg)](https://youtu.be/nhUhcBWD4HE)
+## Demo : (Click the images)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/cpMpWohodUc/0.jpg)](https://youtu.be/cpMpWohodUc)
+<!-- [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/nhUhcBWD4HE/0.jpg)](https://youtu.be/nhUhcBWD4HE) -->
 
 ---
-Note: The video player in the browser currently does not support subtitle rendering as extracting embedded subtitles from an mkv file is quite tricky and is way out of my league. To play the video with subtitles open it in VLC by clicking on the `Open VLC` button when playing an episode.
+> [!NOTE]
+> The video player inside the browser/app currently does not support subtitle rendering as extracting embedded subtitles from an mkv file is quite tricky and is way out of my league. To play the video with subtitles open it in VLC/MPV by clicking on the `Open VLC` or `Open in External Player` button when playing an episode.
 
 ---
 
-### Disclaimer : [disclaimer.md](https://github.com/hitarth-gg/zenshin/blob/af8cd6485cc9fa8ea59434312d022fce223daa28/disclaimer.md)
+### Disclaimer : [disclaimer.md](https://github.com/hitarth-gg/zenshin/blob/main/disclaimer.md)
 
 ---
 
