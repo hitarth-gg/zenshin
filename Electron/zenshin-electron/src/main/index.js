@@ -5,7 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import { Deeplink } from 'electron-deeplink'
 import { exec } from 'child_process'
 import express from 'express'
-import WebTorrent from 'webtorrent'
+// import WebTorrent from 'webtorrent'
 import cors from 'cors'
 import fs from 'fs'
 import { animepaheRouter } from './animepahe/routes/search'
@@ -22,6 +22,17 @@ import('chalk').then((module) => {
   chalk = module.default
   console.log(chalk.green('Chalk is loaded!'))
 })
+let client = null
+async function loadWebTorrent() {
+  const { default: WebTorrent } = await import('webtorrent')
+  try {
+    client = new WebTorrent()
+    console.log('WebTorrent loaded:')
+  } catch (error) {
+    console.error('Error loading WebTorrent:', error)
+  }
+}
+loadWebTorrent()
 
 // import isDev from 'electron-is-dev'
 // app.commandLine.appendSwitch('force_low_power_gpu')
@@ -434,7 +445,7 @@ deeplink.on('received', (link) => {
 // const { downloadsFolderPath } = JSON.parse(fs.readFileSync(settingsPath))
 
 const app2 = express()
-const client = new WebTorrent()
+// const client = new WebTorrent()
 
 app2.use(cors())
 
