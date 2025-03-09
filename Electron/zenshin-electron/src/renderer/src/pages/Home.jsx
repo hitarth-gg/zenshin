@@ -166,7 +166,7 @@ export default function Home() {
     <div className="select-none font-space-mono tracking-tight">
       {!hideHero && (
         <div
-          className="relative flex min-h-[96svh] animate-fade flex-col items-center justify-around gap-y-11 lg:flex-row"
+          className="relative flex min-h-[96svh] animate-fade flex-col items-center justify-center gap-x-24 gap-y-11 lg:flex-row"
           style={
             {
               // backgroundImage: `url(${gradient1})`,
@@ -207,8 +207,9 @@ export default function Home() {
           <div className="my-12 flex h-full w-8/12 flex-col items-center justify-start gap-y-1 p-3 lg:w-2/5">
             <img src={zenshinLogo} alt="" className="drop-shadow-xl h-[6rem] object-scale-down" />
             <p className="text-center font-space-mono">
-              Stream your favourite anime instantly with our service, no waiting for downloads,
-              reliable and seamless streaming directly to the app / External Media Player.
+              {/* Stream your favourite anime instantly with our service, no waiting for downloads,
+              reliable and seamless streaming directly to the app / External Media Player. */}
+              A desktop anime list manager with media streaming capabilities.
             </p>
           </div>
 

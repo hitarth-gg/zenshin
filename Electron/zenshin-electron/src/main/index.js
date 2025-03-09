@@ -1,7 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, dialog, session, globalShortcut } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/icon.ico?asset'
 import { Deeplink } from 'electron-deeplink'
 import { exec } from 'child_process'
 import express from 'express'
@@ -382,7 +382,7 @@ app.whenReady().then(() => {
       setTimeout(() => {
         rpcClient.setActivity({
           details: 'Browsing Anime',
-          state: 'At Home',
+          state: 'At HomePage',
           // largeImageKey: 'logo',
           // largeImageText: 'Anime Time!',
           // smallImageKey: 'logo',

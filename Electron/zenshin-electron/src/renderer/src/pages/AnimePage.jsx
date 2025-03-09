@@ -105,7 +105,7 @@ export default function AnimePage() {
   useEffect(() => {
     setDiscordRPC()
     return () => {
-      window.api.setDiscordRpc({ details: 'Stream Anime.' })
+      window.api.setDiscordRpc({ details: 'Browsing Anime' })
     }
   }, [animeData, episodesWatched, malIdData])
 

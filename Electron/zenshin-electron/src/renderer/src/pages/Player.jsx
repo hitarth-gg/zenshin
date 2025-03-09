@@ -36,7 +36,7 @@ export default function Player(query) {
   useEffect(() => {
     setDiscordRPC()
     return () => {
-      window.api.setDiscordRpc({ details: 'Stream Anime.' })
+      window.api.setDiscordRpc({ details: 'Browsing Anime' })
     }
   }, [discordRpcActivity])
 

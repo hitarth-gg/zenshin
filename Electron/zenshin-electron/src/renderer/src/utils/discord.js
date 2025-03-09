@@ -24,8 +24,8 @@ class DiscordRPC {
       pid: process.pid,
       activity: {
         timestamps: { start: Date.now() },
-        details: activityDetails.details || 'Stream Anime.',
-        state: activityDetails.state || 'Watching Anime',
+        details: activityDetails.details || 'Browsing Anime',
+        state: activityDetails.state || 'Looking for anime to watch',
         assets: {
           // large_image: activityDetails.largeImageKey || 'logo',
           // large_text: activityDetails.largeImageText || 'Anime Time!',
