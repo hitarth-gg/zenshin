@@ -1,7 +1,7 @@
-# zenshin. <img src="https://github.com/user-attachments/assets/87dd28e0-8c0a-43ce-a953-f58c604ccf62" width="23">
+# zenshin. <img src="https://github.com/user-attachments/assets/6de78e3e-2c14-4044-b65f-cc5e81fc4e10" width="23">
 
 <p align="center" >
-  <img src="https://github.com/user-attachments/assets/af797fd4-e7ca-428f-82fc-c50d13b9407c" width="120">
+  <img src="https://github.com/user-attachments/assets/3ecc5d2b-eb45-4865-8d5b-688f1d328756" width="170">
 </p>
 <p align="center">
   <a href="https://github.com/hitarth-gg/zenshin/releases">
