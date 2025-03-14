@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { isTruthyWithZero } from '../../../../common/utils'
 
 const ZenshinContext = createContext()
 
@@ -23,7 +24,8 @@ export default function ZenshinProvider({ children }) {
   const [hoverCard, setHoverCard] = useState(true)
   const [settings, setSettings] = useState({})
   const [smoothScroll, setSmoothScroll] = useState(true)
-
+  const [uploadLimit, setUploadLimit] = useState(-1)
+  const [downloadLimit, setDownloadLimit] = useState(-1)
 
   useEffect(() => {
     const glow = localStorage.getItem('glow')
@@ -65,6 +67,14 @@ export default function ZenshinProvider({ children }) {
       if (settings.broadcastDiscordRpc) {
         setBroadcastDiscordRpc(settings.broadcastDiscordRpc)
       }
+      if (isTruthyWithZero(settings.uploadLimit) && settings.uploadLimit !== -1) {
+        setUploadLimit(parseInt(settings.uploadLimit) / 1024)
+      }
+      if (isTruthyWithZero(settings.downloadLimit) && settings.downloadLimit !== -1) {
+        console.log('settings.downloadLimit', settings.downloadLimit)
+
+        setDownloadLimit(parseInt(settings.downloadLimit) / 1024)
+      }
       setSettings(settings)
     }
 
@@ -72,7 +82,6 @@ export default function ZenshinProvider({ children }) {
     if (animateHoverCard) {
       setHoverCard(animateHoverCard === 'true')
     }
-
 
     const smoothScroll = localStorage.getItem('smoothScroll')
     if (smoothScroll && smoothScroll === 'false') {
@@ -108,7 +117,11 @@ export default function ZenshinProvider({ children }) {
         settings,
         setSettings,
         smoothScroll,
-        setSmoothScroll
+        setSmoothScroll,
+        uploadLimit,
+        setUploadLimit,
+        downloadLimit,
+        setDownloadLimit
       }}
     >
       {children}

@@ -97,7 +97,6 @@ const router = createHashRouter([
 ])
 
 function App() {
-  // the idea of integrating react-query is similar to that of context api
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

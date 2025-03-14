@@ -21,6 +21,8 @@ export default function Episode({
   episodeNumber,
   all,
   bannerImage,
+  animeCoverImage,
+
   discordRpcActivity
 }) {
   const navigate = useNavigate()
@@ -54,18 +56,33 @@ export default function Episode({
   }
 
   function onTorrentClick(torrent) {
-    navigate(
-      `/player/${encodeURIComponent(torrent.magnet_uri)}/${animeId}/${progress}/${episodeNumber}`,
-      {
-        state: {
-          episodeTitle: data.title,
-          episodeNumber: episodeNumber,
-          animeTitle: anime.romaji,
-          bannerImage: bannerImage,
-          discordRpcActivity: discordRpcActivity
-        }
+    let urlObj = {
+      pathname: `/player/${encodeURIComponent(torrent.magnet_uri)}/${animeId}/${progress}/${episodeNumber}`,
+      state: {
+        animeId: animeId,
+        magnetUri: torrent.magnet_uri,
+        episodeTitle: data.title,
+        episodeNumber: episodeNumber,
+        animeTitle: anime.romaji,
+        bannerImage: bannerImage,
+        animeCoverImage: animeCoverImage,
+        discordRpcActivity: discordRpcActivity
       }
-    )
+    }
+    navigate(urlObj.pathname, { state: urlObj })
+
+    // navigate(
+    //   `/player/${encodeURIComponent(torrent.magnet_uri)}/${animeId}/${progress}/${episodeNumber}`,
+    //   {
+    //     state: {
+    //       episodeTitle: data.title,
+    //       episodeNumber: episodeNumber,
+    //       animeTitle: anime.romaji,
+    //       bannerImage: bannerImage,
+    //       discordRpcActivity: discordRpcActivity
+    //     }
+    //   }
+    // )
   }
 
   useEffect(() => {
@@ -199,7 +216,7 @@ export default function Episode({
   // if the data is defined, then it is a normal episode
   if (episodeNumber <= progress && data?.hideWatchedEpisodes) return null
   return (
-    <div className="flex w-full  cursor-default flex-col border border-gray-700 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100">
+    <div className="flex w-full cursor-default flex-col border border-gray-700 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20] hover:opacity-100">
       <div className="flex">
         {data.thumbnail && (
           <img

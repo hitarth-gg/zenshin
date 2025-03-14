@@ -22,8 +22,10 @@ export default function Player(query) {
   const [files, setFiles] = useState([])
   const { vlcPath, backendPort } = useZenshinContext()
   // receive params from navigation hook
+  const loc = useLocation()
   const { episodeTitle, episodeNumber, animeTitle, bannerImage, discordRpcActivity } =
-    useLocation().state
+    loc.state.state
+  console.log(loc.state)
 
   function setDiscordRPC() {
     if (!discordRpcActivity) return
@@ -100,6 +102,7 @@ export default function Player(query) {
   const getFiles = async () => {
     try {
       console.log('Inside getFiles')
+
       const response = await axios.get(
         `http://localhost:${backendPort}/metadata/${encodeURIComponent(magnetURI)}`
       )
@@ -177,9 +180,17 @@ export default function Player(query) {
 
   /* ---------------- Handling batch files ---------------- */
 
-  const handleStreamBrowser = (eipsode) => {
+  const handleStreamBrowser = (episode) => {
+    // save the data in the settings
+    let temp_obj = {
+      episodeName: episode,
+      streamUrl: `http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
+      ...loc.state
+    }
+    window.api.saveToSettings('currentAnime', temp_obj)
+
     setVideoSrc(
-      `http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(eipsode)}`
+      `http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
     )
   }
   console.log(videoSrc)
@@ -201,9 +212,16 @@ export default function Player(query) {
     }
   }
 
-  // const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"'
 
   const handleStreamVlc = async (episode) => {
+    // save the data in the settings
+    let temp_obj = {
+      episodeName: episode,
+      streamUrl: `http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
+      ...loc.state
+    }
+    window.api.saveToSettings('currentAnime', temp_obj)
+
     try {
       window.api.openVlc(
         `${vlcPath} http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`

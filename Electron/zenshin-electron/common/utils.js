@@ -8,4 +8,10 @@ const encUrls = {
   nyaaApi: decodeURIComponent(atob('aHR0cHM6Ly9ueWFhYXBpLm9ucmVuZGVyLmNvbS9ueWFh'))
 }
 
+function isTruthyWithZero(value) {
+  return Boolean(value) || value === 0
+}
+
+export { isTruthyWithZero }
+
 export default encUrls

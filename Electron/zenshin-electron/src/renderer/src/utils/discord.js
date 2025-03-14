@@ -12,14 +12,14 @@ class DiscordRPC {
 
   initialize() {
     register(this.clientId)
-    this.client.login({ clientId: this.clientId }).catch(console.error)
+    this.client.login({ clientId: this.clientId }).catch(() => {
+      setTimeout(() => this.initialize(), 5000).unref()
+    })
   }
 
   setActivity(activityDetails) {
-    if (!this.client) {
-      console.error('RPC client not initialized.')
-      return
-    }
+    if (!this.client || !this.client.user) return
+
     this.client.request('SET_ACTIVITY', {
       pid: process.pid,
       activity: {
@@ -30,7 +30,7 @@ class DiscordRPC {
           // large_image: activityDetails.largeImageKey || 'logo',
           // large_text: activityDetails.largeImageText || 'Anime Time!',
           // small_image: activityDetails.smallImageKey || 'logo',
-          // small_text: activityDetails.smallImageText || 'Zenshin Player'
+          // small_text: activityDetails.smallImageText || 'Zenshin'
           ...activityDetails.assets
         },
 
@@ -45,7 +45,6 @@ class DiscordRPC {
       }
     })
   }
-
   disconnect() {
     this.client.destroy().then(() => {
       console.log('RPC client disconnected.')

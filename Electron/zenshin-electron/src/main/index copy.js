@@ -12,45 +12,21 @@ import encUrls from '../../common/utils'
 import DiscordRPC from '../renderer/src/utils/discord'
 import WebSocket from 'ws'
 import announce from '../../common/announce'
-import Settings from './settings'
 
+console.log('IN MAIN !!!')
+
+// import path from 'path'
+// import { fileURLToPath } from 'url'
 let chalk
 import('chalk').then((module) => {
   chalk = module.default
   console.log(chalk.green('Chalk is loaded!'))
 })
-
 let client = null
-
-const settings = new Settings()
-
-const us = () => {
-  if (
-    (!settings.get('uploadLimit') && settings.get('uploadLimit') !== 0) ||
-    settings.get('uploadLimit') === -1
-  )
-    return -1
-  else return settings.get('uploadLimit')
-}
-const ds = () => {
-  if (
-    (!settings.get('downloadLimit') && settings.get('downloadLimit') !== 0) ||
-    settings.get('downloadLimit') === -1
-  )
-    return -1
-  else return settings.get('downloadLimit')
-}
-
-console.log('Upload Limit:', us())
-console.log('Download Limit:', ds())
-
 async function loadWebTorrent() {
   const { default: WebTorrent } = await import('webtorrent')
   try {
-    client = new WebTorrent({
-      uploadLimit: us(),
-      downloadLimit: ds()
-    })
+    client = new WebTorrent()
     console.log('WebTorrent loaded:')
   } catch (error) {
     console.error('Error loading WebTorrent:', error)
@@ -62,23 +38,22 @@ loadWebTorrent()
 // app.commandLine.appendSwitch('force_low_power_gpu')
 // app.commandLine.appendSwitch('force_high_performance_gpu')
 
-let mainWindow
+let mainWindow // Define mainWindow here
+const zenshinPathDocuments = app.getPath('documents') + '/Zenshin'
+let downloadsDir = path.join(app.getPath('downloads'), 'ZenshinDownloads')
+let defaultDownloadsDir = path.join(app.getPath('downloads'), 'ZenshinDownloads')
+const settingsPath = path.join(zenshinPathDocuments, 'settings.json')
+let backendPort = 64621
 let backendServer
 const discordClientId = '1312155472781901824'
+// let rpcClient = new DiscordRPC(discordClientId)
 let rpcClient = null
+let broadcastDiscordRpc = true
 let extensionUrls = {}
 // let zoomFactor = 1.0
 
-function mkdirp(dir) {
-  if (fs.existsSync(dir)) {
-    return true
-  }
-  const dirname = path.dirname(dir)
-  mkdirp(dirname)
-  fs.mkdirSync(dir)
-}
-
 function createWindow() {
+  // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1300,
     height: 800,
@@ -227,6 +202,26 @@ app.whenReady().then(() => {
     fs.mkdirSync(zenshinPathDocuments)
   }
 
+  // create settings.json file if it doesn't exist
+  if (!fs.existsSync(settingsPath)) {
+    try {
+      let json_obj = {
+        downloadsFolderPath: downloadsDir,
+        backendPort: backendPort,
+        broadcastDiscordRpc: true,
+        extensionUrls: {}
+      }
+      fs.writeFileSync(settingsPath, JSON.stringify(json_obj, null, 2))
+    } catch (error) {
+      console.error('Error creating settings.json file:', error)
+      dialog.showErrorBox('Error creating settings.json file:', error.message)
+    }
+  }
+  // change variables according to settings.json
+  let settings = JSON.parse(fs.readFileSync(settingsPath))
+  backendPort = settings.backendPort || 64621
+  downloadsDir = settings.downloadsFolderPath || defaultDownloadsDir
+  broadcastDiscordRpc = settings.broadcastDiscordRpc && true
   extensionUrls = settings.extensionUrls
 
   ipcMain.on('open-animepahe', () => {
@@ -245,6 +240,8 @@ app.whenReady().then(() => {
     webview.webContents.on('did-finish-load', async () => {
       const cookies = await webview.webContents.session.cookies.get({})
       console.log('Cookies from webview:', cookies)
+      // fs.writeFileSync('./cookies.json', JSON.stringify(cookies, null, 2))
+
       // save cookies in documents directory, write file asynchronusly
       fs.writeFile(
         path.join(zenshinPathDocuments, 'cookies.json'),
@@ -265,18 +262,32 @@ app.whenReady().then(() => {
 
       .showOpenDialog({
         title: 'Select Downloads Folder',
-        defaultPath: settings.getDefaultSettings().downloadsFolderPath,
+        defaultPath: downloadsDir,
         properties: ['openDirectory']
       })
       .then((result) => {
         if (!result.canceled) {
-          let t = result.filePaths[0]
-          console.log('Downloads directory changed to:', t)
+          downloadsDir = result.filePaths[0]
+          console.log('Downloads directory changed to:', downloadsDir)
 
           // Save the new downloads directory in settings.json
-          settings.set('downloadsFolderPath', t)
+          const settingsPath = path.join(zenshinPathDocuments, 'settings.json')
+          fs.writeFileSync(
+            settingsPath,
+            JSON.stringify(
+              {
+                ...JSON.parse(fs.readFileSync(settingsPath)),
+                downloadsFolderPath: downloadsDir
+              },
+              null,
+              2
+            )
+          )
           // Send the new downloads directory to the renderer process
-          mainWindow.webContents.send('receive-settings-json', settings.getSettings())
+          mainWindow.webContents.send(
+            'receive-settings-json',
+            JSON.parse(fs.readFileSync(settingsPath))
+          )
         }
       })
       .catch((err) => {
@@ -286,11 +297,23 @@ app.whenReady().then(() => {
 
   // change port of backend server
   ipcMain.on('change-backend-port', (event, port) => {
+    backendPort = port
+    console.log('Backend port changed to:', backendPort)
+
     // Save the new backend port in settings.json
-    settings.set('backendPort', port)
-    console.log('Backend port changed to:', settings.get('backendPort'))
+    fs.writeFileSync(
+      settingsPath,
+      JSON.stringify(
+        {
+          ...JSON.parse(fs.readFileSync(settingsPath)),
+          backendPort: backendPort
+        },
+        null,
+        2
+      )
+    )
     // Send the new backend port to the renderer process
-    mainWindow.webContents.send('receive-settings-json', settings.getSettings())
+    mainWindow.webContents.send('receive-settings-json', JSON.parse(fs.readFileSync(settingsPath)))
 
     // Restart the backend server
     if (backendServer) {
@@ -299,29 +322,25 @@ app.whenReady().then(() => {
         startServer() // Restart the server on the new port
       })
     } else {
-      console.log('Backend server not running, starting it now...')
       startServer() // Start the server if it's not running yet
-    }
-  })
-
-  ipcMain.on('save-to-settings', (event, key, value) => {
-    settings.set(key, value)
-  })
-
-  ipcMain.on('get-settings-json', () => {
-    mainWindow.webContents.send('receive-settings-json', settings.getSettings())
-  })
-
-  ipcMain.on('reload-window', (event) => {
-    const win = BrowserWindow.fromWebContents(event.sender)
-    if (win) {
-      win.webContents.reload()
     }
   })
 
   // change discord rpc setting
   ipcMain.on('broadcast-discord-rpc', (event, value) => {
-    settings.set('broadcastDiscordRpc', value)
+    broadcastDiscordRpc = value
+
+    fs.writeFileSync(
+      settingsPath,
+      JSON.stringify(
+        {
+          ...JSON.parse(fs.readFileSync(settingsPath)),
+          broadcastDiscordRpc: broadcastDiscordRpc
+        },
+        null,
+        2
+      )
+    )
     if (value === false && rpcClient) {
       try {
         rpcClient.disconnect()
@@ -330,7 +349,18 @@ app.whenReady().then(() => {
         console.error('Error stopping Discord RPC:')
       }
     } else if (value === true) startBroadcastingDiscordRpc()
-    console.log('Discord RPC setting changed to:', settings.get('broadcastDiscordRpc'))
+    console.log('Discord RPC setting changed to:', broadcastDiscordRpc)
+  })
+
+  ipcMain.on('get-settings-json', () => {
+    mainWindow.webContents.send('receive-settings-json', JSON.parse(fs.readFileSync(settingsPath)))
+  })
+
+  ipcMain.on('reload-window', (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (win) {
+      win.webContents.reload()
+    }
   })
 
   createWindow()
@@ -349,7 +379,6 @@ app.whenReady().then(() => {
       rpcClient.initialize()
 
       // set default activity
-      if (!rpcClient.client.user) return
       setTimeout(() => {
         rpcClient.setActivity({
           details: 'Browsing Anime',
@@ -367,13 +396,13 @@ app.whenReady().then(() => {
   }
 
   // Discord RPC
-  if (settings.get('broadcastDiscordRpc') === true) {
+  if (broadcastDiscordRpc) {
     startBroadcastingDiscordRpc()
   }
 
   // set discord rpc activity
   ipcMain.on('set-discord-rpc', (event, activityDetails) => {
-    if (!rpcClient || settings.get('broadcastDiscordRpc') === false) return
+    if (!rpcClient || broadcastDiscordRpc === false) return
     rpcClient.setActivity(activityDetails)
   })
 
@@ -413,12 +442,23 @@ deeplink.on('received', (link) => {
   }
 })
 
+// const { downloadsFolderPath } = JSON.parse(fs.readFileSync(settingsPath))
+
 const app2 = express()
 // const client = new WebTorrent()
 
 app2.use(cors())
 
-if (settings.get('downloadsFolderPath')) mkdirp(settings.get('downloadsFolderPath'))
+function mkdirp(dir) {
+  if (fs.existsSync(dir)) {
+    return true
+  }
+  const dirname = path.dirname(dir)
+  mkdirp(dirname)
+  fs.mkdirSync(dir)
+}
+
+if (downloadsDir === defaultDownloadsDir) mkdirp(defaultDownloadsDir)
 
 /* ------------------------------------------------------ */
 /* ------------------------------------------------------ */
@@ -427,8 +467,8 @@ if (settings.get('downloadsFolderPath')) mkdirp(settings.get('downloadsFolderPat
 /* ------------------------------------------------------ */
 
 function startServer() {
-  backendServer = app2.listen(settings.get('backendPort'), () => {
-    console.log(`Server running at http://localhost:${settings.get('backendPort')}`)
+  backendServer = app2.listen(backendPort, () => {
+    console.log(`Server running at http://localhost:${backendPort}`)
   })
 
   backendServer.on('upgrade', (request, socket, head) => {
@@ -476,63 +516,36 @@ function startServer() {
 // seedExistingFiles()
 /* ------------------------------------------------------ */
 
-// app2.get('/add/:magnet', async (req, res) => {
-//   let magnet = req.params.magnet
+app2.get('/add/:magnet', async (req, res) => {
+  let magnet = req.params.magnet
 
-//   /* ------------------------------------------------------ */
-//   // Check if the torrent is already added
-//   let existingTorrent = await client.get(magnet)
-//   console.log('Existing torrent:', existingTorrent)
+  /* ------------------------------------------------------ */
+  // Check if the torrent is already added
+  let existingTorrent = await client.get(magnet)
+  console.log('Existing torrent:', existingTorrent)
 
-//   if (existingTorrent) {
-//     // If torrent is already added, return its file information
-//     let files = existingTorrent.files.map((file) => ({
-//       name: file.name,
-//       length: file.length
-//     }))
-//     // console.log("Existing torrent files:", files);
+  if (existingTorrent) {
+    // If torrent is already added, return its file information
+    let files = existingTorrent.files.map((file) => ({
+      name: file.name,
+      length: file.length
+    }))
+    // console.log("Existing torrent files:", files);
 
-//     return res.status(200).json(files)
-//   }
-//   /* ------------------------------------------------------ */
-
-//   client.add(magnet, function (torrent) {
-//     let files = torrent.files.map((file) => ({
-//       name: file.name,
-//       length: file.length
-//     }))
-//     // console.log(files);
-
-//     res.status(200).json(files)
-//   })
-// })
-
-async function loadLastTorrentSession() {
-  const lastSession = settings.get('currentAnime')
-  if (!lastSession) return
-  const streamUrl = lastSession.streamUrl
-  const magnet = lastSession.state.magnetUri
-
-  // add the torrent using the sreamUrl
-  try {
-    const pre = await fetch(
-      `http://localhost:${settings.get('backendPort')}/metadata/${encodeURIComponent(magnet)}`
-    )
-    if (pre.status === 200) {
-      const res = await fetch(streamUrl)
-    }
-  } catch (error) {
-    console.error('Error fetching stream URL:', error)
-    return
+    return res.status(200).json(files)
   }
-}
+  /* ------------------------------------------------------ */
 
-/* ------------------ ADD LAST SESSION ------------------ */
-// await 5s before loading the last session, yea i know how bad this is
-setTimeout(() => {
-  loadLastTorrentSession()
-}, 5000)
-/* ------------------------------------------------------ */
+  client.add(magnet, function (torrent) {
+    let files = torrent.files.map((file) => ({
+      name: file.name,
+      length: file.length
+    }))
+    // console.log(files);
+
+    res.status(200).json(files)
+  })
+})
 
 /* -------------------- GET METADATA -------------------- */
 app2.get('/metadata/:magnet', async (req, res) => {
@@ -562,11 +575,7 @@ app2.get('/metadata/:magnet', async (req, res) => {
     torrent.destroy()
   })
 
-  const torrent = client.add(magnet, {
-    path: settings.get('downloadsFolderPath'),
-    deselect: true,
-    announce: announce
-  })
+  const torrent = client.add(magnet, { path: downloadsDir, deselect: true /* , announce */ })
 
   torrent.on('metadata', () => {
     const files = torrent.files.map((file) => ({
@@ -585,6 +594,7 @@ app2.get('/metadata/:magnet', async (req, res) => {
 })
 
 /* ------------------------------------------------------ */
+/*                        NEW META                        */
 /* ------------------------------------------------------ */
 const wss = new WebSocket.Server({ noServer: true })
 // const wss = new WebSocket.Server({ port: 64622 })
@@ -593,6 +603,7 @@ wss.on('connection', (ws) => {
   console.log('Client connected')
   const interval = setInterval(() => {
     let data = []
+    // data.push()
     data.push({ clientDownloadSpeed: client.downloadSpeed, clientUploadSpeed: client.uploadSpeed })
     const file = client.torrents.map((torrent) => ({
       name: torrent.name,

@@ -26,11 +26,22 @@ export default function Settings() {
     settings,
     setSettings,
     smoothScroll,
-    setSmoothScroll
+    setSmoothScroll,
+    uploadLimit,
+    setUploadLimit,
+    downloadLimit,
+    setDownloadLimit
   } = useZenshinContext()
 
   // const [settingsJson, setSettingsJson] = useState({})
+
   const [tempBackendPort, setTempBackendPort] = useState(backendPort)
+  const [tempUploadLimit, setTempUploadLimit] = useState(uploadLimit === -1 ? '' : uploadLimit)
+  const [tempDownloadLimit, setTempDownloadLimit] = useState(
+    downloadLimit === -1 ? '' : downloadLimit
+  )
+
+  console.log('downloadLimit', downloadLimit);
 
   function toggleGlow() {
     const newGlowState = !glow // Determine the new state
@@ -43,6 +54,30 @@ export default function Settings() {
     const newPath = e.target.value.replace(/"/g, '')
     setVlcPath(`"${newPath}"`)
     localStorage.setItem('vlcPath', `"${newPath}"`)
+  }
+  function updateUploadLimit(e) {
+    let newSpeed = -1
+    let value = parseInt(e.target.value, 10) // Convert input to number
+    setTempUploadLimit(value)
+    if (!isNaN(value) && value > -1) {
+      newSpeed = value
+      window.api.saveToSettings('uploadLimit', newSpeed * 1024)
+    } else {
+      window.api.saveToSettings('uploadLimit', newSpeed)
+    }
+    setUploadLimit(newSpeed)
+  }
+  function updateDownloadLimit(e) {
+    let newSpeed = -1
+    let value = parseInt(e.target.value, 10) // Convert input to number
+    setTempDownloadLimit(value)
+    if (!isNaN(value) && value > -1) {
+      newSpeed = value
+      window.api.saveToSettings('downloadLimit', newSpeed * 1024)
+    } else {
+      window.api.saveToSettings('downloadLimit', newSpeed)
+    }
+    setDownloadLimit(newSpeed)
   }
 
   function toggleAutoUpdateAnilistEpisode() {
@@ -210,6 +245,46 @@ export default function Settings() {
             placeholder={vlcPath}
             value={vlcPath.replace(/"/g, '')}
             onInput={updateVlcPath}
+            className="w-1/2"
+          ></TextField.Root>
+        </div>
+
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="text_input_card">
+            <p className="font-bold">Max Download Speed</p>
+            <p className="text-xs">
+              Set the maximum download speed for torrents. <br /> Leave empty for unlimited speed.{' '}
+              <b>Restart</b> the app after changing the speed.
+            </p>
+            <p className="text-xs">
+              Current Speed: {downloadLimit === -1 ? 'Unlimited' : downloadLimit + ' KB/s'}
+            </p>
+          </div>
+          <TextField.Root
+            type="number"
+            placeholder={'Unlimited'}
+            onInput={updateDownloadLimit}
+            value={tempDownloadLimit}
+            className="w-1/2"
+          ></TextField.Root>
+        </div>
+
+        <div className="flex w-full items-center justify-between bg-[#202022] px-4 py-2">
+          <div className="text_input_card">
+            <p className="font-bold">Max Upload Speed</p>
+            <p className="text-xs">
+              Set the maximum upload speed for torrents. <br /> Leave empty for unlimited speed.{' '}
+              <b>Restart</b> the app after changing the speed.
+            </p>
+            <p className="text-xs">
+              Current Speed: {uploadLimit === -1 ? 'Unlimited' : uploadLimit + ' KB/s'}
+            </p>
+          </div>
+          <TextField.Root
+            type="number"
+            placeholder={'Unlimited'}
+            onInput={updateUploadLimit}
+            value={tempUploadLimit}
             className="w-1/2"
           ></TextField.Root>
         </div>

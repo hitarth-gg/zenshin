@@ -20,6 +20,9 @@ const api = {
       )
     })
   },
+  saveToSettings: (key, value) => {
+    ipcRenderer.send('save-to-settings', key, value)
+  },
   getSettingsJson: () => {
     ipcRenderer.send('get-settings-json')
     return new Promise((resolve) => {

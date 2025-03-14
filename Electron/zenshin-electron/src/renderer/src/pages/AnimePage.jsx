@@ -93,7 +93,8 @@ export default function AnimePage() {
     state: `Browsing ${animeData?.title.romaji}`,
     assets: {
       large_image: animeData?.coverImage?.medium || animeData?.coverImage.extraLarge,
-      small_text: 'Zenshin Player'
+      small_image: 'logo',
+      small_text: 'Zenshin'
     }
   }
 
@@ -377,6 +378,7 @@ export default function AnimePage() {
                   dualAudio={dualAudio}
                   data={{ aids: mappingsData?.mappings?.anidb_id, quality, eids: 0 }}
                   bannerImage={data?.bannerImage}
+                  animeCoverImage={data?.coverImage?.extraLarge}
                   discordRpcActivity={activityDetails}
                 />
                 {animeEpisodes?.map((episode, ix) => (
@@ -394,6 +396,7 @@ export default function AnimePage() {
                     episodeNumber={ix + 1}
                     aniZip_titles={aniZip_titles}
                     bannerImage={data?.bannerImage}
+                    animeCoverImage={data?.coverImage?.extraLarge}
                     discordRpcActivity={activityDetails}
                   />
                 ))}

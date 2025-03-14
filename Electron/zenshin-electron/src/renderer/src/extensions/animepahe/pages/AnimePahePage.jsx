@@ -146,7 +146,7 @@ function AnimePahePage() {
     state: `Browsing ${animeData?.title.romaji}`,
     assets: {
       large_image: animeData?.coverImage?.medium || animeData?.coverImage.extraLarge,
-      small_text: 'Zenshin Player'
+      small_text: 'Zenshin'
     }
   }
 

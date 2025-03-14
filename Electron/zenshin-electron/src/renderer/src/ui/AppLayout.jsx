@@ -88,7 +88,6 @@ export default function AppLayout({ props }) {
     if (checkForUpdates) getLatestRelease()
   }, [checkForUpdates])
 
-
   // const MainComponent = () => {
   //   return (
   //     <Theme appearance={theme}>
@@ -118,6 +117,8 @@ export default function AppLayout({ props }) {
   //     </Theme>
   //   )
   // }
+
+
 
   /* ------------------------------------------------------ */
   return (
