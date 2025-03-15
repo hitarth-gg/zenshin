@@ -32,3 +32,33 @@ $ npm run build:mac
 # For Linux
 $ npm run build:linux
 ```
+
+## Running on Android
+
+To run this application on an Android device, you can use Cordova to package the Electron application as an APK.
+
+### Install Cordova
+
+```powershell
+PS> npm install -g cordova
+```
+
+### Create a new Cordova project
+
+```powershell
+PS> cordova create zenshin-cordova com.zenshin.app Zenshin
+```
+
+### Copy existing Electron application files into the Cordova project
+
+Delete everything in the `zenshin-cordova/www` directory before copying files.
+
+Copy the contents of the `Electron/zenshin-electron` directory into the `zenshin-cordova/www` directory.
+
+### Build the APK using Cordova CLI
+
+```powershell
+PS> cd zenshin-cordova
+PS> cordova platform add android
+PS> cordova build android
+```
