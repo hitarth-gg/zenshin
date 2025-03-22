@@ -119,7 +119,7 @@ export default function Episode({
                 <div className="flex items-start">
                   <DropdownMenu.Root className="nodrag" modal={false}>
                 <DropdownMenu.Trigger>
-                  <div className="flex m-1 items-center gap-2 cursor-default border border-gray-700 p-3 font-space-mono hover:bg-[#1e1e20]">
+                  <div className="flex m-1 h-14 items-center gap-2 cursor-default border border-gray-700 p-3 font-space-mono hover:bg-[#1e1e20]">
                     <div>{(episodePage*100)-99}-{(episodePage*100)}</div>
                     <DropdownMenu.TriggerIcon />
                   </div>
