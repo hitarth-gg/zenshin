@@ -22,6 +22,7 @@ export default function AnimePage() {
   const malId = animeData?.idMal
   const episodesWatched = animeData?.mediaListEntry?.progress || 0
   const [quality, setQuality] = useState('All')
+  const [episodePage, setEpisodePage] = useState(1)
   const {
     isLoading: isLoadingMappings,
     data: mappingsData,
@@ -265,8 +266,11 @@ export default function AnimePage() {
                   dualAudio={dualAudio}
                   data={{ aids: mappingsData?.mappings?.anidb_id, quality, eids: 0 }}
                   bannerImage={data?.bannerImage}
+                  episodePage={episodePage}
+                  setEpisodePage={setEpisodePage}
+                  animeEpisodes={animeEpisodes}
                 />
-                {animeEpisodes?.map((episode, ix) => (
+                {animeEpisodes?.filter((_,index)=> index<(episodePage*100) && index>(episodePage*100)-101).map((episode, ix) => (
                   <Episode
                     key={'ep -' + ix}
                     anime={data.title}
@@ -281,6 +285,8 @@ export default function AnimePage() {
                     episodeNumber={ix + 1}
                     aniZip_titles={aniZip_titles}
                     bannerImage={data?.bannerImage}
+                    episodePage={episodePage}
+                    setEpisodePage={setEpisodePage}
                   />
                 ))}
               </div>

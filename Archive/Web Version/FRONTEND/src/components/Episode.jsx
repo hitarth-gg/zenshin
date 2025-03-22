@@ -2,7 +2,7 @@ import { format, set } from 'date-fns'
 import useNyaaTracker from '../hooks/useNyaaTracker'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { Skeleton, Tooltip } from '@radix-ui/themes'
+import { Button, DropdownMenu, Skeleton, Tooltip } from '@radix-ui/themes'
 import {
   DiscIcon,
   DividerVerticalIcon,
@@ -20,7 +20,10 @@ export default function Episode({
   dualAudio,
   episodeNumber,
   all,
-  bannerImage
+  bannerImage,
+  setEpisodePage,
+  episodePage,
+  animeEpisodes
 }) {
   console.log(data)
 
@@ -111,9 +114,31 @@ export default function Episode({
   // if the data is undefined, then it is a filler episode or a recap episode ot a movie
   if (all)
     return (
+      <div className='flex w-full'>
+      {animeEpisodes?.length > 100?(
+                <div className="flex items-start">
+                  <DropdownMenu.Root className="nodrag" modal={false}>
+                <DropdownMenu.Trigger>
+                  <div className="flex m-1 items-center gap-2 cursor-default border border-gray-700 p-3 font-space-mono hover:bg-[#1e1e20]">
+                    <div>{(episodePage*100)-99}-{(episodePage*100)}</div>
+                    <DropdownMenu.TriggerIcon />
+                  </div>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  {Array.from({length: Math.ceil(animeEpisodes.length/100)}, (_, i) => i+1).map((page) => (
+                    <DropdownMenu.Item
+                      color={`${episodePage === page ? 'indigo' : 'gray'}`}
+                      onClick={() => setEpisodePage(page)}>
+                      {(page*100)-99}-{(page*100)}
+                    </DropdownMenu.Item>
+                  ))}
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+              </div>
+        ):("")}
       <div
         onClick={() => handleClick()}
-        className="relative m-1 cursor-default border border-gray-700 p-3 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20]"
+        className="relative m-1 w-full cursor-default border border-gray-700 p-3 font-space-mono transition-all duration-100 ease-in-out hover:bg-[#1e1e20]"
       >
         <div className="flex items-center justify-between">
           <div className="flex gap-x-1 font-space-mono font-medium opacity-90">
@@ -185,6 +210,7 @@ export default function Episode({
             ))}
           </div>
         )}
+      </div>
       </div>
     )
 
