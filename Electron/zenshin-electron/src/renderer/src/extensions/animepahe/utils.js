@@ -22,6 +22,11 @@ export const animepaheEpisodes = async (id, page = 1) => {
   const data = await response.json()
   return { data: data.episodes }
 }
+export const animepaheEpisodesOfPage = async (id, page = 1) => {
+  const response = await fetch(`${BASE_URL}/getepisodesofpage?id=${id}&page=${page}`)
+  const data = await response.json()
+  return { data: data.episodes }
+}
 
 export const animepahePlay = async (id, episode) => {
   const response = await fetch(`${BASE_URL}/play?id=${id}&episode=${episode}`)

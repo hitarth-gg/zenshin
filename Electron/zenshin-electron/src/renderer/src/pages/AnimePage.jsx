@@ -17,6 +17,7 @@ import MyAnimeListLogo from '../assets/symbols/MyAnimeListLogo'
 import YouTubeLogo from '../assets/symbols/YouTubeLogo'
 import AnilistEditorModal from '../components/AnilistEditorModal'
 import BooksLogo from '../assets/symbols/BooksLogo'
+import Pagination from '../components/Pagination'
 
 export default function AnimePage() {
   const zenshinContext = useZenshinContext()
@@ -87,6 +88,9 @@ export default function AnimePage() {
   const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
   const [showFullDescription, setShowFullDescription] = useState(false)
   const [showRelations, setShowRelations] = useState(false)
+
+  const [pageSize, setPageSize] = useState(100)
+  const [pageNo, setPageNo] = useState(0)
 
   const activityDetails = {
     details: `${animeData?.title.romaji} • ${malIdData?.data?.title_japanese || animeData?.title.native || ''}`,
@@ -369,6 +373,15 @@ export default function AnimePage() {
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
+              <Pagination
+                arraySize={animeEpisodes?.length}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                pageNo={pageNo}
+                setPageNo={setPageNo}
+                position={'relative'}
+                progress= {episodesWatched}
+              />
             </div>
             {!isLoadingMappings && (
               <div className="mt-3 grid grid-cols-1 gap-y-3">
@@ -381,25 +394,49 @@ export default function AnimePage() {
                   animeCoverImage={data?.coverImage?.extraLarge}
                   discordRpcActivity={activityDetails}
                 />
-                {animeEpisodes?.map((episode, ix) => (
-                  <Episode
-                    key={'ep -' + ix}
-                    anime={data.title}
-                    animeId={data.id}
-                    data={{
-                      ...episode,
-                      progress: episodesWatched,
-                      hideWatchedEpisodes,
-                      quality
-                    }}
-                    dualAudio={dualAudio}
-                    episodeNumber={ix + 1}
-                    aniZip_titles={aniZip_titles}
-                    bannerImage={data?.bannerImage}
-                    animeCoverImage={data?.coverImage?.extraLarge}
-                    discordRpcActivity={activityDetails}
-                  />
-                ))}
+                {/* {animeEpisodes?.map((episode, ix) => ( */}
+                {/* {animeEpisodes
+                  ?.slice(pageNo * pageSize, pageNo * pageSize + pageSize)
+                  ?.map((episode, ix) => (
+                    <Episode
+                      key={'ep -' + ix + pageNo * pageSize}
+                      anime={data.title}
+                      animeId={data.id}
+                      data={{
+                        ...episode,
+                        progress: episodesWatched,
+                        hideWatchedEpisodes,
+                        quality
+                      }}
+                      dualAudio={dualAudio}
+                      episodeNumber={ix + 1 + pageNo * pageSize}
+                      aniZip_titles={aniZip_titles}
+                      bannerImage={data?.bannerImage}
+                      animeCoverImage={data?.coverImage?.extraLarge}
+                      discordRpcActivity={activityDetails}
+                    />
+                  ))} */}
+                {animeEpisodes
+                  ?.slice(pageNo * pageSize, pageNo * pageSize + pageSize)
+                  ?.map((episode, ix) => (
+                    <Episode
+                      key={'ep -' + ix + pageNo * pageSize}
+                      anime={data.title}
+                      animeId={data.id}
+                      data={{
+                        ...episode,
+                        progress: episodesWatched,
+                        hideWatchedEpisodes,
+                        quality
+                      }}
+                      dualAudio={dualAudio}
+                      episodeNumber={ix + 1 + pageNo * pageSize}
+                      aniZip_titles={aniZip_titles}
+                      bannerImage={data?.bannerImage}
+                      animeCoverImage={data?.coverImage?.extraLarge}
+                      discordRpcActivity={activityDetails}
+                    />
+                  ))}
               </div>
             )}
             {isLoadingMappings && <Skeleton className="mt-3 h-12" />}

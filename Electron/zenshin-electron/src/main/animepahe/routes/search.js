@@ -208,6 +208,7 @@ router.get('/getallepisodes', cookieMiddleware, async (req, res) => {
 
   try {
     const { cookiesString, baseUrl } = req
+    console.log(`${baseUrl}/api?m=release&id=${id}&page=${currentPage}`)
 
     do {
       const response = await fetch(`${baseUrl}/api?m=release&id=${id}&page=${currentPage}`, {
@@ -236,6 +237,45 @@ router.get('/getallepisodes', cookieMiddleware, async (req, res) => {
       total: allEpisodes.length,
       episodes: allEpisodes
     })
+  } catch (error) {
+    console.error(`Failed to fetch webpage: ${error.message}`)
+    res.status(500).send({
+      status: 500,
+      error: error.message
+    })
+  }
+})
+router.get('/getepisodesofpage', cookieMiddleware, async (req, res) => {
+  const { id } = req.query
+  let currentPage = req.query.page || 1
+  let lastPage = 1
+  let allEpisodes = []
+
+  try {
+    const { cookiesString, baseUrl } = req
+    console.log(`${baseUrl}/api?m=release&id=${id}&page=${currentPage}`)
+
+    const response = await fetch(`${baseUrl}/api?m=release&id=${id}&page=${currentPage}`, {
+      headers: {
+        Cookie: cookiesString
+      }
+    })
+
+    if (!response.ok) {
+      if (response.status === 403) {
+        return res.status(403).send({
+          status: 403,
+          error: 'Please use webview to enter the website then close the webview window.'
+        })
+      }
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return res.json({
+      data: data
+    })
+
   } catch (error) {
     console.error(`Failed to fetch webpage: ${error.message}`)
     res.status(500).send({
