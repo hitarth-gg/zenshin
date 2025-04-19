@@ -72,8 +72,8 @@ function Downloads() {
     !settings?.currentAnime?.episodeName ||
     settings?.currentAnime?.episodeName !== rem[0]?.name
   ) {
-    anime = null
-    currAnime = null
+    // anime = null
+    // currAnime = null
   }
   const navigate = useNavigate()
   console.log(anime)
@@ -101,12 +101,12 @@ function Downloads() {
                 </div>
               </Tooltip>
             )}
-            {anime && (
+            {anime && anime?.bannerImage && (
               <div className="absolute left-0 top-0 -z-10 h-full w-full overflow-hidden">
                 <img
                   src={anime?.bannerImage}
                   alt=""
-                  className="top-7 z-0 h-72 w-full border-2 object-cover opacity-20 blur-sm saturate-150 2xl:h-96"
+                  className="bg top-7 z-0 h-72 w-full border-2  object-cover opacity-20 blur-sm saturate-150 2xl:h-96"
                 />
               </div>
             )}

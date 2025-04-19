@@ -28,6 +28,8 @@ function AnimePahePage() {
   const anilistId = animepaheData?.anilist_id
   const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
 
+  console.log(animepaheData);
+
   const {
     isLoading: isLoadingAnilist,
     animeData,

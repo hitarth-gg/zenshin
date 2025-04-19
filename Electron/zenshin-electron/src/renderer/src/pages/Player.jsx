@@ -100,6 +100,12 @@ export default function Player(query) {
   }
 
   const getFiles = async () => {
+    let temp_obj = {
+      streamUrl: null,
+      ...loc.state
+    }
+    window.api.saveToSettings('currentAnime', temp_obj)
+
     try {
       console.log('Inside getFiles')
 
@@ -148,6 +154,8 @@ export default function Player(query) {
       })
     }
   }
+  // log current path
+  console.log('Current path:', window.location.pathname)
 
   const checkBackendRunning = async () => {
     try {
@@ -187,6 +195,8 @@ export default function Player(query) {
       streamUrl: `http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
       ...loc.state
     }
+    console.log(temp_obj);
+
     window.api.saveToSettings('currentAnime', temp_obj)
 
     setVideoSrc(

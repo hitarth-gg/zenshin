@@ -4,6 +4,51 @@ import encUrls from '../../../../common/utils.js'
 import rageParse from '../../../../common/unpacker.js'
 const router = express.Router() // Use a router to define routes
 
+function extractData(data) {
+  let title, cover, desc, anilist_id
+
+  // Try first pattern (span, synopsis div, anilist link)
+  const titleMatch = data.match(/<span style="user-select:text">(.+?)<\/span>/)
+  const coverMatch = data.match(/<a href="(https:\/\/i.animepahe.ru\/posters.+?)"/)
+  const descMatch = data.match(/<div class="anime-synopsis">(.+?)<\/div>/)
+  const anilistMatch = data.match(/<a href="\/\/anilist.co\/anime\/(.+?)"/)
+
+  title = titleMatch ? titleMatch[1] : null
+  cover = coverMatch ? coverMatch[1] : null
+  desc = descMatch ? descMatch[1] : null
+  anilist_id = anilistMatch ? anilistMatch[1] : null
+
+  // Fallback: Try <meta> and <title> based values
+  if (!title) {
+    const metaTitleMatch = data.match(/<meta property="og:title" content="(.+?)">/)
+    const titleTagMatch = data.match(/<title>(.+?) :: animepahe<\/title>/)
+    title = metaTitleMatch ? metaTitleMatch[1] : titleTagMatch ? titleTagMatch[1] : null
+  }
+
+  if (!cover) {
+    const metaCoverMatch = data.match(/<meta property="og:image" content="(.+?)">/)
+    cover = metaCoverMatch ? metaCoverMatch[1] : null
+  }
+
+  if (!desc) {
+    const metaDescMatch = data.match(/<meta name="description" content="(.+?)">/)
+    const ogDescMatch = data.match(/<meta property="og:description" content="(.+?)">/)
+    desc = metaDescMatch ? metaDescMatch[1] : ogDescMatch ? ogDescMatch[1] : null
+  }
+
+  if (!anilist_id) {
+    const metaAnilistMatch = data.match(/<meta name="anilist" content="(\d+)">/)
+    anilist_id = metaAnilistMatch ? metaAnilistMatch[1] : null
+  }
+
+  return {
+    title,
+    cover,
+    desc,
+    anilist_id
+  }
+}
+
 // Define the /search route with the cookieMiddleware
 router.get('/search', cookieMiddleware, async (req, res) => {
   // console.log(`Search query: ${req.query.q}`)
@@ -95,14 +140,18 @@ router.get('/details', cookieMiddleware, async (req, res) => {
     }
 
     const data = await response.text()
-    const title = data.match(/<span>(.+?)<\/span>/)[1]
-    const cover = data.match(/<a href="(https:\/\/i.animepahe.ru\/posters.+?)"/)[1]
-    const desc = data.match(/<div class="anime-synopsis">(.+?)<\/div>/)[1]
-    const anilist_id = data.match(/<a href="\/\/anilist.co\/anime\/(.+?)"/)
+    // console.log(data)
+    // const title = data.match(/<span>(.+?)<\/span>/)[1]
+    // const cover = data.match(/<a href="(https:\/\/i.animepahe.ru\/posters.+?)"/)[1]
+    // const desc = data.match(/<div class="anime-synopsis">(.+?)<\/div>/)[1]
+    // const anilist_id = data.match(/<a href="\/\/anilist.co\/anime\/(.+?)"/)
+
+    const { title, cover, desc, anilist_id } = extractData(data)
 
     res.status(200).send({
       title: title,
-      anilist_id: anilist_id ? anilist_id[1] : null,
+      // anilist_id: anilist_id ? anilist_id[1] : null,
+      anilist_id: anilist_id,
       cover: cover,
       desc: desc
     })

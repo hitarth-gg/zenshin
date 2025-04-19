@@ -518,8 +518,8 @@ async function loadLastTorrentSession() {
     const pre = await fetch(
       `http://localhost:${settings.get('backendPort')}/metadata/${encodeURIComponent(magnet)}`
     )
-    if (pre.status === 200) {
-      const res = await fetch(streamUrl)
+    if (pre.status === 200 && streamUrl) {
+      await fetch(streamUrl)
     }
   } catch (error) {
     console.error('Error fetching stream URL:', error)
@@ -901,6 +901,7 @@ app2.delete('/remove/:magnet', async (req, res) => {
       console.error('Error removing torrent:', err)
       return res.status(500).send('Error removing torrent')
     }
+    settings.set('currentAnime', null) // Clear the current anime session
 
     res.status(200).send('Torrent removed successfully')
   })
