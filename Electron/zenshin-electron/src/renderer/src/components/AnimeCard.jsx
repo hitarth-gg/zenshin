@@ -5,7 +5,7 @@ import { useZenshinContext } from '../utils/ContextProvider'
 import { Button, Skeleton, Tooltip } from '@radix-ui/themes'
 import { useEffect, useRef, useState } from 'react'
 import AnilistEditorModal from './AnilistEditorModal'
-import { PersonIcon, StarIcon } from '@radix-ui/react-icons'
+import { PersonIcon, SpeakerLoudIcon, SpeakerOffIcon, StarIcon } from '@radix-ui/react-icons'
 import YouTubeLogo from '../assets/symbols/YouTubeLogo'
 
 export default function AnimeCard({ data }) {
@@ -19,7 +19,10 @@ export default function AnimeCard({ data }) {
   const [videoLoading, setVideoLoading] = useState(true)
   const zenshinContext = useZenshinContext()
   const { glow, hoverCard } = zenshinContext
-
+  const [trailerOpen, setTrailerOpen] = useState(false)
+  // const [trailerMuted, setTrailerMuted] = useState(
+  // sessionStorage.getItem('trailerMuted') === 'true' ? true : false
+  // )
   const date = data?.startDate?.year
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
     : null
@@ -31,9 +34,13 @@ export default function AnimeCard({ data }) {
     data?.trailer?.site === 'youtube'
       ? `https://www.youtube.com/watch?v=${data?.trailer?.id}`
       : null //0c4IoCA5fY0
-  // data?.trailer?.site === 'youtube'
-  // ? `https://www.youtube.com/embed/${data?.trailer?.id}?autoplay=1`
-  // : null //0c4IoCA5fY0
+  //   // data?.trailer?.site === 'youtube'
+  //   // ? `https://www.youtube.com/embed/${data?.trailer?.id}?autoplay=1`
+  //   // : null //0c4IoCA5fY0
+  //   data?.trailer?.site === 'youtube'
+  //     ? // ? `https://inv.tux.pizza/latest_version?id=${data?.trailer?.id}&itag=18`
+  //       `https://www.youtube.com/embed/${data?.trailer?.id}?cc_load_policy=1&modestbranding=1&rel=0&autoplay=1&mute=${trailerMuted}`
+  //     : null //0c4IoCA5fY0
 
   const [pos2, setPos2] = useState(0)
   useEffect(() => {
@@ -48,11 +55,19 @@ export default function AnimeCard({ data }) {
   }, [card])
   const genresString = data?.genres?.join(', ') || ''
 
+  // function handleTrailerMuted() {
+  //   setTrailerMuted(!trailerMuted)
+  //   sessionStorage.setItem('trailerMuted', !trailerMuted)
+  // }
+
   return (
     <div
       className="relative my-4 w-fit"
       onMouseOver={() => setCard(1)}
-      onMouseLeave={() => setCard(0)}
+      onMouseLeave={() => {
+        setCard(0)
+        setTrailerOpen(false)
+      }}
       onClick={() => handleClick()}
       ref={divRef}
     >
@@ -74,7 +89,7 @@ export default function AnimeCard({ data }) {
             />
           </div>
 
-          <div className="z-20 flex w-full  flex-col gap-y-1">
+          <div className="z-20 flex w-full flex-col gap-y-1">
             <div
               title={data?.title?.romaji}
               className="line-clamp-2 h-11 w-full text-sm font-medium opacity-90"
@@ -143,11 +158,38 @@ export default function AnimeCard({ data }) {
             className={`duration-400 relative h-36 w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
           ></div>
           {/* {videoSrc && (
+            // <iframe
+            // onLoad={() => setVideoLoading(false)}
+            // src={videoSrc}
+            // frameBorder="0"
+            // className={`duration-400 absolute -top-9 z-20 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
+            // allowFullScreen
+            // />
+
+            <div className="duration-400 absolute -top-9 z-20 aspect-video h-auto w-full animate-fade overflow-hidden rounded-sm object-cover object-center transition-all ease-in-out animate-delay-500">
+              <iframe
+                className="pointer-events-none absolute left-0 top-1/2 h-[calc(100%+200px)] w-full -translate-y-1/2 border-0"
+                title="trailer"
+                allow="autoplay"
+                allowFullScreen
+                src={videoSrc}
+              />
+              <div
+                className="absolute right-0 top-0 z-20 m-1 rounded-full bg-[#00000070] p-1"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setTrailerMuted(!trailerMuted)
+                }}
+              >
+                {trailerMuted ? <SpeakerOffIcon /> : <SpeakerLoudIcon />}
+              </div>
+            </div>
+          )} */}
+          {/* {trailerOpen && (
             <iframe
-              onLoad={() => setVideoLoading(false)}
               src={videoSrc}
               frameBorder="0"
-              className={`duration-400 absolute top-0 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
+              className={`duration-400 absolute -top-0 left-[100%] z-20 aspect-video h-full animate-fade-up rounded-sm object-cover object-center transition-all ease-in-out animate-duration-700`}
               allowFullScreen
             />
           )} */}
@@ -165,7 +207,7 @@ export default function AnimeCard({ data }) {
                   src={bannerImage || data?.coverImage?.extraLarge}
                   alt=""
                   // className={`duration-400 absolute top-0 aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
-                  className={`duration-400 absolute top-20 -z-10 h-36 w-full rounded-sm object-cover object-center opacity-70 blur-2xl brightness-75 saturate-150 transition-all ease-in-out`}
+                  className={`duration-400 absolute top-0 -z-10 h-36 w-full rounded-sm object-cover object-center blur-3xl brightness-75 saturate-150 transition-all ease-in-out`}
                 />
               )} */}
             </>
@@ -235,9 +277,10 @@ export default function AnimeCard({ data }) {
                   onClick={(e) => {
                     e.stopPropagation()
                     window.open(videoSrc, '_blank')
+                    // setTrailerOpen(!trailerOpen)
                   }}
                 >
-                  <div className="flex">
+                  <div className="flex flex-row">
                     <div className="bg-[#2f3236] px-1">
                       <YouTubeLogo />
                     </div>
@@ -251,6 +294,22 @@ export default function AnimeCard({ data }) {
                     >
                       Trailer
                     </Button>
+                    {/* <div className="ml-1">
+                      <Button
+                        size={'1'}
+                        color="gray"
+                        variant="soft"
+                        style={{
+                          borderRadius: '0rem'
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setTrailerMuted(!trailerMuted)
+                        }}
+                      >
+                        {trailerMuted ? <SpeakerOffIcon /> : <SpeakerLoudIcon />}
+                      </Button>
+                    </div> */}
                   </div>
                 </div>
               )}

@@ -275,7 +275,6 @@ router.get('/getepisodesofpage', cookieMiddleware, async (req, res) => {
     return res.json({
       data: data
     })
-
   } catch (error) {
     console.error(`Failed to fetch webpage: ${error.message}`)
     res.status(500).send({
@@ -429,6 +428,34 @@ router.get('/image/snapshot/:id', cookieMiddleware, async (req, res) => {
 
     // Check if the response is ok
     if (!response.ok) {
+      if (response.status === 404) {
+        let response_alt_1
+        try {
+          response_alt_1 = await fetch(`${encUrls.paheimages}/uploads/snapshots/${id}`, {
+            headers: {
+              Cookie: cookiesString
+            }
+          })
+          if (response_alt_1.ok) {
+            const contentType = response_alt_1.headers.get('content-type')
+            const buffer = await response_alt_1.arrayBuffer()
+            res.set('Content-Type', contentType)
+            return res.send(Buffer.from(buffer))
+          }
+        } catch (error) {
+          console.error(`Failed to fetch image: ${error.message}`)
+          res.status(500).send({
+            status: 500,
+            error: error.message
+          })
+        }
+        if (!response_alt_1.ok) {
+          return res.status(404).send({
+            status: 404,
+            error: 'Image not found'
+          })
+        }
+      }
       if (response.status === 403) {
         return res.status(403).send({
           status: 403,
