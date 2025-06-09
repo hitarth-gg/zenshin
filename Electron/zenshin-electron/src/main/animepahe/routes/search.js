@@ -107,7 +107,7 @@ router.get('/latest', cookieMiddleware, async (req, res) => {
     const data = await response.json()
     res.json(data)
   } catch (error) {
-    console.error(`Failed to fetch webpage: ${error.message}`)
+    console.error(`Failed to fetch webpage "latest": ${error.message}`)
     res.status(500).send({
       status: 500,
       error: error.message

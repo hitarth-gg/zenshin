@@ -13,6 +13,7 @@ const api = {
   changeBackendPort: (port) => ipcRenderer.send('change-backend-port', port),
   openFolder: (folder) => ipcRenderer.send('open-folder', folder),
   changeDownloadsFolder: () => {
+    ipcRenderer.removeAllListeners('receive-settings-json')
     ipcRenderer.send('change-downloads-folder')
     return new Promise((resolve) => {
       ipcRenderer.once('receive-settings-json', (event, updatedSettings) =>
@@ -24,6 +25,7 @@ const api = {
     ipcRenderer.send('save-to-settings', key, value)
   },
   getSettingsJson: () => {
+    ipcRenderer.removeAllListeners('receive-settings-json')
     ipcRenderer.send('get-settings-json')
     return new Promise((resolve) => {
       ipcRenderer.once('receive-settings-json', (event, data) => resolve(data))

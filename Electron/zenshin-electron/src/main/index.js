@@ -14,6 +14,7 @@ import WebSocket from 'ws'
 import announce from '../../common/announce'
 import Settings from './settings'
 
+
 let chalk
 import('chalk').then((module) => {
   chalk = module.default
@@ -193,7 +194,6 @@ function createWindow() {
 app.whenReady().then(() => {
   // Set app user model id for windows
   // Reset Zoom to default
-
   // globalShortcut.register('CommandOrControl+=', () => {
   //   zoomFactor += 0.1
   //   mainWindow.webContents.setZoomFactor(zoomFactor)

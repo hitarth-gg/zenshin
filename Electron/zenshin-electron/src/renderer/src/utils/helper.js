@@ -740,7 +740,7 @@ export async function searchAnilist(searchObject, page = 1, perPage = 30) {
         )
 
       if (searchObject?.sort) {
-        if (searchObject.sort == 'POPULARITY_DESC') {
+        if (searchObject.sort === 'POPULARITY_DESC') {
           data = data.sort((a, b) => b.popularity - a.popularity)
         } else if (searchObject.sort === 'SCORE_DESC') {
           data = data.sort((a, b) => b.averageScore - a.averageScore)
