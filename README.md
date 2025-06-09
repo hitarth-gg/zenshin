@@ -17,7 +17,8 @@
 
 A web and electron based anime list manager with media streaming capabilities.
 
-<details>
+<!-- <details> -->
+  
 <summary><h1>Screenshots 🖼️: </h1></summary>
   
 ![image](https://github.com/user-attachments/assets/02158f0e-e2dd-4269-8ab9-d7ec57d5af6f)
@@ -29,7 +30,7 @@ A web and electron based anime list manager with media streaming capabilities.
 ![image](https://github.com/user-attachments/assets/6c17a60c-34ed-44c8-b8d4-7e886ea2c496)
 ![image](https://github.com/user-attachments/assets/6948d885-fe74-463a-b004-4c4cb372049e)
 
-</details>
+<!-- </details> -->
 
 
 ## Demo : (Click the images)
