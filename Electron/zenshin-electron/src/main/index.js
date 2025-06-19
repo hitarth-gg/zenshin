@@ -402,16 +402,36 @@ app.on('window-all-closed', () => {
   }
 })
 
-const protocol = 'zenshin'
-const isDev = true
-const deeplink = new Deeplink({ app, mainWindow, protocol, isDev })
-
-deeplink.on('received', (link) => {
-  console.log('Received deeplink:', link)
+// This handles deep links when the app is packaged and opened via its protocol
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  // When a link is received, forward it to the renderer process
   if (mainWindow && mainWindow.webContents) {
-    mainWindow.webContents.send('deeplink-received', link)
+    // Making sure the window is focused if it was minimized
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+    mainWindow.webContents.send('deeplink-received', url);
   }
-})
+});
+
+
+// The `is` object is already imported: `is.dev`
+// This block will now ONLY run in your development environment (`npm run dev`)
+if (is.dev) {
+  const deeplink = new Deeplink({
+    app,
+    mainWindow,
+    protocol: 'zenshin', 
+    isDev: is.dev // Pass the correct development flag
+  });
+
+  deeplink.on('received', (link) => {
+    console.log('Received deeplink:', link);
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('deeplink-received', link);
+    }
+  });
+}
 
 const app2 = express()
 // const client = new WebTorrent()
