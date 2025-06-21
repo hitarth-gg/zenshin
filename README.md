@@ -15,7 +15,11 @@
 
 ![zenshin banner github](https://github.com/user-attachments/assets/54a37351-b064-4749-a4b5-7fb19ce86ceb)
 
-A web and electron based anime list manager with media streaming capabilities.
+A poorly written web and electron based anime list manager with media streaming capabilities.
+
+> [!NOTE]  
+> If you can't access pahe even after refreshing cookies, try using [Cloudflare DNS](https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/download-warp/).
+
 
 <!-- <details> -->
   
