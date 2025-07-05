@@ -14,7 +14,6 @@ import WebSocket from 'ws'
 import announce from '../../common/announce'
 import Settings from './settings'
 
-
 let chalk
 import('chalk').then((module) => {
   chalk = module.default
@@ -68,6 +67,8 @@ let backendServer
 const discordClientId = '1312155472781901824'
 let rpcClient = null
 let extensionUrls = {}
+const wss = new WebSocket.Server({ noServer: true })
+// const wss = new WebSocket.Server({ port: 64622 })
 // let zoomFactor = 1.0
 
 function mkdirp(dir) {
@@ -75,8 +76,10 @@ function mkdirp(dir) {
     return true
   }
   const dirname = path.dirname(dir)
-  mkdirp(dirname)
-  fs.mkdirSync(dir)
+  if (!fs.existsSync(dirname)) {
+    mkdirp(dirname) // Recursively create parent directories
+  }
+  fs.mkdirSync(dir) // Create the current directory
 }
 
 function createWindow() {
@@ -403,8 +406,7 @@ app.on('window-all-closed', () => {
 })
 
 const protocol = 'zenshin'
-const isDev = true
-const deeplink = new Deeplink({ app, mainWindow, protocol, isDev })
+const deeplink = new Deeplink({ app, mainWindow, protocol, isDev: is.dev })
 
 deeplink.on('received', (link) => {
   console.log('Received deeplink:', link)
@@ -586,8 +588,6 @@ app2.get('/metadata/:magnet', async (req, res) => {
 
 /* ------------------------------------------------------ */
 /* ------------------------------------------------------ */
-const wss = new WebSocket.Server({ noServer: true })
-// const wss = new WebSocket.Server({ port: 64622 })
 
 wss.on('connection', (ws) => {
   console.log('Client connected')

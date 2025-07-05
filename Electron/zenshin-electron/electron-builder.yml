@@ -1,5 +1,9 @@
 appId: com.zenshin.app
 productName: zenshin
+protocols:
+  - name: Zenshin Protocol
+    schemes:
+      - zenshin
 directories:
   buildResources: build
 files:
