@@ -56,15 +56,14 @@ export default function Pagination({
   const pageCount = Math.ceil(arraySize / pageSize)
   return (
     <div
-      className={`flex ${
-        position ? position : 'absolute'
-      } w-fit items-center justify-center rounded-sm border-[1px] border-[#43484e]`}
+      className={`flex ${position ? position : 'absolute'} w-fit mx-2 items-center justify-center`}
+      // } w-fit items-center justify-center rounded-sm border-[1px] border-[#43484e]`}
     >
       <IconButton
         size={'1'}
         color="gray"
         variant="soft"
-        style={{ borderRadius: '0px' }}
+        style={{ borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }}
         onClick={() => {
           if (pageNo - 1 >= 0) {
             setPageNo(pageNo - 1)
@@ -76,7 +75,7 @@ export default function Pagination({
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger size={'1'}>
           <Button color="gray" variant="soft" highContrast style={{ borderRadius: '0px' }}>
-            {pageNo + 1} / {pageCount || "?"}
+            {pageNo + 1} / {pageCount || '?'}
             <DropdownMenu.TriggerIcon />
           </Button>
         </DropdownMenu.Trigger>
@@ -84,10 +83,11 @@ export default function Pagination({
           <Grid columns={'5'}>
             {Array.from({ length: pageCount }).map((_, i) => (
               <DropdownMenu.Item
-              color={
-                (progress+1 >= (i * pageSize + 1) && progress+1 <= (i + 1) * pageSize) ? 'green' : null
-              }
-
+                color={
+                  progress + 1 >= i * pageSize + 1 && progress + 1 <= (i + 1) * pageSize
+                    ? 'green'
+                    : null
+                }
                 key={i}
                 style={i === pageNo ? { ...styles.selected, ...styles.fixed } : { ...styles.fixed }}
                 onClick={() => {
@@ -109,7 +109,7 @@ export default function Pagination({
         size={'1'}
         color="gray"
         variant="soft"
-        style={{ borderRadius: '0px' }}
+        style={{ borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }}
         onClick={() => {
           if (pageNo + 1 < pageCount) {
             setPageNo(pageNo + 1)

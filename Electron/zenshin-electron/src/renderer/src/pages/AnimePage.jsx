@@ -18,6 +18,7 @@ import YouTubeLogo from '../assets/symbols/YouTubeLogo'
 import AnilistEditorModal from '../components/AnilistEditorModal'
 import BooksLogo from '../assets/symbols/BooksLogo'
 import Pagination from '../components/Pagination'
+import CustomSearch from '../components/CustomSearch'
 
 export default function AnimePage() {
   const zenshinContext = useZenshinContext()
@@ -324,7 +325,7 @@ export default function AnimePage() {
         )}
 
         {true && (
-          <div className="mb-64 mt-12">
+          <div className="mb-96 mt-12">
             <div className="flex items-center gap-x-3">
               <p className="font-space-mono text-lg font-medium opacity-90">Episodes</p>
               <Button
@@ -380,7 +381,18 @@ export default function AnimePage() {
                 pageNo={pageNo}
                 setPageNo={setPageNo}
                 position={'relative'}
-                progress= {episodesWatched}
+                progress={episodesWatched}
+              />
+              <CustomSearch
+                anime={data.title}
+                animeId={data.id}
+                data={{
+                  progress: episodesWatched,
+                  hideWatchedEpisodes,
+                  quality
+                }}
+                bannerImage={data?.bannerImage}
+                animeCoverImage={data?.coverImage?.extraLarge}
               />
             </div>
             {!isLoadingMappings && (

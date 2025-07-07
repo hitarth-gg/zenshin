@@ -13,6 +13,13 @@ export function SEARCH_TORRENT(query) {
   return `${BASE_URL_NYAA}/?q=${query}&sort=seeders&order=desc&page=1&category=anime`
 }
 
+export function SEARCH_TORRENT_TOSHO(query, page = 1) {
+  // json?qx=1&q=kaoru&page=1
+  console.log(`${TOSHO}/json?qx=1&q=${query}&page=${page}`);
+
+  return `${TOSHO}/json?qx=1&q=${query}&page=${page}`
+}
+
 export function TOP_AIRING_ANIME() {
   return `${BASE_URL_JIKAN}/top/anime?&filter=airing&limit=25&sfw=true&type=tv`
 }

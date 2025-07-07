@@ -8,6 +8,7 @@ import {
   GET_TOSHO_RSS_BY_QUERY,
   SEARCH_ANIME,
   SEARCH_TORRENT,
+  SEARCH_TORRENT_TOSHO,
   TOP_AIRING_ANIME,
   TOP_ANIME
 } from './api'
@@ -452,6 +453,17 @@ export async function searchTorrent(query) {
   // await new Promise((resolve) => setTimeout(resolve, 300)) // 300 milliseconds delay
   try {
     const response = await fetch(SEARCH_TORRENT(query))
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+    throw new Error(error)
+  }
+}
+export async function searchTorrentOnTosho(query, page = 1) {
+  // await new Promise((resolve) => setTimeout(resolve, 300)) // 300 milliseconds delay
+  try {
+    const response = await fetch(SEARCH_TORRENT_TOSHO(query, page))
     const data = await response.json()
     return data
   } catch (error) {
