@@ -13,6 +13,7 @@ import DiscordRPC from '../renderer/src/utils/discord'
 import WebSocket from 'ws'
 import announce from '../../common/announce'
 import Settings from './settings'
+import { mkdirp } from 'mkdirp'
 
 let chalk
 import('chalk').then((module) => {
@@ -70,17 +71,6 @@ let extensionUrls = {}
 const wss = new WebSocket.Server({ noServer: true })
 // const wss = new WebSocket.Server({ port: 64622 })
 // let zoomFactor = 1.0
-
-function mkdirp(dir) {
-  if (fs.existsSync(dir)) {
-    return true
-  }
-  const dirname = path.dirname(dir)
-  if (!fs.existsSync(dirname)) {
-    mkdirp(dirname) // Recursively create parent directories
-  }
-  fs.mkdirSync(dir) // Create the current directory
-}
 
 function createWindow() {
   mainWindow = new BrowserWindow({

@@ -107,40 +107,43 @@ function CustomSearch({
             </div>
           ) : torrents && torrents.length > 0 ? (
             <div className="">
-              {torrents.slice(0, 75).map((torrent) => (
-                <div
-                  key={torrent.id}
-                  className="cursor-pointer border-b border-[#3a3b3f] px-4 py-3 transition-colors duration-150 last:border-b-0 hover:bg-[#1e1e20]"
-                  onMouseDown={() => onTorrentClick(torrent)}
-                >
-                  <div className="flex flex-col space-y-2">
-                    <div
-                      className="line-clamp-2 font-space-mono text-[13px] font-medium leading-tight text-gray-400"
-                      title={torrent.title}
-                    >
-                      {torrent.title}
-                    </div>
-                    <div className="flex items-center justify-between text-xs text-gray-400">
-                      <div className="flex items-center space-x-4">
-                        <span className="flex items-center">
-                          <span className="mr-1 h-2 w-2 rounded-full bg-green-500"></span>
-                          {torrent.seeders} seeders
-                        </span>
-                        <span className="flex items-center">
-                          <span className="mr-1 h-2 w-2 rounded-full bg-red-500"></span>
-                          {torrent.leechers} leechers
-                        </span>
-                        <span className="text-blue-400">
-                          {torrent.torrent_downloaded_count} downloads
+              {torrents
+                .slice(0, 75)
+                .sort((a, b) => b?.seeders - a?.seeders)
+                .map((torrent) => (
+                  <div
+                    key={torrent.id}
+                    className="cursor-pointer border-b border-[#3a3b3f] px-4 py-3 transition-colors duration-150 last:border-b-0 hover:bg-[#1e1e20]"
+                    onMouseDown={() => onTorrentClick(torrent)}
+                  >
+                    <div className="flex flex-col space-y-2">
+                      <div
+                        className="line-clamp-2 font-space-mono text-[13px] font-medium leading-tight text-gray-400"
+                        title={torrent?.title}
+                      >
+                        {torrent?.title}
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-gray-400">
+                        <div className="flex items-center space-x-4">
+                          <span className="flex items-center">
+                            <span className="mr-1 h-2 w-2 rounded-full bg-green-500"></span>
+                            {torrent?.seeders} seeders
+                          </span>
+                          <span className="flex items-center">
+                            <span className="mr-1 h-2 w-2 rounded-full bg-red-500"></span>
+                            {torrent?.leechers} leechers
+                          </span>
+                          <span className="text-blue-400">
+                            {torrent?.torrent_downloaded_count} downloads
+                          </span>
+                        </div>
+                        <span className="font-medium text-gray-300">
+                          {formatFileSize(torrent?.total_size)}
                         </span>
                       </div>
-                      <span className="font-medium text-gray-300">
-                        {formatFileSize(torrent.total_size)}
-                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           ) : (
             searchQuery &&
