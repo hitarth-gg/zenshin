@@ -4,6 +4,7 @@ import { Code, Spinner, TextField } from '@radix-ui/themes'
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import useToshoTracker from '../hooks/useToshoTracker'
 import { useNavigate } from 'react-router-dom'
+import { format, fromUnixTime } from 'date-fns'
 
 function CustomSearch({
   anime,
@@ -127,15 +128,20 @@ function CustomSearch({
                         <div className="flex items-center space-x-4">
                           <span className="flex items-center">
                             <span className="mr-1 h-2 w-2 rounded-full bg-green-500"></span>
-                            {torrent?.seeders} seeders
+                            {torrent?.seeders || '?'} seeders
                           </span>
                           <span className="flex items-center">
                             <span className="mr-1 h-2 w-2 rounded-full bg-red-500"></span>
-                            {torrent?.leechers} leechers
+                            {torrent?.leechers || '?'} leechers
                           </span>
                           <span className="text-blue-400">
-                            {torrent?.torrent_downloaded_count} downloads
+                            {torrent?.torrent_downloaded_count || '?'} downloads
                           </span>
+                          {torrent.timestamp && (
+                            <span className="">
+                              {format(fromUnixTime(torrent.timestamp), 'dd-LLL-yyyy')}
+                            </span>
+                          )}
                         </div>
                         <span className="font-medium text-gray-300">
                           {formatFileSize(torrent?.total_size)}

@@ -161,7 +161,7 @@ export default function AnimePage() {
   const genresString = data?.genres?.join(', ') || ''
 
   return (
-    <div className="relative select-none">
+    <div className="relative">
       {/* {false && ( */}
       {data?.bannerImage && (
         // <div className="p-4 px-8">
