@@ -488,43 +488,48 @@ router.get('/image/snapshot/:id', cookieMiddleware, async (req, res) => {
   }
 })
 router.get('/image/poster/:id', cookieMiddleware, async (req, res) => {
-  const { id } = req.params // Extract the ID from the URL parameter
+  const { id } = req.params
+  const { cookiesString } = req
 
   try {
-    const { cookiesString } = req
+    // Try fetching the first URL
+    const urls = [
+      `https://i.animepahe.ru/posters/${id}`,
+      `https://i.animepahe.ru/uploads/posters/${id}`
+    ]
 
-    // Fetch the image from the external source
-    const response = await fetch(`https://i.animepahe.ru/posters/${id}`, {
-      headers: {
-        Cookie: cookiesString
-      }
-    })
+    let response = null
 
-    // Check if the response is ok
-    if (!response.ok) {
-      if (response.status === 403) {
+    for (const url of urls) {
+      const resAttempt = await fetch(url, {
+        headers: {
+          Cookie: cookiesString
+        }
+      })
+
+      if (resAttempt.ok) {
+        response = resAttempt
+        break
+      } else if (resAttempt.status === 403) {
         return res.status(403).send({
           status: 403,
           error: 'Please use webview to enter the website then close the webview window.'
         })
       }
-      // Return error status and message without parsing
-      return res.status(response.status).send({
-        status: response.status,
-        error: `HTTP error! Status: ${response.status}`
+    }
+
+    if (!response) {
+      return res.status(404).send({
+        status: 404,
+        error: 'Image not found at either URL.'
       })
     }
 
-    // Get the image content type from the response
     const contentType = response.headers.get('content-type')
-
-    // Read the response body as a Buffer
-    // const buffer = await response.buffer() // If using node-fetch v2
-    // Alternatively, if you're using node-fetch v3 or above, use the following:
-    const buffer = await response.arrayBuffer()
+    const buffer = Buffer.from(await response.arrayBuffer())
 
     res.set('Content-Type', contentType)
-    res.send(Buffer.from(buffer))
+    res.send(buffer)
   } catch (error) {
     console.error(`Failed to fetch image: ${error.message}`)
     res.status(500).send({
