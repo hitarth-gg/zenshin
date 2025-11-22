@@ -46,7 +46,7 @@ export default function AnimePaheSearchBar() {
   return (
     <div ref={searchBarRef} className="relative z-10">
       <TextField.Root
-        placeholder={'Search on animepahe...'}
+        placeholder={'Search anime and episodes...'}
         onInput={(e) => setSearchText(e.target.value)}
         ref={inputRef}
         type="text"

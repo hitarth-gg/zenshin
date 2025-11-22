@@ -13,6 +13,7 @@ import {
 import useGetoToshoEpisodes from '../hooks/useGetToshoEpisodes'
 import nFormatter from '../utils/nFormatter'
 import formatBytes from '../utils/formatBytes'
+import { zone_out } from '../../../../common/utils'
 export default function Episode({
   data,
   anime,
@@ -155,10 +156,10 @@ export default function Episode({
         {active && (
           <div className="mt-3 flex flex-col gap-y-2">
             {isLoading && <Skeleton width={'50%'} />}
-            {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
+            {error && <p className="font-space-mono text-red-500">Error fetching media</p>}
 
             {!isLoading && torrentData?.length === 0 && (
-              <p className="font-space-mono text-red-500">No torrents found</p>
+              <p className="font-space-mono text-red-500">No media found</p>
             )}
 
             {torrentData?.map((torrent) => (
@@ -278,57 +279,63 @@ export default function Episode({
       {active && (
         <div className="mx-3 my-3 flex flex-col gap-y-2">
           {isLoading && <Skeleton width={'50%'} className="mb-1" />}
-          {error && <p className="font-space-mono text-red-500">Error fetching torrents</p>}
+          {error && <p className="font-space-mono text-red-500">Error fetching media</p>}
           {!isLoading && torrentData?.length === 0 && (
-            <p className="font-space-mono text-red-500">No torrents found</p>
+            <p className="font-space-mono text-red-500">No media found</p>
           )}
-          {torrentData?.map((torrent) => (
-            <div
-              key={torrent.title}
-              className="group flex animate-fade-down cursor-pointer flex-col gap-y-1 border-2 border-[#2c2d3c] bg-[#111113] px-2 py-2 transition-all duration-150 ease-in-out animate-duration-500 hover:border-[#c084fc90]" //0f1012
-              onClick={() => onTorrentClick(torrent)}
-            >
-              <div className="mr-1 flex min-w-32 items-center gap-x-4 p-1">
-                <div className="flex items-center gap-x-1">
-                  <p className="font-space-mono text-xs opacity-60">
-                    {nFormatter(torrent.seeders)}
-                  </p>
-                  <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                </div>
+          {!isLoading && !zone_out.includes(animeId) && (
+            <p className="font-space-mono text-orange-500">
+              Licensed Media is not playable via Zenshin.
+            </p>
+          )}
+          {zone_out.includes(animeId) &&
+            torrentData?.map((torrent) => (
+              <div
+                key={torrent.title}
+                className="group flex animate-fade-down cursor-pointer flex-col gap-y-1 border-2 border-[#2c2d3c] bg-[#111113] px-2 py-2 transition-all duration-150 ease-in-out animate-duration-500 hover:border-[#c084fc90]" //0f1012
+                onClick={() => onTorrentClick(torrent)}
+              >
+                <div className="mr-1 flex min-w-32 items-center gap-x-4 p-1">
+                  <div className="flex items-center gap-x-1">
+                    <p className="font-space-mono text-xs opacity-60">
+                      {nFormatter(torrent.seeders)}
+                    </p>
+                    <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                  </div>
 
-                <div className="flex items-center gap-x-1">
-                  <p className="font-space-mono text-xs opacity-60">
-                    {nFormatter(torrent.leechers)}
-                  </p>
-                  <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                </div>
+                  <div className="flex items-center gap-x-1">
+                    <p className="font-space-mono text-xs opacity-60">
+                      {nFormatter(torrent.leechers)}
+                    </p>
+                    <div className="h-2 w-2 rounded-full bg-red-500"></div>
+                  </div>
 
-                <div className="flex items-center gap-x-1">
-                  <p className="font-space-mono text-xs opacity-60">
-                    {nFormatter(torrent.torrent_downloaded_count)}
-                  </p>
-                  <DownloadIcon height={12} width={12} color="gray" />
-                </div>
+                  <div className="flex items-center gap-x-1">
+                    <p className="font-space-mono text-xs opacity-60">
+                      {nFormatter(torrent.torrent_downloaded_count)}
+                    </p>
+                    <DownloadIcon height={12} width={12} color="gray" />
+                  </div>
 
-                <div className="flex items-center gap-x-1">
-                  <p className="text-nowrap font-space-mono text-xs opacity-60">
-                    {torrent.num_files}
-                  </p>
-                  <FileIcon height={12} width={12} color="gray" />
-                </div>
+                  <div className="flex items-center gap-x-1">
+                    <p className="text-nowrap font-space-mono text-xs opacity-60">
+                      {torrent.num_files}
+                    </p>
+                    <FileIcon height={12} width={12} color="gray" />
+                  </div>
 
-                <div className="flex items-center gap-x-1">
-                  <p className="text-nowrap font-space-mono text-xs opacity-60">
-                    {formatBytes(torrent.total_size, 1)}
-                  </p>
-                  <DiscIcon height={12} width={12} color="gray" />
+                  <div className="flex items-center gap-x-1">
+                    <p className="text-nowrap font-space-mono text-xs opacity-60">
+                      {formatBytes(torrent.total_size, 1)}
+                    </p>
+                    <DiscIcon height={12} width={12} color="gray" />
+                  </div>
                 </div>
+                <p className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 transition-all duration-150 ease-in-out group-hover:text-purple-400 group-hover:opacity-100">
+                  {torrent.title}
+                </p>
               </div>
-              <p className="cursor-pointer font-space-mono text-sm tracking-wide opacity-55 transition-all duration-150 ease-in-out group-hover:text-purple-400 group-hover:opacity-100">
-                {torrent.title}
-              </p>
-            </div>
-          ))}
+            ))}
         </div>
       )}
     </div>

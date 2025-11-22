@@ -25,6 +25,7 @@ coverImage {
 },
 source,
 countryOfOrigin,
+isLicensed,
 isAdult,
 bannerImage,
 synonyms,

@@ -12,6 +12,8 @@ function isTruthyWithZero(value) {
   return Boolean(value) || value === 0
 }
 
+export const zone_out = [166611, 6654]
+
 export { isTruthyWithZero }
 
 export default encUrls

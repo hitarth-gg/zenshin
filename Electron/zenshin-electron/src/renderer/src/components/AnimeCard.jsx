@@ -20,9 +20,9 @@ export default function AnimeCard({ data }) {
   const zenshinContext = useZenshinContext()
   const { glow, hoverCard } = zenshinContext
   const [trailerOpen, setTrailerOpen] = useState(false)
-  // const [trailerMuted, setTrailerMuted] = useState(
-  // sessionStorage.getItem('trailerMuted') === 'true' ? true : false
-  // )
+  const [trailerMuted, setTrailerMuted] = useState(
+    sessionStorage.getItem('trailerMuted') === 'true' ? true : false
+  )
   const date = data?.startDate?.year
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
     : null
@@ -31,16 +31,16 @@ export default function AnimeCard({ data }) {
   const [card, setCard] = useState(0)
   const divRef = useRef(null)
   const videoSrc =
+    // data?.trailer?.site === 'youtube'
+    //   ? `https://www.youtube.com/watch?v=${data?.trailer?.id}`
+    //   : null //0c4IoCA5fY0
+    // data?.trailer?.site === 'youtube'
+    // ? `https://www.youtube.com/embed/${data?.trailer?.id}?autoplay=1`
+    // : null //0c4IoCA5fY0
     data?.trailer?.site === 'youtube'
-      ? `https://www.youtube.com/watch?v=${data?.trailer?.id}`
+      ? // ? `https://inv.tux.pizza/latest_version?id=${data?.trailer?.id}&itag=18`
+        `https://www.youtube.com/embed/${data?.trailer?.id}?cc_load_policy=1&modestbranding=1&rel=0&autoplay=1&mute=${trailerMuted}`
       : null //0c4IoCA5fY0
-  //   // data?.trailer?.site === 'youtube'
-  //   // ? `https://www.youtube.com/embed/${data?.trailer?.id}?autoplay=1`
-  //   // : null //0c4IoCA5fY0
-  //   data?.trailer?.site === 'youtube'
-  //     ? // ? `https://inv.tux.pizza/latest_version?id=${data?.trailer?.id}&itag=18`
-  //       `https://www.youtube.com/embed/${data?.trailer?.id}?cc_load_policy=1&modestbranding=1&rel=0&autoplay=1&mute=${trailerMuted}`
-  //     : null //0c4IoCA5fY0
 
   const [pos2, setPos2] = useState(0)
   useEffect(() => {
@@ -55,10 +55,10 @@ export default function AnimeCard({ data }) {
   }, [card])
   const genresString = data?.genres?.join(', ') || ''
 
-  // function handleTrailerMuted() {
-  //   setTrailerMuted(!trailerMuted)
-  //   sessionStorage.setItem('trailerMuted', !trailerMuted)
-  // }
+  function handleTrailerMuted() {
+    setTrailerMuted(!trailerMuted)
+    sessionStorage.setItem('trailerMuted', !trailerMuted)
+  }
 
   return (
     <div
@@ -157,7 +157,7 @@ export default function AnimeCard({ data }) {
             // className={`duration-400 relative aspect-video h-auto w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
             className={`duration-400 relative h-36 w-full animate-fade rounded-sm object-cover object-center transition-all ease-in-out`}
           ></div>
-          {/* {videoSrc && (
+          {videoSrc && (
             // <iframe
             // onLoad={() => setVideoLoading(false)}
             // src={videoSrc}
@@ -184,7 +184,7 @@ export default function AnimeCard({ data }) {
                 {trailerMuted ? <SpeakerOffIcon /> : <SpeakerLoudIcon />}
               </div>
             </div>
-          )} */}
+          )}
           {/* {trailerOpen && (
             <iframe
               src={videoSrc}

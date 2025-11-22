@@ -307,7 +307,7 @@ export default function Home() {
                     className="w-fit cursor-pointer transition-all duration-200 ease-in-out"
                     onClick={() => navigate('/animepahe')}
                   >
-                    New AnimePahe Releases
+                    New Releases
                   </p>
                 </Tooltip>
               </div>
