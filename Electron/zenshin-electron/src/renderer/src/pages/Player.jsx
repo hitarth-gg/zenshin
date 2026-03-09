@@ -195,7 +195,7 @@ export default function Player(query) {
       streamUrl: `http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`,
       ...loc.state
     }
-    console.log(temp_obj);
+    console.log(temp_obj)
 
     window.api.saveToSettings('currentAnime', temp_obj)
 
@@ -222,7 +222,6 @@ export default function Player(query) {
     }
   }
 
-
   const handleStreamVlc = async (episode) => {
     // save the data in the settings
     let temp_obj = {
@@ -234,7 +233,8 @@ export default function Player(query) {
 
     try {
       window.api.openVlc(
-        `${vlcPath} http://localhost:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
+        vlcPath,
+        `http://127.0.0.1:${backendPort}/streamfile/${encodeURIComponent(magnetURI)}/${encodeURIComponent(episode)}`
       )
     } catch (error) {
       console.error('Error streaming to VLC', error)

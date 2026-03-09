@@ -3,7 +3,7 @@ import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.ico?asset'
 import { Deeplink } from 'electron-deeplink'
-import { exec } from 'child_process'
+import { spawn } from 'child_process'
 import express from 'express'
 import cors from 'cors'
 import fs from 'fs'
@@ -14,6 +14,7 @@ import WebSocket from 'ws'
 import announce from '../../common/announce'
 import Settings from './settings'
 import { mkdirp } from 'mkdirp'
+import { cleanPath, validateStreamUrl } from '../renderer/src/utils/externalPlayer'
 
 let chalk
 import('chalk').then((module) => {
@@ -159,14 +160,28 @@ function createWindow() {
     shell.openExternal(authUrl) // Open the OAuth URL in the default browser
   })
 
-  ipcMain.on('open-vlc', (event, command) => {
-    exec(command, (error) => {
-      if (error) {
-        dialog.showErrorBox(
-          'Error launching External Player, make sure the path to .exe is correct. You can specify the correct path to it in the settings\n',
-          error.message
-        )
-      }
+  ipcMain.on('open-vlc', (event, player, url) => {
+    const cleanedPlayerPath = cleanPath(player)
+
+    if (validateStreamUrl(url) === false) {
+      dialog.showErrorBox(
+        'Invalid Stream URL',
+        'The provided stream URL is invalid. Please check the URL and try again.'
+      )
+      return
+    }
+
+    const vlc = spawn(cleanedPlayerPath, [url], {
+      shell: false,
+      detached: true,
+      stdio: 'ignore'
+    })
+
+    vlc.on('error', (error) => {
+      dialog.showErrorBox(
+        'Error launching External Player, make sure the path to .exe is correct. You can specify the correct path to it in the settings\n',
+        error.message
+      )
     })
   })
 
@@ -419,7 +434,7 @@ if (settings.get('downloadsFolderPath')) mkdirp(settings.get('downloadsFolderPat
 /* ------------------------------------------------------ */
 
 function startServer() {
-  backendServer = app2.listen(settings.get('backendPort'), () => {
+  backendServer = app2.listen(settings.get('backendPort'), '127.0.0.1', () => {
     console.log(`Server running at http://localhost:${settings.get('backendPort')}`)
   })
 
@@ -856,24 +871,24 @@ app2.get('/details/:magnet', async (req, res) => {
 // import { get } from 'http'
 // import { fileURLToPath } from 'url'
 // Full path to VLC executable, change it as needed
-const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"' // Adjust this path as needed
+// const vlcPath = '"C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"' // Adjust this path as needed
 
-app2.get('/stream-to-vlc', async (req, res) => {
-  const { url, magnet } = req.query
+// app2.get('/stream-to-vlc', async (req, res) => {
+//   const { url, magnet } = req.query
 
-  if (!url) {
-    return res.status(400).send('URL is required')
-  }
-  const vlcCommand = `${vlcPath} "${url}"`
+//   if (!url) {
+//     return res.status(400).send('URL is required')
+//   }
 
-  exec(vlcCommand, (error) => {
-    if (error) {
-      console.error(`Error launching VLC: ${error.message}`)
-      return res.status(500).send('Error launching VLC')
-    }
-    res.send('VLC launched successfully')
-  })
-})
+//   spawn(vlcPath.replace(/"/g, ''), [url], {
+//     shell: false,
+//     detached: true,
+//     stdio: 'ignore'
+//   })
+
+//   res.send('VLC launched successfully')
+// })
+
 /* ------------------------------------------------------ */
 
 app2.delete('/remove/:magnet', async (req, res) => {
