@@ -9,7 +9,7 @@ function extractData(data) {
 
   // Try first pattern (span, synopsis div, anilist link)
   const titleMatch = data.match(/<span style="user-select:text">(.+?)<\/span>/)
-  const coverMatch = data.match(/<a href="(https:\/\/i.animepahe.si\/posters.+?)"/)
+  const coverMatch = data.match(/<a href="(https:\/\/i.animepahe.pw\/posters.+?)"/)
   const descMatch = data.match(/<div class="anime-synopsis">(.+?)<\/div>/)
   const anilistMatch = data.match(/<a href="\/\/anilist.co\/anime\/(.+?)"/)
 
@@ -142,7 +142,7 @@ router.get('/details', cookieMiddleware, async (req, res) => {
     const data = await response.text()
     // console.log(data)
     // const title = data.match(/<span>(.+?)<\/span>/)[1]
-    // const cover = data.match(/<a href="(https:\/\/i.animepahe.si\/posters.+?)"/)[1]
+    // const cover = data.match(/<a href="(https:\/\/i.animepahe.pw\/posters.+?)"/)[1]
     // const desc = data.match(/<div class="anime-synopsis">(.+?)<\/div>/)[1]
     // const anilist_id = data.match(/<a href="\/\/anilist.co\/anime\/(.+?)"/)
 
@@ -427,7 +427,7 @@ router.get('/play', cookieMiddleware, async (req, res) => {
   }
 })
 
-// https://i.animepahe.si/snapshots/069b876a55ac41fbbe3fc992f04297d7902b204a257762ed15a4c2901c21b28f.jpg
+// https://i.animepahe.pw/snapshots/069b876a55ac41fbbe3fc992f04297d7902b204a257762ed15a4c2901c21b28f.jpg
 router.get('/image/snapshot/:id', cookieMiddleware, async (req, res) => {
   const { id } = req.params // Extract the ID from the URL parameter
 
@@ -509,8 +509,8 @@ router.get('/image/poster/:id', cookieMiddleware, async (req, res) => {
   try {
     // Try fetching the first URL
     const urls = [
-      `https://i.animepahe.si/posters/${id}`,
-      `https://i.animepahe.si/uploads/posters/${id}`
+      `https://i.animepahe.pw/posters/${id}`,
+      `https://i.animepahe.pw/uploads/posters/${id}`
     ]
 
     let response = null

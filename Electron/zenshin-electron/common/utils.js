@@ -1,7 +1,7 @@
 const encUrls = {
   tosho: decodeURIComponent(atob('aHR0cHM6Ly9mZWVkLmFuaW1ldG9zaG8ub3Jn')),
-  pahe: decodeURIComponent(atob('aHR0cHM6Ly9hbmltZXBhaGUuc2k=')),
-  paheimages: decodeURIComponent(atob('aHR0cHM6Ly9pLmFuaW1lcGFoZS5zaQ==')),
+  pahe: decodeURIComponent(atob('aHR0cHM6Ly9hbmltZXBhaGUucHc=')),
+  paheimages: decodeURIComponent(atob('aHR0cHM6Ly9pLmFuaW1lcGFoZS5wdw==')),
   zenshinSupabase: decodeURIComponent(
     atob('aHR0cDovL3plbnNoaW4tc3VwYWJhc2UtYXBpLW15aWcub25yZW5kZXIuY29t')
   ),
