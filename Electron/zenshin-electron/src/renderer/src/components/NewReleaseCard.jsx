@@ -55,7 +55,7 @@ export default function NewReleaseCard({
 }) {
   const navigate = useNavigate()
   // const magnet = magnetRegex(data?.description[0]) || ''
-  const magnet = data.magnet_uri
+  const magnet = data.magnet
 
   // console.log(data)
 
@@ -73,7 +73,7 @@ export default function NewReleaseCard({
 
   const [imageUrl, setImageUrl] = useState(null)
 
-  const aniDbId = data?.anidb_aid
+  const aniDbId = data?.series?.anidb_aid
 
   // async function getImageUrl() {
   //   // https://api.ani.zip/mappings?anidb_id=1
@@ -81,8 +81,8 @@ export default function NewReleaseCard({
   //   const json = await data.json()
   // }
   const { isLoading, error, data: anidbMap } = useGetAniZipMappings(aniDbId, true)
-  const timeAgo = (timestamp) => {
-    return formatDistanceToNow(new Date(timestamp * 1000), { addSuffix: true }).replace('about', '')
+  const timeAgo = (date_added) => {
+    return formatDistanceToNow(date_added, { addSuffix: true }).replace('about', '')
   }
   // console.log(anidbMap)
 
@@ -91,7 +91,7 @@ export default function NewReleaseCard({
       // conver the object into an array
       setAnilistId(anidbMap.mappings.anilist_id)
       const arr = anidbMap?.episodes ? Object.values(anidbMap.episodes) : []
-      const img = arr.filter((ep) => ep.anidbEid == data.anidb_eid)
+      const img = arr.filter((ep) => ep.anidbEid == data.series.anidb_eid)
       console.log(img)
 
       setAnilistIds((prev) => [...prev, anidbMap.mappings.anilist_id])
@@ -158,7 +158,7 @@ export default function NewReleaseCard({
         <div className="w-full truncate text-sm font-medium opacity-90">{title}</div>
 
         <div className="flex justify-between text-xs opacity-60">
-          <p className="text-nowrap">{timeAgo(data.timestamp)}</p>
+          <p className="text-nowrap">{timeAgo(data.date_added)}</p>
           <p className="text-nowrap">Episode {episode ? episode : '?'}</p>
         </div>
         <div></div>

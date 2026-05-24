@@ -52,5 +52,5 @@ async function initialize(extension) {
     console.error('Failed to load extension.')
   }
 }
-initialize('gh/hitarth-gg/mizukijs')
+initialize('gh/hitarth-gg/mizukijs-xyz')
 console.log('Worker initialized')

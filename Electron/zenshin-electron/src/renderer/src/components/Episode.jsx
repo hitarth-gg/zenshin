@@ -57,10 +57,10 @@ export default function Episode({
 
   function onTorrentClick(torrent) {
     let urlObj = {
-      pathname: `/player/${encodeURIComponent(torrent.magnet_uri)}/${animeId}/${progress}/${episodeNumber}`,
+      pathname: `/player/${encodeURIComponent(torrent.magnet)}/${animeId}/${progress}/${episodeNumber}`,
       state: {
         animeId: animeId,
-        magnetUri: torrent.magnet_uri,
+        magnetUri: torrent.magnet,
         episodeTitle: data.title,
         episodeNumber: episodeNumber,
         animeTitle: anime.romaji,
@@ -72,7 +72,7 @@ export default function Episode({
     navigate(urlObj.pathname, { state: urlObj })
 
     // navigate(
-    //   `/player/${encodeURIComponent(torrent.magnet_uri)}/${animeId}/${progress}/${episodeNumber}`,
+    //   `/player/${encodeURIComponent(torrent.magnet)}/${animeId}/${progress}/${episodeNumber}`,
     //   {
     //     state: {
     //       episodeTitle: data.title,
@@ -198,7 +198,7 @@ export default function Episode({
 
                   <div className="flex items-center gap-x-1">
                     <p className="text-nowrap font-space-mono text-xs opacity-60">
-                      {formatBytes(torrent.total_size, 1)}
+                      {formatBytes(torrent.size_bytes, 1)}
                     </p>
                     <DiscIcon height={12} width={12} color="gray" />
                   </div>
@@ -319,7 +319,7 @@ export default function Episode({
 
                 <div className="flex items-center gap-x-1">
                   <p className="text-nowrap font-space-mono text-xs opacity-60">
-                    {formatBytes(torrent.total_size, 1)}
+                    {formatBytes(torrent.size_bytes, 1)}
                   </p>
                   <DiscIcon height={12} width={12} color="gray" />
                 </div>

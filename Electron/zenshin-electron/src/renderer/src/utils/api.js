@@ -14,10 +14,13 @@ export function SEARCH_TORRENT(query) {
 }
 
 export function SEARCH_TORRENT_TOSHO(query, page = 1) {
-  // json?qx=1&q=kaoru&page=1
-  console.log(`${TOSHO}/json?qx=1&q=${query}&page=${page}`);
+  const encodedQuery = encodeURIComponent(query)
 
-  return `${TOSHO}/json?qx=1&q=${query}&page=${page}`
+  const url = `${TOSHO}/json/v1/search?q=${encodedQuery}&limit=100&qx=1`
+
+  console.log(url)
+
+  return url
 }
 
 export function TOP_AIRING_ANIME() {

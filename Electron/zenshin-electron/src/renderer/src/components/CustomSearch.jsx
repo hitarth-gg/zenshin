@@ -53,10 +53,10 @@ function CustomSearch({
     console.log('torrent clicked:', torrent)
 
     let urlObj = {
-      pathname: `/player/${encodeURIComponent(torrent.magnet_uri)}/${animeId}/${progress}/${episodeNumber}`,
+      pathname: `/player/${encodeURIComponent(torrent.magnet)}/${animeId}/${progress}/${episodeNumber}`,
       state: {
         animeId: animeId,
-        magnetUri: torrent.magnet_uri,
+        magnetUri: torrent.magnet,
         episodeTitle: data.title,
         episodeNumber: episodeNumber,
         animeTitle: anime.romaji,
@@ -128,14 +128,14 @@ function CustomSearch({
                         <div className="flex items-center space-x-4">
                           <span className="flex items-center">
                             <span className="mr-1 h-2 w-2 rounded-full bg-green-500"></span>
-                            {torrent?.seeders || '?'} seeders
+                            {torrent?.seeders ?? '?'} seeders
                           </span>
                           <span className="flex items-center">
                             <span className="mr-1 h-2 w-2 rounded-full bg-red-500"></span>
-                            {torrent?.leechers || '?'} leechers
+                            {torrent?.leechers ?? '?'} leechers
                           </span>
                           <span className="text-blue-400">
-                            {torrent?.torrent_downloaded_count || '?'} downloads
+                            {torrent?.downloads ?? '?'} downloads
                           </span>
                           {torrent.timestamp && (
                             <span className="">
@@ -144,7 +144,7 @@ function CustomSearch({
                           )}
                         </div>
                         <span className="font-medium text-gray-300">
-                          {formatFileSize(torrent?.total_size)}
+                          {torrent?.size_bytes ? formatFileSize(torrent?.size_bytes) : ''}
                         </span>
                       </div>
                     </div>

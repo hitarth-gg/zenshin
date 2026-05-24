@@ -465,7 +465,7 @@ export async function searchTorrentOnTosho(query, page = 1) {
   try {
     const response = await fetch(SEARCH_TORRENT_TOSHO(query, page))
     const data = await response.json()
-    return data
+    return data.data
   } catch (error) {
     console.log(error)
     throw new Error(error)

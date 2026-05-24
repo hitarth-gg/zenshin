@@ -1,5 +1,5 @@
 const encUrls = {
-  tosho: decodeURIComponent(atob('aHR0cHM6Ly9mZWVkLmFuaW1ldG9zaG8ub3Jn')),
+  tosho: decodeURIComponent(atob('aHR0cHM6Ly9mZWVkLmFuaW1ldG9zaG8ueHl6')),
   pahe: decodeURIComponent(atob('aHR0cHM6Ly9hbmltZXBhaGUucHc=')),
   paheimages: decodeURIComponent(atob('aHR0cHM6Ly9pLmFuaW1lcGFoZS5wdw==')),
   zenshinSupabase: decodeURIComponent(
