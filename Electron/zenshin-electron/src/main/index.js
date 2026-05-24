@@ -548,7 +548,7 @@ app2.get('/metadata/:magnet', async (req, res) => {
   /* ------------------------------------------------------ */
   // Check if the torrent is already added
   let existingTorrent = await client.get(magnet)
-  console.log('Existing torrent:', existingTorrent)
+  // console.log('Existing torrent:', existingTorrent)
 
   if (existingTorrent) {
     // If torrent is already added, return its file information

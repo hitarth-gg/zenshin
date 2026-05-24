@@ -144,7 +144,7 @@ function CustomSearch({
                           )}
                         </div>
                         <span className="font-medium text-gray-300">
-                          {torrent?.size_bytes ? formatFileSize(torrent?.size_bytes) : ''}
+                          {formatFileSize(torrent?.size_bytes)}
                         </span>
                       </div>
                     </div>

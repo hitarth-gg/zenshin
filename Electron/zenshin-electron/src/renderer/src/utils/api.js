@@ -36,7 +36,7 @@ export function GET_ANIME_DETAILS_BY_ID(id) {
 }
 
 export function GET_ANIME_MAPPING_BY_ANILIST_ID(anilist_id, anidb = false) {
-  console.log(`${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`)
+  // console.log(`${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`)
   if (anidb) return `${BASE_URL_ANIZIP}/mappings?anidb_id=${anilist_id}`
   return `${BASE_URL_ANIZIP}/mappings?anilist_id=${anilist_id}`
 }

@@ -80,7 +80,7 @@ export default function NewReleaseCard({
   //   const data = await fetch(`https://api.ani.zip/mappings?anidb_id=${aniDbId}`)
   //   const json = await data.json()
   // }
-  const { isLoading, error, data: anidbMap } = useGetAniZipMappings(aniDbId, true)
+  const { isLoading, error, data: anidbMap } = useGetAniZipMappings(aniDbId, true) // gets mapping data using anidb_id
   const timeAgo = (date_added) => {
     return formatDistanceToNow(date_added, { addSuffix: true }).replace('about', '')
   }
@@ -89,12 +89,20 @@ export default function NewReleaseCard({
   useEffect(() => {
     if (anidbMap) {
       // conver the object into an array
-      setAnilistId(anidbMap.mappings.anilist_id)
+      const nextAnilistId = anidbMap?.mappings?.anilist_id ?? null
+      setAnilistId(nextAnilistId)
+
       const arr = anidbMap?.episodes ? Object.values(anidbMap.episodes) : []
       const img = arr.filter((ep) => ep.anidbEid == data.series.anidb_eid)
       console.log(img)
 
-      setAnilistIds((prev) => [...prev, anidbMap.mappings.anilist_id])
+      setAnilistIds((prev) => {
+        const id = nextAnilistId
+        const cleanedPrev = (prev ?? []).filter((v) => v !== null && v !== undefined)
+        if (id === null || id === undefined) return cleanedPrev
+        return Array.from(new Set([...cleanedPrev, id]))
+      })
+
       if (!img[0]?.image) {
         setImageUrl(tempImg)
       }
