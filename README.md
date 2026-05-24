@@ -1,5 +1,9 @@
 # zenshin. <img src="https://github.com/user-attachments/assets/6de78e3e-2c14-4044-b65f-cc5e81fc4e10" width="23">
 
+> [!IMPORTANT]
+Since tosho is shutting down, I've switched to the new tosho-xyz alternative. Branch [tosho-update](https://github.com/hitarth-gg/zenshin/tree/tosho-update) will use the newer alternative and the [main](https://github.com/hitarth-gg/zenshin/tree/main) branch will still use the older URL until the newer API is stable.
+
+
 <p align="center" >
   <img src="https://github.com/user-attachments/assets/3ecc5d2b-eb45-4865-8d5b-688f1d328756" width="170">
 </p>
