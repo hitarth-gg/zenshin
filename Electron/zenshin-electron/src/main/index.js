@@ -15,6 +15,7 @@ import announce from '../../common/announce'
 import Settings from './settings'
 import { mkdirp } from 'mkdirp'
 import { cleanPath, validateStreamUrl } from '../renderer/src/utils/externalPlayer'
+import { installAniListRequestHeaderOverride } from './anilistRequestHeaders.mjs'
 
 let chalk
 import('chalk').then((module) => {
@@ -341,6 +342,7 @@ app.whenReady().then(() => {
     console.log('Discord RPC setting changed to:', settings.get('broadcastDiscordRpc'))
   })
 
+  installAniListRequestHeaderOverride(session.defaultSession)
   createWindow()
 
   if (process.argv.length >= 2) {
