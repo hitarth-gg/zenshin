@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import useGetAnimeById from '../hooks/useGetAnimeById'
-import { format, formatDate, fromUnixTime, getUnixTime } from 'date-fns'
+import { format, fromUnixTime } from 'date-fns'
 import { useEffect, useState } from 'react'
 import CenteredLoader from '../ui/CenteredLoader'
 import Episode from '../components/Episode'
@@ -19,6 +19,14 @@ import AnilistEditorModal from '../components/AnilistEditorModal'
 import BooksLogo from '../assets/symbols/BooksLogo'
 import Pagination from '../components/Pagination'
 import CustomSearch from '../components/CustomSearch'
+import EpisodeCatalogNotice from '../components/EpisodeCatalogNotice'
+import useGetoToshoEpisodes from '../hooks/useGetToshoEpisodes'
+import useToshoTracker from '../hooks/useToshoTracker'
+import {
+  buildEpisodeCatalog,
+  deriveReleasedEpisodeCount,
+  selectAnimeToshoQueryTitle
+} from '../utils/episodeCatalog.mjs'
 
 export default function AnimePage() {
   const zenshinContext = useZenshinContext()
@@ -38,52 +46,58 @@ export default function AnimePage() {
   const {
     isLoading: isLoadingMappings,
     data: mappingsData,
-    error: errorMappings,
-    status: statusMappings
+    error: errorMappings
   } = useGetAniZipMappings(animeId)
 
+  const { data: malIdData, error: errorMalId } = useGetAnimeByMalId(malId || null)
+
+  const mappingAid = mappingsData?.mappings?.anidb_id
+  const toshoQueryTitle = selectAnimeToshoQueryTitle({
+    english: animeData?.title?.english,
+    romaji: animeData?.title?.romaji,
+    native: animeData?.title?.native
+  })
+  const titleCandidates = [
+    mappingsData?.titles?.en,
+    mappingsData?.titles?.['x-jat'],
+    mappingsData?.titles?.ja,
+    animeData?.title?.english,
+    animeData?.title?.romaji,
+    animeData?.title?.native,
+    ...(animeData?.synonyms || [])
+  ]
+  const titleCatalogQuery = !isLoadingMappings && !mappingAid ? toshoQueryTitle : null
   const {
-    isLoading: isLoadingMalId,
-    data: malIdData,
-    error: errorMalId,
-    status: statusMalId
-  } = useGetAnimeByMalId(malId || null)
-
-  let episodesAnizip = mappingsData?.episodes
-  let aniZip_titles = {
-    en: '',
-    ja: '',
-    xJat: '',
-    malTitleRomaji: '',
-    malTitleEnglish: ''
-  }
-  if (mappingsData?.titles) {
-    aniZip_titles.en = mappingsData?.titles?.en || ''
-    aniZip_titles.ja = mappingsData?.titles?.ja || ''
-    aniZip_titles.xJat = mappingsData?.titles['x-jat'] || ''
-    aniZip_titles.malTitleRomaji = malIdData?.data?.titles[0]?.title || ''
-    aniZip_titles.malTitleEnglish = malIdData?.data?.titles[4]?.title || ''
-  }
-
-  if (episodesAnizip) {
-    episodesAnizip = Object.keys(episodesAnizip)?.map((key) => episodesAnizip[key])
-    let tempEps = episodesAnizip.map((ep) => {
-      if (isNaN(ep.episode)) return null
-      return {
-        epNum: ep.episode,
-        title: ep.title.en || ep.title['x-jat'] || ep.title.jp || `Episode ${ep.episode}`,
-        thumbnail: ep.image,
-        airdate: ep.airdate,
-        overview: ep.overview,
-        aids: mappingsData?.mappings?.anidb_id,
-        eids: ep.anidbEid
-      }
-    })
-
-    // remove null values
-    tempEps = tempEps.filter((ep) => ep !== null)
-    episodesAnizip = tempEps
-  }
+    isLoading: isLoadingToshoByAid,
+    data: toshoByAid,
+    error: errorToshoByAid
+  } = useGetoToshoEpisodes('All', mappingAid, null)
+  const {
+    isFetching: isLoadingToshoByTitle,
+    torrents: toshoByTitle,
+    error: errorToshoByTitle
+  } = useToshoTracker(titleCatalogQuery, 3)
+  const toshoCatalogResults = mappingAid ? toshoByAid : toshoByTitle
+  const releasedEpisodeCount = deriveReleasedEpisodeCount({
+    nextAiringEpisode: animeData?.nextAiringEpisode,
+    status: animeData?.status,
+    expectedEpisodeCount: animeData?.episodes
+  })
+  const episodeCatalog = buildEpisodeCatalog({
+    mappingData: mappingsData,
+    mappingError: errorMappings,
+    mappingLoading: isLoadingMappings,
+    anilistEpisodes: animeData?.streamingEpisodes,
+    toshoResults: toshoCatalogResults,
+    titleCandidates,
+    toshoScope: mappingAid ? 'aid' : 'title',
+    releasedEpisodeCount,
+    expectedEpisodeCount: animeData?.episodes,
+    seriesStatus: animeData?.status
+  })
+  const animeEpisodes = episodeCatalog.episodes
+  const isLoadingToshoCatalog = mappingAid ? isLoadingToshoByAid : isLoadingToshoByTitle
+  const errorToshoCatalog = mappingAid ? errorToshoByAid : errorToshoByTitle
   const navigate = useNavigate()
   const [dualAudio, setDualAudio] = useState(false)
   const [hideWatchedEpisodes, setHideWatchedEpisodes] = useState(false)
@@ -117,10 +131,10 @@ export default function AnimePage() {
 
   if (isLoading) return <CenteredLoader />
 
-  if (errorMappings || errorMalId) {
-    toast.error('Error fetching Anime', {
+  if (errorMalId) {
+    toast.error('Error fetching MyAnimeList metadata', {
       icon: <ExclamationTriangleIcon height="16" width="16" color="#ffffff" />,
-      description: `Couldn't fetch anime: ${errorMappings?.message || errorMalId?.message}`,
+      description: `Couldn't fetch MyAnimeList metadata: ${errorMalId.message}`,
       classNames: {
         title: 'text-rose-500'
       }
@@ -140,23 +154,6 @@ export default function AnimePage() {
   const startDate = data?.startDate
     ? new Date(data.startDate.year, data.startDate.month - 1, data.startDate.day)
     : null
-
-  const endDate = data?.endDate
-    ? new Date(data.endDate.year, data.endDate.month - 1, data.endDate.day)
-    : null
-
-  let animeEpisodes = data?.streamingEpisodes
-  animeEpisodes?.sort((a, b) => {
-    const aNum = parseInt(a.title.split(' ')[1])
-    const bNum = parseInt(b.title.split(' ')[1])
-    return aNum - bNum
-  })
-
-  // if (!animeEpisodes) {
-  // animeEpisodes = episodesAnizip;
-  // } else if (episodesAnizip.length >= animeEpisodes.length) {
-  animeEpisodes = episodesAnizip
-  // }
 
   const genresString = data?.genres?.join(', ') || ''
 
@@ -395,63 +392,55 @@ export default function AnimePage() {
                 animeCoverImage={data?.coverImage?.extraLarge}
               />
             </div>
-            {!isLoadingMappings && (
-              <div className="mt-3 grid grid-cols-1 gap-y-3">
-                <Episode
-                  all={true}
-                  anime={data.title}
-                  dualAudio={dualAudio}
-                  data={{ aids: mappingsData?.mappings?.anidb_id, quality, eids: 0 }}
-                  bannerImage={data?.bannerImage}
-                  animeCoverImage={data?.coverImage?.extraLarge}
-                  discordRpcActivity={activityDetails}
-                />
-                {/* {animeEpisodes?.map((episode, ix) => ( */}
-                {/* {animeEpisodes
-                  ?.slice(pageNo * pageSize, pageNo * pageSize + pageSize)
-                  ?.map((episode, ix) => (
-                    <Episode
-                      key={'ep -' + ix + pageNo * pageSize}
-                      anime={data.title}
-                      animeId={data.id}
-                      data={{
-                        ...episode,
-                        progress: episodesWatched,
-                        hideWatchedEpisodes,
-                        quality
-                      }}
-                      dualAudio={dualAudio}
-                      episodeNumber={ix + 1 + pageNo * pageSize}
-                      aniZip_titles={aniZip_titles}
-                      bannerImage={data?.bannerImage}
-                      animeCoverImage={data?.coverImage?.extraLarge}
-                      discordRpcActivity={activityDetails}
-                    />
-                  ))} */}
-                {animeEpisodes
-                  ?.slice(pageNo * pageSize, pageNo * pageSize + pageSize)
-                  ?.map((episode, ix) => (
-                    <Episode
-                      key={'ep -' + ix + pageNo * pageSize}
-                      anime={data.title}
-                      animeId={data.id}
-                      data={{
-                        ...episode,
-                        progress: episodesWatched,
-                        hideWatchedEpisodes,
-                        quality
-                      }}
-                      dualAudio={dualAudio}
-                      episodeNumber={ix + 1 + pageNo * pageSize}
-                      aniZip_titles={aniZip_titles}
-                      bannerImage={data?.bannerImage}
-                      animeCoverImage={data?.coverImage?.extraLarge}
-                      discordRpcActivity={activityDetails}
-                    />
-                  ))}
-              </div>
+            <EpisodeCatalogNotice notice={episodeCatalog.notice} />
+            {errorToshoCatalog && animeEpisodes.length > 0 && (
+              <p className="mt-2 font-space-mono text-xs text-amber-300" role="status">
+                AnimeTosho catalog fallback is unavailable; showing episodes from other verified
+                sources.
+              </p>
             )}
-            {isLoadingMappings && <Skeleton className="mt-3 h-12" />}
+            <div className="mt-3 grid grid-cols-1 gap-y-3">
+              <Episode
+                all={true}
+                anime={data.title}
+                animeId={data.id}
+                dualAudio={dualAudio}
+                episodeNumber={0}
+                data={{
+                  aids: mappingAid,
+                  quality,
+                  eids: 0,
+                  progress: episodesWatched,
+                  title: 'All episodes'
+                }}
+                bannerImage={data?.bannerImage}
+                animeCoverImage={data?.coverImage?.extraLarge}
+                discordRpcActivity={activityDetails}
+              />
+              {animeEpisodes
+                .slice(pageNo * pageSize, pageNo * pageSize + pageSize)
+                .map((episode) => (
+                  <Episode
+                    key={`episode-${episode.epNum}`}
+                    anime={data.title}
+                    animeId={data.id}
+                    data={{
+                      ...episode,
+                      progress: episodesWatched,
+                      hideWatchedEpisodes,
+                      quality
+                    }}
+                    dualAudio={dualAudio}
+                    episodeNumber={episode.epNum}
+                    bannerImage={data?.bannerImage}
+                    animeCoverImage={data?.coverImage?.extraLarge}
+                    discordRpcActivity={activityDetails}
+                  />
+                ))}
+            </div>
+            {(isLoadingMappings || isLoadingToshoCatalog) && animeEpisodes.length === 0 && (
+              <Skeleton className="mt-3 h-12" />
+            )}
           </div>
         )}
       </div>

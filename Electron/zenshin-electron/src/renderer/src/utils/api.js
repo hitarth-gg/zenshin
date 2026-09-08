@@ -15,8 +15,9 @@ export function SEARCH_TORRENT(query) {
 
 export function SEARCH_TORRENT_TOSHO(query, page = 1) {
   const encodedQuery = encodeURIComponent(query)
+  const offset = (page - 1) * 100
 
-  const url = `${TOSHO}/json/v1/search?q=${encodedQuery}&limit=100&qx=1`
+  const url = `${TOSHO}/json/v1/search?q=${encodedQuery}&limit=100&qx=1&offset=${offset}`
 
   console.log(url)
 

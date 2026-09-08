@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { searchTorrentOnTosho } from '../utils/helper'
+import { collectAnimeToshoPages } from '../utils/episodeCatalog.mjs'
 
-export default function useToshoTracker(query) {
+export default function useToshoTracker(query, maxPages = 1) {
   const {
     isLoading,
     data: torrents,
@@ -9,10 +10,13 @@ export default function useToshoTracker(query) {
     status,
     isFetching
   } = useQuery({
-    queryKey: ['tosho_search_result_tracker', query],
+    queryKey: ['tosho_search_result_tracker', query, maxPages],
     queryFn: () => {
       if (query) {
-        return searchTorrentOnTosho(query)
+        return collectAnimeToshoPages((page) => searchTorrentOnTosho(query, page), {
+          maxPages,
+          pageSize: 100
+        })
       }
       return null
     },

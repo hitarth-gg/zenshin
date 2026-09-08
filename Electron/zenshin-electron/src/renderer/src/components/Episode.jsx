@@ -1,18 +1,16 @@
-import { format, set } from 'date-fns'
-import useNyaaTracker from '../hooks/useNyaaTracker'
+/* eslint-disable react/prop-types */
+import { format } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Skeleton, Tooltip } from '@radix-ui/themes'
-import {
-  DiscIcon,
-  DividerVerticalIcon,
-  DownloadIcon,
-  FileIcon,
-  MagnifyingGlassIcon
-} from '@radix-ui/react-icons'
+import { DiscIcon, DownloadIcon, FileIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons'
 import useGetoToshoEpisodes from '../hooks/useGetToshoEpisodes'
 import nFormatter from '../utils/nFormatter'
 import formatBytes from '../utils/formatBytes'
+import { filterAnimeToshoResults } from '../utils/episodeCatalog.mjs'
+
+const EMPTY_TOSHO_RESULTS = Object.freeze([])
+
 export default function Episode({
   data,
   anime,
@@ -28,12 +26,19 @@ export default function Episode({
   const navigate = useNavigate()
   const [active, setActive] = useState(false)
   const progress = data?.progress || 0
-  const [torrentData, setTorrentData] = useState([])
+  const cachedToshoResults = Array.isArray(data?.toshoResults)
+    ? data.toshoResults
+    : EMPTY_TOSHO_RESULTS
+  const hasCachedToshoResults = cachedToshoResults.length > 0
   const {
     isLoading,
     data: toshoEps,
     error
-  } = useGetoToshoEpisodes(active ? data?.quality : null, data?.aids, data?.eids ? data.eids : null)
+  } = useGetoToshoEpisodes(
+    active && !hasCachedToshoResults ? data?.quality : null,
+    data?.aids,
+    data?.eids ? data.eids : null
+  )
 
   // on pressing escape, close the dropdown
   useEffect(() => {
@@ -85,31 +90,13 @@ export default function Episode({
     // )
   }
 
-  useEffect(() => {
-    if (dualAudio) {
-      const temp = toshoEps?.filter((torrent) => {
-        const title = torrent?.title
-
-        // Ensure that the title exists and is a string before using toLowerCase
-        if (typeof title === 'string') {
-          const lowerCaseTitle = title.toLowerCase()
-          return (
-            lowerCaseTitle.includes('dual audio') ||
-            lowerCaseTitle.includes('dual-audio') ||
-            lowerCaseTitle.includes('english dub') ||
-            lowerCaseTitle.includes('eng dub')
-          )
-        }
-        return false
-      })
-
-      setTorrentData(temp)
-    } else {
-      setTorrentData(toshoEps)
-    }
-  }, [dualAudio, toshoEps])
-
-  torrentData?.sort((a, b) => b.seeders - a.seeders)
+  const torrentData = useMemo(() => {
+    const sourceResults = hasCachedToshoResults ? cachedToshoResults : toshoEps
+    return filterAnimeToshoResults(sourceResults, {
+      quality: data?.quality,
+      dualAudio
+    }).sort((a, b) => (b.seeders || 0) - (a.seeders || 0))
+  }, [cachedToshoResults, data?.quality, dualAudio, hasCachedToshoResults, toshoEps])
 
   // check if the episode was released after the last 2 days
   const isRecent =
@@ -184,7 +171,7 @@ export default function Episode({
 
                   <div className="flex items-center gap-x-1">
                     <p className="font-space-mono text-xs opacity-60">
-                      {nFormatter(torrent.torrent_downloaded_count)}
+                      {nFormatter(torrent.downloads ?? torrent.torrent_downloaded_count)}
                     </p>
                     <DownloadIcon height={12} width={12} color="gray" />
                   </div>
@@ -305,7 +292,7 @@ export default function Episode({
 
                 <div className="flex items-center gap-x-1">
                   <p className="font-space-mono text-xs opacity-60">
-                    {nFormatter(torrent.torrent_downloaded_count)}
+                    {nFormatter(torrent.downloads ?? torrent.torrent_downloaded_count)}
                   </p>
                   <DownloadIcon height={12} width={12} color="gray" />
                 </div>

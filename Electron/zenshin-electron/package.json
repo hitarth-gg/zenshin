@@ -8,6 +8,9 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "test": "npm run test:unit && npm run test:component",
+    "test:unit": "node --test src/main/__tests__/*.test.mjs src/renderer/src/utils/__tests__/*.test.mjs",
+    "test:component": "node ./node_modules/vitest/vitest.mjs run src/renderer/src/components/__tests__",
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
@@ -75,7 +78,9 @@
     "prettier-plugin-tailwindcss": "^0.6.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-test-renderer": "^18.3.1",
     "tailwindcss": "^3.4.10",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vitest": "^3.2.6"
   }
 }
